@@ -1,0 +1,5 @@
+Warnings in file C:\Users\dianm\Desktop\Alchitry\ALU\source\multiplier.luc:
+    Line 3, Column 4 : "rst" was never used
+    Line 2, Column 4 : "clk" was never used
+Errors in file C:\Users\dianm\Desktop\Alchitry\ALU\source\au_top.luc:
+    Line 24, Column 4 : The signals "a, b, alufn_signal" were not assigned

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ALU" board="Alchitry Au" language="Lucid" version="3">
+  <files>
+    <component>pipeline.luc</component>
+    <src>auto_test.luc</src>
+    <component>reset_conditioner.luc</component>
+    <src>manual_test.luc</src>
+    <component>edge_detector.luc</component>
+    <src>multiplier.luc</src>
+    <src top="true">au_top.luc</src>
+    <component>button_conditioner.luc</component>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">io.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
+  </files>
+</project>

@@ -1,0 +1,17 @@
+module manual_test (
+    input clk,  // clock
+    input rst,  // reset
+    input trigger_start
+    //input trigger_error,
+    //output out
+  ) {
+  
+  //multiplier mult_unit(.clk(clk), .rst(rst));
+  //dff test_values[4](#INIT(0), .clk(clk), .rst(rst));
+  //fsm test_states (.clk(clk), .rst(rst)) = {IDLE, START, PASS, ERROR};
+
+  always {
+    //wait for two buttons then put opcode? then forced error
+    
+  }
+}

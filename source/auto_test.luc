@@ -1,0 +1,91 @@
+// auto tester for this specific module
+
+module auto_test (
+    input clk,  // clock
+    input rst,  // reset
+    input trigger_start,
+    //input trigger_error,
+    output out[16],
+    output current[2],
+    output err_flag[1]
+    //output msg_segment[8],
+    //output msg_digit[4]
+  ) {
+  
+  multiplier mult_unit(.clk(clk), .rst(rst));
+  dff test_values[4](#INIT(0), .clk(clk), .rst(rst));
+  fsm test_states (.clk(clk), .rst(rst)) = {IDLE, START, PASS, ERROR};
+
+  // TODO: MISSING INTRO ERROR
+  always {
+    // default values
+    mult_unit.a = 16b0;
+    mult_unit.b = 16b0;
+    mult_unit.alufn_signal = 6b0;
+    err_flag = b0;
+    out = 16b0;
+    current = b00;
+    
+    if (trigger_start == b0) {
+      test_states.d = test_states.IDLE;
+    }
+    
+    case (test_states.q) {
+      test_states.IDLE:
+        if (trigger_start == b1) {
+          test_states.d = test_states.START;
+          test_values.d = 0;
+        }
+      
+      test_states.START:
+        case(test_values.q) {
+        
+          // Test 1 - 0*0
+          h0000:
+            current = b01;
+            mult_unit.alufn_signal = b000010;
+            mult_unit.a = 16h1;
+            mult_unit.b = 16h1;
+            if (mult_unit.out != 16h0) {
+              test_states.d = test_states.ERROR;
+            }
+            out = 16h0;
+            
+          h0001:
+            test_states.d = test_states.PASS;
+            current = b11;
+            
+          // Test 2 - 1*1
+            
+          // Test 3 - -1*-1 
+            
+          // Test 4 - 0*1111
+            
+          // Test 5 - 1*1111
+            
+          // Test 6 - -1*1111
+            
+          // Test 7 - 0*-1111
+            
+          // Test 8 - 1*-1111
+            
+          // Test 9 - -1*-1111
+            
+          // Test 10 - positive overflow
+            
+          // Test 11 - negative overflow   
+          
+        }
+        test_values.d = test_values.q+1;
+        
+      test_states.PASS:
+        err_flag = b0;
+      
+      test_states.ERROR:
+        err_flag = b1;
+        
+    }
+    
+    
+  }
+}
