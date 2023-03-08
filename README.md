@@ -15,19 +15,21 @@ git clone git clone https://github.com/50002-computation-structures/1d-project-g
 
 ## Making New changes
 
-Before you work on a new feature, create a new branch with this format `<name>-<featurename>` with the following commands
+Before you work on a new feature, you need to do 2 things.   
+Step 1: Get updated master branch with the following commands. 
 
 ```
 #Get updated master branch
 git checkout master
 git pull origin master
+```
 
+Step 2: Create a new branch with this format `<name>-<featurename>` with the following commands
+```
 #Create new branch
 git checkout -b <name>-<feature-name>
 
 #Example:
-git checkout master
-git pull origin master
 git checkout -b carina-readme
 
 ```
@@ -64,7 +66,7 @@ git push origin carina-readme
 
 Step 5: Submit a Pull Request to the `master` branch using the GitHub website `Repo master page -> Pull Request -> New pull request`
 
-## Update master branch and delete feature branch
+## Seeing new changes
 
 After your pull request is successfully merged above, update your master branch with
 
@@ -74,11 +76,3 @@ git pull origin master
 
 ```
 
-Delete your feature branch by:
-
-```
-git branch -D <name>-<feature-name>
-
-#Example
-git branch -D carina-readme
-```
