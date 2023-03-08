@@ -77,9 +77,8 @@ git pull origin master
 Delete your feature branch by:
 
 ```
-git push origin <name>-<feature-name>
+git branch -D <name>-<feature-name>
 
-#Example:
-git push origin carina-readme
-
+#Example
+git branch -D carina-readme
 ```
