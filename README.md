@@ -9,7 +9,9 @@
 ## Collaborating
 
 First, clone the repository using `git clone`   
-```git clone git clone https://github.com/50002-computation-structures/1d-project-group_15.git```
+```
+git clone git clone https://github.com/50002-computation-structures/1d-project-group_15.git  
+```
 
 ## Making New changes
 
