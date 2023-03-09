@@ -7,8 +7,7 @@
 - [Carina] (https://github.com/carinachu22)  
 - [Oishin]  
 - [Dian]  
-- [Radhi]  
-- [Xue Min]   
+- [Radhi]    
 - [Hui Yi]  
 - [Michelle]  
 
