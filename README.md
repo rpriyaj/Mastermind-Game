@@ -4,7 +4,13 @@
 
 ## Members
 
-- [Carina Chu] (https://github.com/carinachu22)
+- [Carina] (https://github.com/carinachu22)  
+- [Oishin]  
+- [Dian]  
+- [Radhi]  
+- [Xue Min]   
+- [Hui Yi]  
+- [Michelle]  
 
 ## Collaborating
 
