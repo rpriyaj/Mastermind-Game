@@ -1,0 +1,42 @@
+module adder_subtractor_unit (
+
+    // Inputs are 16bits a,b, ALUFN 
+    // Outputs are 1bit. z,v,n
+    input a[16],  
+    input b[16],
+    input alufn[6],  
+    
+    output z[1],
+    output v[1],
+    output n[1],
+    output out[16]
+  ) {
+  
+  //Set a signal 
+  sig s[16];
+
+  always {
+    // Set initial output to be 16 0s
+    s = b0000000000000000;
+    
+    // If ALUFN0 signal is 0, its addition
+    if (alufn[0] == 0){
+      s = a+b;
+      }
+    
+    // Else if ALUFN1 signal is 1, its subtract
+    if (alufn[0] ==1){
+      s = a-b;
+    }
+    
+   
+	  // Output  
+    n = s[15]; // n is =1 when s is negative. -> question, is s signed? 
+    v = (a[15] & (b[15]^alufn[0]) & !s[15] ) | (!a[15] & !(b[15]^alufn[0])&s[15]); //follow formula on lab3 ws
+    z =0; // if s is not all 0s, z == 0. 
+    if (s == b0000000000000000){
+      z = 1;
+    }
+    out = s;
+  }
+}
