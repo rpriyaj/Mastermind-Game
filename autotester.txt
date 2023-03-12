@@ -1,0 +1,49 @@
+//What should I expect to see? 
+// 7seg to show 0000, 1111, 0000 (start of add_sub_tester), 1,2,3,7777,4,7777,5,6,7,7777,8,7777,
+
+module autotester (
+    input clk,  // clock
+    input rst,  // reset
+    input trigger_start,
+    input trigger_error, // force error -> io_dip can trigger?, push up to invert that specific bit
+    output out[16],
+    output seg_out[4][4]
+  ) {
+  
+    // STEP 1: Declare my components 
+    add_sub_tester add_sub_tester16(.clk(clk), .rst(rst)); // Question: I NOT SURE ABOUT THIS 
+    //counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(27));
+    //edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+    fsm test_states (.clk(clk), .rst(rst)) = {IDLE, ADDSUB,MULP,PASS};
+    
+    // STEP 2: Set up fsm 
+    always {
+    
+      // STEP 3: Setup signals/default values for input
+      add_sub_tester16.trigger_start = b0;
+  
+      out = hFFFF;
+      seg_out = {4d0, 4d0, 4d0, 4d0};
+      //slow_edge.in = slow_clock.value;
+      
+      case(test_states.q){
+        test_states.IDLE:
+          if (trigger_start == b1){
+                  test_states.d = test_states.ADDSUB;
+              }
+          
+        test_states.ADDSUB:
+          seg_out = {4d1, 4d1, 4d1, 4d1};
+          add_sub_tester16.trigger_start =1;
+          test_states.d = test_states.MULP;
+          
+        test_states.MULP:
+          seg_out = {4d2, 4d2, 4d2, 4d2};
+          test_states.d = test_states.PASS;
+          
+        test_states.PASS:
+           seg_out = {4d3, 4d3, 4d3, 4d3};
+          
+    }
+  }
+  
