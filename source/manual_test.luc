@@ -1,17 +1,89 @@
 module manual_test (
     input clk,  // clock
     input rst,  // reset
-    input trigger_start
-    //input trigger_error,
-    //output out
+    input dips[16], // dip switches
+    input trigger_start,
+    output out[16],
+    output out_z[1],
+    output out_v[1],
+    output out_n[1],
+    output seg_out[4][5]
   ) {
   
-  //multiplier mult_unit(.clk(clk), .rst(rst));
-  //dff test_values[4](#INIT(0), .clk(clk), .rst(rst));
-  //fsm test_states (.clk(clk), .rst(rst)) = {IDLE, START, PASS, ERROR};
-
+  // STEP 1: Declare my components
+  alu alu16 (.clk(clk), .rst(rst));
+  
+  // STEP 2: Setup values register and fsm
+  dff a[16](#INIT(0), .clk(clk), .rst(rst));
+  dff b[16](#INIT(0), .clk(clk), .rst(rst));
+  dff op[6](#INIT(0), .clk(clk), .rst(rst));
+  fsm man_states (.clk(clk), .rst(rst)) = {IDLE, WAITA, WAITB, WAITOP, CHECKALU}; 
+  
   always {
-    //wait for two buttons then put opcode? then forced error
+    alu16.a = 16b0;
+    alu16.b = 16b0;
+    alu16.alufn_signal = 6b0;
+    out = 16h0000;
+    out_z = b0;
+    out_v = b0;
+    out_n = b0;
+    seg_out = {5d0, 5d0, 5d0, 5d13};
     
+    case (man_states.q) {
+      man_states.IDLE:
+        
+        // When looping back from the last state (CHECKALU), reset everything
+        alu16.a = 16b0;
+        alu16.b = 16b0;
+        alu16.alufn_signal = 6b0;
+        out = 16h0000;
+        out_z = b0;
+        out_v = b0;
+        out_n = b0;
+        seg_out = {5d31, 5d31, 5d31, 5d13};
+        a.d = 16b0;
+        b.d = 16b0;
+        op.d = 6b0;
+        
+        if (trigger_start == b1) {
+          man_states.d = man_states.WAITA;
+        }
+        
+      man_states.WAITA:
+        out = dips;
+        seg_out = {5d31, 5d31, 5d31, 5d17};
+        if (trigger_start == b1) {
+          a.d = dips;
+          man_states.d = man_states.WAITB;
+        }
+       
+      man_states.WAITB:
+        out = dips;
+        seg_out = {5d31, 5d31, 5d31, 5d18};
+        if (trigger_start == b1) {
+          b.d = dips;
+          man_states.d = man_states.WAITOP;
+        }
+        
+      man_states.WAITOP:
+        out = dips;
+        seg_out = {5d31, 5d31, 5d0, 5d15};
+        if (trigger_start == b1) {
+          op.d = dips[5:0];
+          man_states.d = man_states.CHECKALU;
+        }
+        
+      man_states.CHECKALU:
+        seg_out = {5d10, 5d1, 5d14, 5d13};
+        alu16.a = a.q;
+        alu16.b = b.q;
+        alu16.alufn_signal = op.q;
+        out = alu16.out;
+        out_z = alu16.z;
+        out_v = alu16.v;
+        out_n = alu16.n;
+        if (trigger_start == b1) {
+          man_states.d = man_states.IDLE;
+        }
   }
 }

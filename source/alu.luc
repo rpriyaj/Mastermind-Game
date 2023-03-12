@@ -1,0 +1,71 @@
+module alu (
+    input clk,  // clock
+    input rst,  // reset
+    input alufn_signal[6],
+    input a[16],
+    input b[16],
+    output out[16],
+    output z,
+    output v,
+    output n
+  ) {
+  
+  // STEP 1: Declare all ALU sub-units
+  comparator cmp(.clk(clk), .rst(rst));
+  adder add(.clk(clk), .rst(rst));
+  shifter shift(.clk(clk), .rst(rst));
+  boolean bool(.clk(clk), .rst(rst));
+  multiplier mult(.clk(clk), .rst(rst));
+
+  always {
+    // STEP 2: Setup initial values for sub-units
+    z = b0;
+    v = b0;
+    n = b0;
+    add.a = a;
+    add.b = b;
+    add.alufn_op = alufn_signal;
+    bool.a = a;
+    bool.b = b;
+    bool.alufn_op = alufn_signal;
+    mult.a = a;
+    mult.b = b;
+    mult.alufn_op = alufn_signal;
+    shift.a = a;
+    shift.b = b;
+    shift.alufn_op = alufn_signal;
+    cmp.z = b0;
+    cmp.v = b0;
+    cmp.n = b0;
+    cmp.alufn_op = alufn_signal;
+    
+    out = 16b0;
+    
+    // STEP 3: Access sub-unit depending on alufn opcode provided
+    case (alufn_signal[5:4]) {
+   
+      b00:
+        case (alufn_signal[1]) {
+          b0:
+            out = add.out;
+            z = add.z;
+            v = add.v;
+            n = add.n;
+          b1:
+            out = mult.out;
+        }
+        
+      b01:
+        out = bool.out;  
+               
+      b10:
+        out = shift.out;
+        
+      b11:
+        cmp.z = add.z;
+        cmp.v = add.v;
+        cmp.n = add.n;
+        out = cmp.out;
+    }
+  }
+}

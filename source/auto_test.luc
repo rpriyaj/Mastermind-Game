@@ -1,91 +1,245 @@
-// auto tester for this specific module
+// NOTE: all test OUTPUTS shift to ROM! must change
 
 module auto_test (
     input clk,  // clock
     input rst,  // reset
     input trigger_start,
-    //input trigger_error,
+    input err_dip[8],
     output out[16],
-    output current[2],
-    output err_flag[1]
-    //output msg_segment[8],
-    //output msg_digit[4]
+    output out_z[1],
+    output out_v[1],
+    output out_n[1],
+    output seg_out[4][5]
   ) {
   
-  multiplier mult_unit(.clk(clk), .rst(rst));
-  dff test_values[4](#INIT(0), .clk(clk), .rst(rst));
-  fsm test_states (.clk(clk), .rst(rst)) = {IDLE, START, PASS, ERROR};
-
-  // TODO: MISSING INTRO ERROR
+  // STEP 1: Declare my components
+  alu alu16 (.clk(clk), .rst(rst)); // ALU - alu16
+  external_error mod (.clk(clk), .rst(rst)); // External modification - mod
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(27)); // Slow clock
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0)); // Edge detector
+  
+  // STEP 2: Setup test values register and fsm
+  dff test_cases[4](#INIT(0), .clk(clk), .rst(rst));
+  fsm test_states (.clk(clk), .rst(rst)) = {IDLE, START, PASS, ERROR, FINISH}; 
+  
   always {
-    // default values
-    mult_unit.a = 16b0;
-    mult_unit.b = 16b0;
-    mult_unit.alufn_signal = 6b0;
-    err_flag = b0;
-    out = 16b0;
-    current = b00;
+  
+    // STEP 3: Setup default values for inputs  
+    alu16.a = 16b0;
+    alu16.b = 16b0;
+    alu16.alufn_signal = 6b0;
+    out = 16hFFFF;
+    out_z = b0;
+    out_v = b0;
+    out_n = b0;
+    seg_out = {5d31, 5d31, 5d31, 5d11};
     
-    if (trigger_start == b0) {
-      test_states.d = test_states.IDLE;
-    }
+    mod.inv_input = err_dip;
+    mod.alu_result = alu16.out;
     
+    slow_edge.in = slow_clock.value;
+    
+    // STEP 4: Start FSM Code
     case (test_states.q) {
       test_states.IDLE:
         if (trigger_start == b1) {
+          test_cases.d = 0;
           test_states.d = test_states.START;
-          test_values.d = 0;
         }
       
+      // STEP 5: Cycle through all test cases in ROM and check if external_error introduced then answer
       test_states.START:
-        case(test_values.q) {
+        case(test_cases.q) {
         
           // Test 1 - 0*0
-          h0000:
-            current = b01;
-            mult_unit.alufn_signal = b000010;
-            mult_unit.a = 16h1;
-            mult_unit.b = 16h1;
-            if (mult_unit.out != 16h0) {
+          b0:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h0; 
+            alu16.b = 16h0;
+            seg_out = {5d31, 5d31, 5d31, 5d1};
+            
+            // Answer check with forced error
+            if (mod.out != 16h0 && slow_edge.out) { // Change to ACCESS ROM HERE
+              test_cases.d = test_cases.q+1;
               test_states.d = test_states.ERROR;
             }
-            out = 16h0;
-            
-          h0001:
-            test_states.d = test_states.PASS;
-            current = b11;
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
           // Test 2 - 1*1
+          b1: 
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h1;
+            alu16.b = 16h1;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d2};
+            
+            // Answer check
+            if (mod.out != 16h1 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
           // Test 3 - -1*-1 
+          b10:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16hFFFF;
+            alu16.b = 16hFFFF;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d3};
             
-          // Test 4 - 0*1111
+            // Answer check
+            if (mod.out != 16h1 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
-          // Test 5 - 1*1111
+          // Test 4 - 0*273(16h0111)
+          b11:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h0;
+            alu16.b = 16h0111;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d4};
             
-          // Test 6 - -1*1111
+            // Answer check
+            if (mod.out != 16h0 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
-          // Test 7 - 0*-1111
+          // Test 5 - 1*273(16h0111)
+          b100:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h1;
+            alu16.b = 16h0111;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d5};
             
-          // Test 8 - 1*-1111
+            // Answer check
+            if (mod.out != 16h0111 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
-          // Test 9 - -1*-1111
+          // Test 6 - -1*273(16h0111)
+          b101:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16hFFFF;
+            alu16.b = 16h0111;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d6};
             
-          // Test 10 - positive overflow
+            // Answer check
+            if (mod.out != 16hFEEF && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }
             
-          // Test 11 - negative overflow   
-          
+          // Test 7 - 0*-273
+          b110:
+            //current = b01;
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h0;
+            alu16.b = 16hFEEF;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d7};
+            
+            // Answer check
+            if (mod.out != 16h0 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }  
+            
+          // Test 8 - 1*-273
+          b111:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16h1;
+            alu16.b = 16hFEEF;
+            //out = alu16.out;
+            seg_out = {5d31, 5d31, 5d31, 5d8};
+            
+            // Answer check
+            if (mod.out != 16hFEEF && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }  
+            
+          // Test 9 - -1*-273
+          b1000:
+            alu16.alufn_signal = b000010;
+            alu16.a = 16hFFFF;
+            alu16.b = 16hFEEF;
+            seg_out = {5d31, 5d31, 5d31, 5d9};
+            
+            // Answer check
+            if (mod.out != 16h0111 && slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.ERROR;
+            }
+            else if (slow_edge.out) {
+              test_cases.d = test_cases.q+1;
+              test_states.d = test_states.PASS;
+            }  
+           
+          b1001:
+            test_states.d = test_states.FINISH;
         }
-        test_values.d = test_values.q+1;
-        
+        // At end of each test_case, update these:
+        out = alu16.out;
+        out_z = alu16.z;
+        out_v = alu16.v;
+        out_n = alu16.n;
+      
       test_states.PASS:
-        err_flag = b0;
+        out = 16b0;
+        seg_out = {5d15, 5d11, 5d14, 5d14};
+        if (slow_edge.out) {
+            test_states.d = test_states.START;
+        }
       
       test_states.ERROR:
-        err_flag = b1;
+        seg_out = {5d12, 5d16, 5d16, 5d0};
+        if (slow_edge.out) {
+            test_states.d = test_states.START;
+        }
         
+      test_states.FINISH:
+        out = 16b0;
+        seg_out = {5d10, 5d1, 5d14, 5d13};
+        if (trigger_start) {
+          test_states.d = test_states.IDLE;
+        }
     }
-    
-    
   }
 }

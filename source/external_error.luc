@@ -1,0 +1,18 @@
+module external_error (
+    input clk,  // clock
+    input rst,  // reset
+    input inv_input[8],
+    input alu_result[16],
+    output out[16]
+  ) {
+
+  always {    
+    if (inv_input != 8b0) {
+      out = alu_result ^ inv_input;
+    }
+    else {
+      out = alu_result; // no external modification made
+    }
+    
+  }
+}

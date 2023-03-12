@@ -3,20 +3,18 @@ module multiplier (
     input rst,  // reset
     input a[16],
     input b[16],
-    input alufn_signal[6],
+    input alufn_op[6],
     output out[16],
     output err[1] // general error flag
   ) {
   
-  // MANUAL -- wait for two inputs using FSM and then calculate
-  // AUTO -- run through cases automatically with precomputed values
   always {
     err = 0;
     
-    case (alufn_signal) {
+    case (alufn_op) {
       default: out = 16b0; err = b0;
       
-      // MULT - normal multiplication
+      // MULT - normal multiplication (ALUFN)
       b000010: out = a * b;
       
       // DIV - normal division, check for 0 division error
@@ -29,10 +27,7 @@ module multiplier (
         else {
           out = 16b0;
           err = b1;
-        }
-        
-      // MOD - modulus, signed? unsigned?
-        
+        }        
     }
   }
 }
