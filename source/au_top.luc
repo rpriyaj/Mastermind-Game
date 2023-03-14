@@ -12,20 +12,20 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
-  sig switch_state;         // state signal from auto to
+  sig switch_state; 
+  sig next;
   
   .clk(clk) {
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
-    
-    button_conditioner buttoncond[3];
-    edge_detector buttondetector[3](#RISE(1), #FALL(0));
-    
+    button_conditioner buttoncond[4];
+    edge_detector buttondetector[4](#RISE(1), #FALL(0));
+
     .rst(rst) {
-      auto_test auto;
+      auto_rom_tester auto; // rom_tester is our backup combined everything (sloppy), rom_tester_state is the one where we r trying to modularise the tests
       manual_test man;
-      multi_seven_seg seg_msg;
+      multi_seven_seg seg;
       fsm test_mode = {IDLE, MANUAL, AUTOMATIC};
     }
   }
@@ -42,20 +42,20 @@ module au_top (
     io_seg = 8hff;          // turn segments off
     io_sel = 4hf;           // select no digits
     
-    /*
-      I/O Legend:
-      io_button[]
-    */
-    buttoncond.in = io_button[2:0];
+    //io_led = io_dip;   // connect the DIP switches to the LEDs
+    
+    buttoncond.in = io_button[3:0];
     buttondetector.in = buttoncond.out;
     switch_state = buttondetector.out[0];
+    next = buttondetector.out[3];
     auto.trigger_start = b0;
-    auto.err_dip = 8b0;
+    auto.err_dips = 8b0;
     man.trigger_start = b0;
     man.dips = 16b0;
     
-    seg_msg.values = {5d31, 5d31, 5d13, 5d1};
-    
+    // welcome messsage
+    seg.values = {4d0, 4d0, 4d13, 4d1};
+      
     // Top-level FSM for auto Vs man testing
     case (test_mode.q) {
       test_mode.IDLE:
@@ -72,7 +72,7 @@ module au_top (
         man.dips[15:8] = io_dip[1];
         man.trigger_start = buttondetector.out[1];
         
-        seg_msg.values = man.seg_out;
+        seg.values = man.seg_out;
         io_led[2][2] = man.out_z;
         io_led[2][1] = man.out_v;
         io_led[2][0] = man.out_n;
@@ -85,21 +85,22 @@ module au_top (
         }
         
         auto.trigger_start = buttondetector.out[1];
-        auto.err_dip = io_dip[2];
+        auto.err_dips = io_dip[2];
         
-        seg_msg.values = auto.seg_out;
-        io_led[2][2] = auto.out_z;
-        io_led[2][1] = auto.out_v;
-        io_led[2][0] = auto.out_n;
+        seg.values = auto.seg_out;
+        io_led[2][2] = auto.out_zvn[2];
+        io_led[2][1] = auto.out_zvn[1];
+        io_led[2][0] = auto.out_zvn[0];
+        //io_led[2][7:5] = auto.out_status;
         io_led[1] = auto.out[15:8]; // show last 8 bits of result
         io_led[0] = auto.out[7:0]; // show first 8 bits of result
         
         // REDUNDANT only use if need debugging
         //io_led[2][7] = mult_auto.err_flag; // most left LED light up if error
         //io_led[2][1:0] = mult_auto.current; // first 2 leds from right will light up if complete
-    }
+      }
     
-    io_seg = ~seg_msg.seg;
-    io_sel = ~seg_msg.sel;
+      io_seg = ~seg.seg; //seg_msg
+      io_sel = ~seg.sel;
   }
 }

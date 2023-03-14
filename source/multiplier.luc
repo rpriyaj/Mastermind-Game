@@ -1,5 +1,4 @@
 module multiplier (
-    input clk,  // clock
     input rst,  // reset
     input a[16],
     input b[16],
@@ -9,10 +8,10 @@ module multiplier (
   ) {
   
   always {
-    err = 0;
+    //err = 0;
     
     case (alufn_op) {
-      default: out = 16b0; err = b0;
+      default: out = 16b0; //err = b0;
       
       // MULT - normal multiplication (ALUFN)
       b000010: out = a * b;

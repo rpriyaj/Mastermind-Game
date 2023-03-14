@@ -1,5 +1,4 @@
 module boolean (
-    input clk,
     input rst,
     input a[16],
     input b[16],

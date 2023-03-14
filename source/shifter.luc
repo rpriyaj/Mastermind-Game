@@ -1,5 +1,4 @@
 module shifter (
-    input clk,
     input rst,
     input a[16],
     input b[4],

@@ -23,6 +23,8 @@ module au_top_0 (
   
   reg switch_state;
   
+  reg next;
+  
   wire [1-1:0] M_reset_cond_out;
   reg [1-1:0] M_reset_cond_in;
   reset_conditioner_1 reset_cond (
@@ -30,12 +32,12 @@ module au_top_0 (
     .in(M_reset_cond_in),
     .out(M_reset_cond_out)
   );
-  wire [(2'h3+0)-1:0] M_buttoncond_out;
-  reg [(2'h3+0)-1:0] M_buttoncond_in;
+  wire [(3'h4+0)-1:0] M_buttoncond_out;
+  reg [(3'h4+0)-1:0] M_buttoncond_in;
   
   genvar GEN_buttoncond0;
   generate
-  for (GEN_buttoncond0=0;GEN_buttoncond0<2'h3;GEN_buttoncond0=GEN_buttoncond0+1) begin: buttoncond_gen_0
+  for (GEN_buttoncond0=0;GEN_buttoncond0<3'h4;GEN_buttoncond0=GEN_buttoncond0+1) begin: buttoncond_gen_0
     button_conditioner_2 buttoncond (
       .clk(clk),
       .in(M_buttoncond_in[GEN_buttoncond0*(1)+(1)-1-:(1)]),
@@ -43,12 +45,12 @@ module au_top_0 (
     );
   end
   endgenerate
-  wire [(2'h3+0)-1:0] M_buttondetector_out;
-  reg [(2'h3+0)-1:0] M_buttondetector_in;
+  wire [(3'h4+0)-1:0] M_buttondetector_out;
+  reg [(3'h4+0)-1:0] M_buttondetector_in;
   
   genvar GEN_buttondetector0;
   generate
-  for (GEN_buttondetector0=0;GEN_buttondetector0<2'h3;GEN_buttondetector0=GEN_buttondetector0+1) begin: buttondetector_gen_0
+  for (GEN_buttondetector0=0;GEN_buttondetector0<3'h4;GEN_buttondetector0=GEN_buttondetector0+1) begin: buttondetector_gen_0
     edge_detector_3 buttondetector (
       .clk(clk),
       .in(M_buttondetector_in[GEN_buttondetector0*(1)+(1)-1-:(1)]),
@@ -57,28 +59,24 @@ module au_top_0 (
   end
   endgenerate
   wire [16-1:0] M_auto_out;
-  wire [1-1:0] M_auto_out_z;
-  wire [1-1:0] M_auto_out_v;
-  wire [1-1:0] M_auto_out_n;
-  wire [20-1:0] M_auto_seg_out;
+  wire [3-1:0] M_auto_out_zvn;
+  wire [16-1:0] M_auto_seg_out;
   reg [1-1:0] M_auto_trigger_start;
-  reg [8-1:0] M_auto_err_dip;
-  auto_test_4 auto (
+  reg [8-1:0] M_auto_err_dips;
+  v3_same_state_mult_rom_tester_4 auto (
     .clk(clk),
     .rst(rst),
     .trigger_start(M_auto_trigger_start),
-    .err_dip(M_auto_err_dip),
+    .err_dips(M_auto_err_dips),
     .out(M_auto_out),
-    .out_z(M_auto_out_z),
-    .out_v(M_auto_out_v),
-    .out_n(M_auto_out_n),
+    .out_zvn(M_auto_out_zvn),
     .seg_out(M_auto_seg_out)
   );
   wire [16-1:0] M_man_out;
   wire [1-1:0] M_man_out_z;
   wire [1-1:0] M_man_out_v;
   wire [1-1:0] M_man_out_n;
-  wire [20-1:0] M_man_seg_out;
+  wire [16-1:0] M_man_seg_out;
   reg [16-1:0] M_man_dips;
   reg [1-1:0] M_man_trigger_start;
   manual_test_5 man (
@@ -92,15 +90,15 @@ module au_top_0 (
     .out_n(M_man_out_n),
     .seg_out(M_man_seg_out)
   );
-  wire [7-1:0] M_seg_msg_seg;
-  wire [4-1:0] M_seg_msg_sel;
-  reg [20-1:0] M_seg_msg_values;
-  multi_seven_seg_6 seg_msg (
+  wire [7-1:0] M_seg_seg;
+  wire [4-1:0] M_seg_sel;
+  reg [16-1:0] M_seg_values;
+  multi_seven_seg_6 seg (
     .clk(clk),
     .rst(rst),
-    .values(M_seg_msg_values),
-    .seg(M_seg_msg_seg),
-    .sel(M_seg_msg_sel)
+    .values(M_seg_values),
+    .seg(M_seg_seg),
+    .sel(M_seg_sel)
   );
   localparam IDLE_test_mode = 2'd0;
   localparam MANUAL_test_mode = 2'd1;
@@ -118,14 +116,15 @@ module au_top_0 (
     io_led = 24'h000000;
     io_seg = 8'hff;
     io_sel = 4'hf;
-    M_buttoncond_in = io_button[0+2-:3];
+    M_buttoncond_in = io_button[0+3-:4];
     M_buttondetector_in = M_buttoncond_out;
     switch_state = M_buttondetector_out[0+0-:1];
+    next = M_buttondetector_out[3+0-:1];
     M_auto_trigger_start = 1'h0;
-    M_auto_err_dip = 8'h00;
+    M_auto_err_dips = 8'h00;
     M_man_trigger_start = 1'h0;
     M_man_dips = 16'h0000;
-    M_seg_msg_values = 20'hffda1;
+    M_seg_values = 16'h00d1;
     
     case (M_test_mode_q)
       IDLE_test_mode: begin
@@ -140,7 +139,7 @@ module au_top_0 (
         M_man_dips[0+7-:8] = io_dip[0+7-:8];
         M_man_dips[8+7-:8] = io_dip[8+7-:8];
         M_man_trigger_start = M_buttondetector_out[1+0-:1];
-        M_seg_msg_values = M_man_seg_out;
+        M_seg_values = M_man_seg_out;
         io_led[16+2+0-:1] = M_man_out_z;
         io_led[16+1+0-:1] = M_man_out_v;
         io_led[16+0+0-:1] = M_man_out_n;
@@ -152,17 +151,17 @@ module au_top_0 (
           M_test_mode_d = MANUAL_test_mode;
         end
         M_auto_trigger_start = M_buttondetector_out[1+0-:1];
-        M_auto_err_dip = io_dip[16+7-:8];
-        M_seg_msg_values = M_auto_seg_out;
-        io_led[16+2+0-:1] = M_auto_out_z;
-        io_led[16+1+0-:1] = M_auto_out_v;
-        io_led[16+0+0-:1] = M_auto_out_n;
+        M_auto_err_dips = io_dip[16+7-:8];
+        M_seg_values = M_auto_seg_out;
+        io_led[16+2+0-:1] = M_auto_out_zvn[2+0-:1];
+        io_led[16+1+0-:1] = M_auto_out_zvn[1+0-:1];
+        io_led[16+0+0-:1] = M_auto_out_zvn[0+0-:1];
         io_led[8+7-:8] = M_auto_out[8+7-:8];
         io_led[0+7-:8] = M_auto_out[0+7-:8];
       end
     endcase
-    io_seg = ~M_seg_msg_seg;
-    io_sel = ~M_seg_msg_sel;
+    io_seg = ~M_seg_seg;
+    io_sel = ~M_seg_sel;
   end
   
   always @(posedge clk) begin

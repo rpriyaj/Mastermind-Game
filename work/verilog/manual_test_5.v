@@ -13,28 +13,25 @@ module manual_test_5 (
     output reg [0:0] out_z,
     output reg [0:0] out_v,
     output reg [0:0] out_n,
-    output reg [19:0] seg_out
+    output reg [15:0] seg_out
   );
   
   
   
   wire [16-1:0] M_alu16_out;
-  wire [1-1:0] M_alu16_z;
-  wire [1-1:0] M_alu16_v;
-  wire [1-1:0] M_alu16_n;
+  wire [1-1:0] M_alu16_div_err;
+  wire [3-1:0] M_alu16_zvn;
   reg [6-1:0] M_alu16_alufn_signal;
   reg [16-1:0] M_alu16_a;
   reg [16-1:0] M_alu16_b;
   alu_8 alu16 (
-    .clk(clk),
     .rst(rst),
     .alufn_signal(M_alu16_alufn_signal),
     .a(M_alu16_a),
     .b(M_alu16_b),
     .out(M_alu16_out),
-    .z(M_alu16_z),
-    .v(M_alu16_v),
-    .n(M_alu16_n)
+    .div_err(M_alu16_div_err),
+    .zvn(M_alu16_zvn)
   );
   
   reg [15:0] M_a_d, M_a_q = 1'h0;
@@ -65,7 +62,7 @@ module manual_test_5 (
     out_z = 1'h0;
     out_v = 1'h0;
     out_n = 1'h0;
-    seg_out = 20'h0000d;
+    seg_out = 16'h000d;
     
     case (M_man_states_q)
       IDLE_man_states: begin
@@ -76,7 +73,7 @@ module manual_test_5 (
         out_z = 1'h0;
         out_v = 1'h0;
         out_n = 1'h0;
-        seg_out = 20'hfffed;
+        seg_out = 16'h000d;
         M_a_d = 16'h0000;
         M_b_d = 16'h0000;
         M_op_d = 6'h00;
@@ -86,7 +83,7 @@ module manual_test_5 (
       end
       WAITA_man_states: begin
         out = dips;
-        seg_out = 20'hffff1;
+        seg_out = 16'h0001;
         if (trigger_start == 1'h1) begin
           M_a_d = dips;
           M_man_states_d = WAITB_man_states;
@@ -94,7 +91,7 @@ module manual_test_5 (
       end
       WAITB_man_states: begin
         out = dips;
-        seg_out = 20'hffff2;
+        seg_out = 16'h0002;
         if (trigger_start == 1'h1) begin
           M_b_d = dips;
           M_man_states_d = WAITOP_man_states;
@@ -102,21 +99,21 @@ module manual_test_5 (
       end
       WAITOP_man_states: begin
         out = dips;
-        seg_out = 20'hffc0f;
+        seg_out = 16'h0003;
         if (trigger_start == 1'h1) begin
           M_op_d = dips[0+5-:6];
           M_man_states_d = CHECKALU_man_states;
         end
       end
       CHECKALU_man_states: begin
-        seg_out = 20'h505cd;
+        seg_out = 16'hfbee;
         M_alu16_a = M_a_q;
         M_alu16_b = M_b_q;
         M_alu16_alufn_signal = M_op_q;
         out = M_alu16_out;
-        out_z = M_alu16_z;
-        out_v = M_alu16_v;
-        out_n = M_alu16_n;
+        out_z = M_alu16_zvn[2+0-:1];
+        out_v = M_alu16_zvn[1+0-:1];
+        out_n = M_alu16_zvn[0+0-:1];
         if (trigger_start == 1'h1) begin
           M_man_states_d = IDLE_man_states;
         end
@@ -126,9 +123,9 @@ module manual_test_5 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_b_q <= 1'h0;
+      M_a_q <= 1'h0;
     end else begin
-      M_b_q <= M_b_d;
+      M_a_q <= M_a_d;
     end
   end
   
@@ -144,18 +141,18 @@ module manual_test_5 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_man_states_q <= 1'h0;
+      M_b_q <= 1'h0;
     end else begin
-      M_man_states_q <= M_man_states_d;
+      M_b_q <= M_b_d;
     end
   end
   
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_a_q <= 1'h0;
+      M_man_states_q <= 1'h0;
     end else begin
-      M_a_q <= M_a_d;
+      M_man_states_q <= M_man_states_d;
     end
   end
   

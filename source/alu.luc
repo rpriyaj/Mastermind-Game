@@ -1,30 +1,26 @@
 module alu (
-    input clk,  // clock
     input rst,  // reset
     input alufn_signal[6],
     input a[16],
     input b[16],
     output out[16],
-    output z,
-    output v,
-    output n
+    output div_err[1],
+    output zvn[3]
   ) {
   
   // STEP 1: Declare all ALU sub-units
-  comparator cmp(.clk(clk), .rst(rst));
-  adder add(.clk(clk), .rst(rst));
-  shifter shift(.clk(clk), .rst(rst));
-  boolean bool(.clk(clk), .rst(rst));
-  multiplier mult(.clk(clk), .rst(rst));
+  comparator cmp(.rst(rst));
+  add_sub_unit add(.rst(rst));
+  shifter shift(.rst(rst));
+  boolean bool(.rst(rst));
+  multiplier mult(.rst(rst));
 
   always {
     // STEP 2: Setup initial values for sub-units
-    z = b0;
-    v = b0;
-    n = b0;
+    zvn = 3b0;
     add.a = a;
     add.b = b;
-    add.alufn_op = alufn_signal;
+    add.alufn = alufn_signal;
     bool.a = a;
     bool.b = b;
     bool.alufn_op = alufn_signal;
@@ -38,6 +34,7 @@ module alu (
     cmp.v = b0;
     cmp.n = b0;
     cmp.alufn_op = alufn_signal;
+    div_err = b0;
     
     out = 16b0;
     
@@ -48,11 +45,15 @@ module alu (
         case (alufn_signal[1]) {
           b0:
             out = add.out;
-            z = add.z;
-            v = add.v;
-            n = add.n;
+            zvn[2] = add.zvn[2];
+            zvn[1] = add.zvn[1];
+            zvn[0] = add.zvn[0];
           b1:
             out = mult.out;
+            div_err = mult.err;
+            //zvn[2] = mult.z;
+            //zvn[1] = mult.v;
+            //zvn[0] = mult.n;
         }
         
       b01:
@@ -62,9 +63,9 @@ module alu (
         out = shift.out;
         
       b11:
-        cmp.z = add.z;
-        cmp.v = add.v;
-        cmp.n = add.n;
+        cmp.z = add.zvn[2];
+        cmp.v = add.zvn[1];
+        cmp.n = add.zvn[0];
         out = cmp.out;
     }
   }

@@ -1,5 +1,4 @@
 module comparator (
-    input clk,
     input rst,
     input z,  
     input v,

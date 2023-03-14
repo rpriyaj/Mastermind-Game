@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date             : Sun Mar 12 19:32:04 2023
+| Date             : Tue Mar 14 17:17:46 2023
 | Host             : LAPTOP-NUP5ASSV running 64-bit major release  (build 9200)
 | Command          : report_power -file au_top_0_power_routed.rpt -pb au_top_0_power_summary_routed.pb -rpx au_top_0_power_routed.rpx
 | Design           : au_top_0
@@ -30,10 +30,10 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 0.098        |
+| Total On-Chip Power (W)  | 0.113        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.026        |
+| Dynamic (W)              | 0.041        |
 | Device Static (W)        | 0.072        |
 | Effective TJA (C/W)      | 4.9          |
 | Max Ambient (C)          | 84.5         |
@@ -53,16 +53,17 @@ Table of Contents
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
 | Clocks         |     0.002 |        3 |       --- |             --- |
-| Slice Logic    |     0.003 |     1163 |       --- |             --- |
-|   LUT as Logic |     0.003 |      706 |     20800 |            3.39 |
-|   CARRY4       |    <0.001 |      114 |      8150 |            1.40 |
-|   Register     |    <0.001 |      152 |     41600 |            0.37 |
-|   Others       |     0.000 |       36 |       --- |             --- |
-| Signals        |     0.003 |     1040 |       --- |             --- |
+| Slice Logic    |     0.010 |     2248 |       --- |             --- |
+|   LUT as Logic |     0.009 |     1672 |     20800 |            8.04 |
+|   CARRY4       |     0.001 |      205 |      8150 |            2.52 |
+|   Register     |    <0.001 |      150 |     41600 |            0.36 |
+|   F7/F8 Muxes  |    <0.001 |        1 |     32600 |           <0.01 |
+|   Others       |     0.000 |       38 |       --- |             --- |
+| Signals        |     0.012 |     2065 |       --- |             --- |
 | DSPs           |    <0.001 |        2 |        90 |            2.22 |
-| I/O            |     0.018 |       74 |       170 |           43.53 |
+| I/O            |     0.017 |       74 |       170 |           43.53 |
 | Static Power   |     0.072 |          |           |                 |
-| Total          |     0.098 |          |           |                 |
+| Total          |     0.113 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -72,7 +73,7 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint    |       1.000 |     0.018 |       0.009 |      0.010 |       NA    | Unspecified | NA         |
+| Vccint    |       1.000 |     0.034 |       0.024 |      0.010 |       NA    | Unspecified | NA         |
 | Vccaux    |       1.800 |     0.013 |       0.001 |      0.013 |       NA    | Unspecified | NA         |
 | Vcco33    |       3.300 |     0.006 |       0.005 |      0.001 |       NA    | Unspecified | NA         |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -138,12 +139,15 @@ Table of Contents
 3.1 By Hierarchy
 ----------------
 
-+----------+-----------+
-| Name     | Power (W) |
-+----------+-----------+
-| au_top_0 |     0.026 |
-|   auto   |     0.001 |
-|   man    |     0.006 |
-+----------+-----------+
++-----------------+-----------+
+| Name            | Power (W) |
++-----------------+-----------+
+| au_top_0        |     0.041 |
+|   auto          |     0.017 |
+|     rom_answers |     0.015 |
+|   man           |     0.006 |
+|     alu16       |     0.005 |
+|       mult      |     0.005 |
++-----------------+-----------+
 
 

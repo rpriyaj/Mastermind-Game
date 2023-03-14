@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Sun Mar 12 19:31:23 2023
-# Process ID: 19716
+# Start of session at: Tue Mar 14 17:16:24 2023
+# Process ID: 13612
 # Current directory: C:/Users/dianm/Desktop/Alchitry/1D_ALU/work/vivado/1D_ALU/1D_ALU.runs/impl_1
 # Command line: vivado.exe -log au_top_0.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source au_top_0.tcl -notrace
 # Log file: C:/Users/dianm/Desktop/Alchitry/1D_ALU/work/vivado/1D_ALU/1D_ALU.runs/impl_1/au_top_0.vdi
