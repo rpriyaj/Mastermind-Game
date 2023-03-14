@@ -79,6 +79,22 @@ For this 1D Project, the ALU takes in 16 bit inputs, A & B, 6 bits ALUFN signals
 | ERROR<br>Indicate error (triggered by external modificatio)  | slow_edge.out = back to TESTING | 7-segment display ‘EEEE’ |
 | FINISH<br>Complete all test cases successfully  | io_button[1] = next state | 7-segment display ‘FISH’<br>io_led[1:0] = b0<br>io_led[3][2:0] = b0|
 
+## Test Cases
+| Unit    | A                  | B    | ALUFN | Out  | zvn | Remarks  |
+|---------|--------------------|------|-------|------|-----|----------|
+| ADD     | 0001<br>0000<br>7FFF<br>8000 | 0001<br>FFFF<br>0001<br>8000   | 00<br>00<br>00<br>00     | 0002<br>FFFF<br>8000<br>0000    | 0<br>1<br>3<br>6   | <br><br>Overflow<br>Overflow         |
+| SUB     | 0001<br>FFFF<br>8000<br>7FFF | 0001<br>0000<br>7FFF<br>8000    | 01<br>01<br>01<br>01     | 0000<br>FFFF<br>0001<br>FFFF | 4<br>1<br>3<br>3   | <br><br>Overflow<br>Overflow |
+| MULT    | 0000<br>FFFF<br>0001<br>0001<br>7FFF<br>0002 |0001<br>FFFF<br>0001<br>FFFF<br>7FFF<br>8000  | 02<br>02<br>02<br>02<br>02<br>02  | 0000<br>0001<br>0001<br>FFFF<br>0001<br>0000  | 4<br>0<br>0<br>1<br>2<br>6   |          |
+| COMPLT  | 0010<br>0007  | 0007<br>000F    | 35<br>35    | 0000<br>0001 | 4<br>0   |          |
+| COMPLE  | 0010<br>0010<br>0015     | 0014<br>0010<br>0004   | 37<br>37<br>37 | 0001<br>0001<br>0000    | 0<br>0<br>4   |          |
+| COMPEQ  | 000F<br>0004   | 000F<br>0010 | 33<br>33    | 0001<br>0000    | 0<br>4   |          |
+| BOOLAND | 0000<br>0000<br>0001        | 0000<br>0001<br>0001    | 18<br>18<br>18  | 0000<br>0000<br>0001    | 4<br>4<br>0   |          |
+| BOOLOR  | 0000<br>0000<br>0001        | 0000<br>0001<br>0001    | 1E<br>1E<br>1E    | 0000<br>0001<br>0001    | 4<br>0<br>0   |          |
+| BOOLXOR | 0000<br>0000<br>0001        | 0000<br>0001<br>0001    | 16<br>16<br>16    | 0000<br>0001<br>0000 | 4<br>0<br>4   |          |
+| BOOLA   | 0000<br>0000<br>0001<br>0001   | 0000<br>0001<br>0000<br>0001    | 1A<br>1A<br>1A<br>1A    | 0000<br>0000<br>0001<br>0001    | 4<br>4<br>0<br>0   |          |
+| SHL     | 0002<br>0002<br>0002        | 0002<br>0004<br>0007    | 20<br>20<br>20    | 0080<br>0020<br>0100  | 0<br>0<br>0   |          |
+| SHR     | 0040<br>0040<br>0040     | 0002<br>0004<br>0007    | 21<br>21<br>21    | 0010<br>0004<br>0000   | 0<br>0<br>0   |          |
+| SRA     | 8040<br>8040<br>8040 | 0002<br>0004<br>0007    | 23<br>23<br>23   | E010<br>F804<br>FF00 | 0<br>0<br>0   |          |
 
 # Reference Materials
 ## Github How-To
