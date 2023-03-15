@@ -19,7 +19,7 @@ For this 1D Project, the ALU takes in 16 bit inputs, A & B, 6 bits ALUFN signals
 | OPERATION     | OPCODE |
 | -----------   | ----------- |
 | ADD<br>SUB      | 000000<br>000001        |
-| MULT     | 000000           |
+| MULT     | 000010           |
 | AND<br>OR<br>XOR<br>"A"     |  011000<br>011110<br>010110<br>011010|
 | SHL<br>SHR<br>SRA<br>       | 100000<br>100001<br>100011    |
 | CMPEQ<br>CMPLT<br>CMPLE   | 110011<br>110101<br>110111 |
