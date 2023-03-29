@@ -1,0 +1,1605 @@
+module old_auto_rom_tester (
+    input clk,  // clock
+    input rst,  // reset
+    input trigger_start,
+    input err_dips[8],
+    output out[16],
+   // output out_status[2],
+    output out_zvn[3],
+    output seg_out[4][4]
+  ){
+  
+  // STEP 1: Declare my components
+  alu alu16 (.rst(rst));
+  external_error mod (.clk(clk), .rst(rst));
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  autotest_rom_answers rom_answers;
+  
+  //sig current[2];
+  
+  // STEP 2: Setup test values register and fsm
+  dff test_values[6](#INIT(0), .clk(clk), .rst(rst));  // Number of bits required depends on number of test cases
+  fsm test_states (.clk(clk), .rst(rst)) = {IDLE, ADDSUB, MULTDIV, ERROR, OVERFLOW, DEBUG, PASS, FINISH};
+  
+  always {
+    // STEP 3: Setup default values for inputs
+    alu16.a = h0000;
+    alu16.b = h0000;
+    alu16.alufn_signal = b000000;
+    rom_answers.address = 0;
+    out = h0000;
+    seg_out = {4d0, 4d0, 4d0, 4d11};
+    slow_edge.in = slow_clock.value;
+    out_zvn = 3b0;
+    mod.inv_input = err_dips;
+    mod.alu_result = alu16.out;
+    //current = 2b0;
+    //out_status = current;
+    
+    // STEP 4: Start FSM Code
+    case(test_states.q){
+      test_states.IDLE:
+        if (trigger_start){
+          test_values.d = 0;
+          test_states.d = test_states.ADDSUB;
+        }
+      
+      test_states.ADDSUB:
+        //current = 2b1;
+        case(test_values.q){
+          // Test 1 -
+          b0:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d1};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 2 -
+          b1:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d2};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 3 -
+          b10:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d3};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 4 -
+          b11:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d4};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 5 -
+          b100:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d5};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 6 -
+          b101:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d6};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // Test 7 -
+          b110:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d7};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          
+          // Test 8 -
+          b111:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d8};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && alu16.zvn==rom_answers.answers[3:0] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+          // MULT Test 9 
+          b1000:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d0, 4d9};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // MULT Test 10 
+          b1001:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d0};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // MULT Test 11
+          b1010:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d1};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4]  && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // MULT Test 12
+          b1011:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d2};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4]  && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // MULT Test 13
+          b1100:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d3};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4]  && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // MULT Test 14 
+          b1101:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d4};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            
+            // BOOL Test 15 
+          b1110:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d5};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 16
+          b1111:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d6};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 17
+          b10000:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d7};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+         // BOOL Test 18 
+          b10001:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d8};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 19 
+          b10010:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d1, 4d9};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // MULT Test 20 
+          b10011:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d0};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 21  
+          b10100:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d1};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 22  
+          b10101:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d2};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 23  
+          b10110:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d3};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 24  
+          b10111:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d4};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 25  
+          b11000:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d5};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 26  
+          b11001:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d6};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // BOOL Test 27  
+          b11010:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d7};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // CMP Test 28 
+          b11011:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d8};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // CMP Test 29
+          b11100:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d2, 4d9};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // CMP Test 30
+          b11101:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d0};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+            // CMP Test 31 
+          b11110:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d1};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+            // CMP Test 32
+          b11111:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d2};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+            // CMP Test 33
+          b100000:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d3};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            // CMP Test 34 
+          b100001:
+          
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d4};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // Shift test 35 
+          b100010:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d5};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+            // Shift test 36 
+          b100011:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d6};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            // Shift test 37 
+          b100100:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d7};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // Shift test 38 
+          b100101:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d8};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // Shift test 39 
+          b100110:
+          
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d3, 4d9};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+          
+            // Shift test 40
+          b100111:
+            
+              rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d4, 4d0};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            
+            // Shift test 41 
+          b101000:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d4, 4d1};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+            
+            // Shift test 42 
+          b101001:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d4, 4d2};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            // Shift test 43 
+          b101010:
+            rom_answers.address = test_values.q;
+            alu16.a = rom_answers.answers[59:44];
+            alu16.b = rom_answers.answers[43:28];
+            alu16.alufn_signal = rom_answers.answers[27:20]; //idk if 8 bits can be fed into 2 bits input -> if cannot, express in bits
+            seg_out = {4d0, 4d0, 4d4, 4d3};
+            
+            out = alu16.out;
+            out_zvn = alu16.zvn;
+            
+            // Wrong output
+            if (mod.out != rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d12, 4d12, 4d12, 4d12};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.ERROR;}
+            
+            // Overflow
+            else if (alu16.zvn[1] == 1 && slow_edge.out) {
+              seg_out = {4d0, 4d10, 4d0, 4d0};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.OVERFLOW;}
+            
+            // Correct answer
+            else if (mod.out == rom_answers.answers[19:4] && slow_edge.out) {
+              seg_out = {4d15, 4d11, 4d14, 4d14};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.PASS;}
+            
+            // Unknown errors
+            else if (slow_edge.out){
+              seg_out = {4d5, 4d5, 4d5, 4d5};
+              test_values.d = test_values.q+1;//}
+              test_states.d = test_states.DEBUG;}
+              
+            
+            
+            
+         // Go to finish state test 44
+          b101011:
+            test_states.d = test_states.FINISH;
+          
+        }
+      
+        
+      test_states.OVERFLOW:
+        seg_out = {4d0, 4d10, 4d0, 4d0};
+        //test_states.d = test_states.ADDSUB;
+        if (slow_edge.out) {
+            test_states.d = test_states.ADDSUB;
+        }
+      
+      test_states.ERROR:
+        seg_out = {4d12, 4d12, 4d12, 4d12};
+        //test_states.d = test_states.ADDSUB;
+        if (slow_edge.out) {
+            test_states.d = test_states.ADDSUB;
+        }
+      
+      test_states.DEBUG:
+        seg_out = {4d4, 4d4, 4d4, 4d4};
+        if (slow_edge.out) {
+            test_states.d = test_states.ADDSUB;
+        }
+      
+      test_states.PASS:
+        seg_out = {4d15, 4d11, 4d14, 4d14};
+        //test_states.d = test_states.ADDSUB;
+        if (slow_edge.out) {
+            test_states.d = test_states.ADDSUB;
+        }
+      
+      test_states.FINISH:
+        out = 16b0;
+        seg_out = {4d10, 4d1, 4d14, 4d13};
+        if (trigger_start) {
+          test_states.d = test_states.IDLE;
+        }
+    }
+}
+}
