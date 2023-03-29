@@ -1,0 +1,48 @@
+module sel_mux_draft (
+    input ra_data[16],
+    input rb_data[16],
+    input alu_data[16],
+    input asel_signal[2],
+    input bsel_signal[3],
+    input wdsel_signal[2],
+    output asel_out[16],
+    output bsel_out[16],
+    output wdsel_out[16]
+  ) {
+
+  always {
+  
+    // INITIALIZE
+    asel_out = 16b0;
+    bsel_out = 16b0;
+    wdsel_out = 16b0;
+    
+    //ASEL MULTIPLEXER
+    case(asel_signal){
+      b00 : asel_out = ra_data;
+      b01 : asel_out = 16d1;
+      b10 : asel_out = 16d0; 
+      default : asel_out = ra_data;
+    }
+    
+    //BSEL MULTIPLEXER
+    case(bsel_signal){
+      b000 : bsel_out = rb_data;
+      b001 : bsel_out = 16d0; 
+      b010 : bsel_out = 16d1; 
+      b011 : bsel_out = 16d10;
+      b100 : bsel_out = 16b11; 
+      b101 : bsel_out = 16b110; 
+      b110 : bsel_out = 16hFF;
+      b111 : bsel_out = 16hFFFF;
+      default : bsel_out = rb_data;
+    }
+    
+    //WDSEL MULTIPLEXER
+    case(wdsel_signal){
+      b00 : wdsel_out = alu_data;
+      b01 : wdsel_out = 16hFFF;
+      b10 : wdsel_out = 16h000;
+    }
+  }
+}

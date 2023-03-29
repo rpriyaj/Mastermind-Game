@@ -1,0 +1,69 @@
+module alu (
+    input rst,  // reset
+    input alufn_signal[6],
+    input a[16],
+    input b[16],
+    output out[16],
+    output div_err[1],
+    output zvn[3]
+  ) {
+  
+  // STEP 1: Declare all ALU sub-units
+  comparator cmp(.rst(rst));
+  adder add(.rst(rst));
+  shifter shift(.rst(rst));
+  boolean bool(.rst(rst));
+  multiplier mult(.rst(rst));
+
+  always {
+    // STEP 2: Setup initial values for sub-units
+    zvn = 3b0;
+    add.a = a;
+    add.b = b;
+    add.alufn = alufn_signal;
+    bool.a = a;
+    bool.b = b;
+    bool.alufn_op = alufn_signal;
+    mult.a = a;
+    mult.b = b;
+    mult.alufn_op = alufn_signal;
+    shift.a = a;
+    shift.b = b;
+    shift.alufn_op = alufn_signal;
+    cmp.z = b0;
+    cmp.v = b0;
+    cmp.n = b0;
+    cmp.alufn_op = alufn_signal;
+    div_err = b0;
+    
+    out = 16b0;
+    
+    // STEP 3: Access sub-unit depending on alufn opcode provided
+    case (alufn_signal[5:4]) {
+   
+      b00:
+        case (alufn_signal[1]) {
+          b0:
+            out = add.out;
+            zvn[2] = add.zvn[2];
+            zvn[1] = add.zvn[1];
+            zvn[0] = add.zvn[0];
+          b1:
+            out = mult.out;
+            div_err = mult.err;
+        }
+        
+      b01:
+        out = bool.out;  
+               
+      b10:
+        out = shift.out;
+        
+      b11:
+        cmp.z = add.zvn[2];
+        cmp.v = add.zvn[1];
+        cmp.n = add.zvn[0];
+        out = cmp.out;
+    }
+  }
+}

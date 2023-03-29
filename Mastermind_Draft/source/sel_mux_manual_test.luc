@@ -1,0 +1,165 @@
+module sel_mux_manual_test (
+    input clk,  // clock
+    input rst,  // reset
+    input dips[16], // dip switches
+    input trigger_start,
+    output out[16],
+    output seg_out[4][5]
+  ) {
+  
+  // STEP 1: Declare my components
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux_draft sel_mux;
+  
+  // STEP 2: Setup values register (ONLY FOR TESTING!)
+  // DFFS WONT APPEAR IN FINAL FSM SINCE VALUES ARE LOCAL TO each man_states
+  // RC AND WE NOT REQUIRED SINCE WE DONT CARE ABOUT WRITE WHEN TESTING ASEL BSEL WDSEL ONLY READ VALUES
+  dff ra[4](#INIT(0), .clk(clk), .rst(rst));
+  dff rb[4](#INIT(0), .clk(clk), .rst(rst));
+  dff asel[2](#INIT(0), .clk(clk), .rst(rst));
+  dff bsel[3](#INIT(0), .clk(clk), .rst(rst));
+  dff wdsel[2](#INIT(0), .clk(clk), .rst(rst));
+  dff alufn[6](#INIT(0), .clk(clk), .rst(rst));
+  
+  fsm man_states (.clk(clk), .rst(rst)) = {IDLE, WAITRA, WAITRB, WAITALUFN, WAITASEL, WAITBSEL, WAITWDSEL, CHECKOUT};
+  
+  always {
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    alu16.alufn_signal = 6b0;
+    
+    sel_mux.alu_data = alu16.out;
+    
+    out = 16h0000;
+    seg_out = {5d0, 5d0, 5d14, 5d10};
+    
+    case (man_states.q) {
+      man_states.IDLE:
+        
+        // When looping back from the last state, reset everything
+        regfile.ra = 4b0;
+        regfile.rb = 4b0;
+        regfile.rc = 4b0;
+        regfile.we = b0;
+        regfile.wr_data = b0;
+        
+        sel_mux.asel_signal = 2b0;
+        sel_mux.bsel_signal = 3b0;
+        sel_mux.wdsel_signal = 2b0;
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b0;
+        
+        sel_mux.alu_data = alu16.out;
+        
+        out = 16h0000;
+        seg_out = {5d0, 5d0, 5d14, 5d10};
+        
+        if (trigger_start == b1) {
+          man_states.d = man_states.WAITRA;
+        }
+      
+      man_states.WAITRA:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d10};
+        if (trigger_start == b1) {
+          ra.d = dips[3:0];
+          man_states.d = man_states.WAITRB;
+        }
+      
+      man_states.WAITRB:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d11};
+        if (trigger_start == b1) {
+          rb.d = dips[3:0];
+          man_states.d = man_states.WAITALUFN;
+        }
+      
+      man_states.WAITALUFN:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d11};
+        if (trigger_start == b1) {
+          alufn.d = dips[5:0];
+          man_states.d = man_states.WAITASEL;
+        }
+      
+      man_states.WAITASEL:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d13};
+        if (trigger_start == b1) {
+          asel.d = dips[1:0];
+          man_states.d = man_states.WAITBSEL;
+        }
+      
+      man_states.WAITBSEL:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d14};
+        if (trigger_start == b1) {
+          bsel.d = dips[2:0];
+          man_states.d = man_states.WAITWDSEL;
+        }
+      
+      man_states.WAITWDSEL:
+        out = dips;
+        seg_out = {5d0, 5d0, 5d0, 5d15};
+        if (trigger_start == b1) {
+          wdsel.d = dips[1:0];
+          man_states.d = man_states.CHECKOUT;
+        }
+      
+      man_states.CHECKOUT:
+        seg_out = {5d17, 5d1, 5d18, 5d14};
+        
+        regfile.ra = ra.q;
+        regfile.rb = rb.q;
+        
+        sel_mux.asel_signal = asel.q;
+        sel_mux.bsel_signal = bsel.q;
+        sel_mux.wdsel_signal = wdsel.q;
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = alufn.q;
+        
+        sel_mux.alu_data = alu16.out;
+        
+        // TESTING
+        case(dips){
+          // CHECK ASEL VALUE
+          16h0:
+            out = sel_mux.asel_out;
+          // CHECK BSEL VALUE
+          16h1:
+            out = sel_mux.bsel_out;
+          // CHECK WDSEL VALUE
+          16h2:
+            out = sel_mux.wdsel_out;
+          // CHECK ALU OUTPUT (CROSS CHECK WIH WDSEL when 0x0 signal sent)
+          16h3:
+            out = alu16.out;
+        }
+        
+        if (trigger_start == b1) {
+          man_states.d = man_states.IDLE;
+        }
+    }
+  }
+}
