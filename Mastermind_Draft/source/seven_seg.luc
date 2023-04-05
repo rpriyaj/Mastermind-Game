@@ -24,9 +24,9 @@ module seven_seg (
       16: segs = 7b0111000; // L
       17: segs = 7b1110001; // F
       18: segs = 7b1101101; // S
-      //15: segs = 7b1110011; // P
-      //16: segs = 7b1110111; // R
-      //17: segs = 7b1011100; // a
+      19: segs = 7b1110011; // P
+      20: segs = 7b1110111; // R
+      21: segs = 7b0111110; // U
       default: segs = 7b0000000;
     }
   }

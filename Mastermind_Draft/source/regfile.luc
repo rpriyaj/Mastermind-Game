@@ -10,7 +10,8 @@ module regfile (
     output rb_data[16],  // data in rb
     output data[16],     // DEBUG ONLY FROM HERE ON <- remove in final project
     output ra_addr[4],
-    output rb_addr[4]
+    output rb_addr[4],
+    output rc_data[16]
     
     // OUTDATED - shd not access directly, only with address
     //output current_position,
@@ -39,8 +40,7 @@ module regfile (
   dff reg_code_helper[16](.clk(clk), .rst(rst));
   dff reg_guess[16](.clk(clk), .rst(rst));
   dff reg_guess_helper[16](.clk(clk), .rst(rst));
-  dff reg_white_hint_count[16](.clk(clk), .rst(rst));
-  dff reg_red_hint_count[16](.clk(clk), .rst(rst));
+  dff reg_hint[16](.clk(clk), .rst(rst));
   dff reg_temp_code[16](.clk(clk), .rst(rst));
   dff reg_temp_guess[16](.clk(clk), .rst(rst));
   dff reg_temp_counter[16](.clk(clk), .rst(rst));
@@ -51,20 +51,22 @@ module regfile (
   always {
   
     // SETUP DEFAULT VALUES
-    reg_current_position.d = 16b1;
-    reg_current_colour.d = 16b1;
-    reg_code.d = 16b1; // REPLACE WITH HARDCODED VALUE
-    reg_guess.d = 16h1000;
-    reg_current_guess_count.d = 16b100;
-    reg_code_helper.d = 16b111000000000;
-    reg_guess_helper.d = 16b111000000000;
-    reg_imposter.d = 16b111;
+    reg_current_position.d = 16b1; // BEGINNING POSITION
+    reg_current_colour.d = 16b1; // BEGINNING COLOUR
+    reg_code.d = 16b0100011000000111; // REPLACE WITH HARDCODED CODE TO CRACK
+    reg_guess.d = 16b0111000000000100; // REPLACE BACK TO EMPTY GUESS <- 16b0 
+    reg_current_guess_count.d = 16b1; // FIRST GUESS
+    reg_code_helper.d = 16b1111000000000000; // DONT CHANGE
+    reg_guess_helper.d = 16b1111000000000000; // DONT CHANGE
+    reg_hint.d = 16b0;
+    reg_imposter.d = 16b111; // REPLACE WITH RANDOM VALUES FROM ANOTHER MODULE
     
     ra_data = 16b0;
     rb_data = 16b0;
     data = 16b0;
     ra_addr = 4b0;
     rb_addr = 4b0;
+    rc_data = 16b0;
     
     if (we) {
       case (rc) {
@@ -76,13 +78,12 @@ module regfile (
         4h6: reg_code_helper.d = wr_data;
         4h7: reg_guess.d = wr_data;
         4h8: reg_guess_helper.d = wr_data;
-        4h9: reg_white_hint_count.d = wr_data;
-        4hA: reg_red_hint_count.d = wr_data;
-        4hB: reg_temp_code.d = wr_data;
-        4hC: reg_temp_guess.d = wr_data;
-        4hD: reg_temp_counter.d = wr_data;
-        4hE: reg_imposter.d = wr_data;
-        4hF: reg_error.d = wr_data;
+        4h9: reg_hint.d = wr_data;
+        4hA: reg_temp_code.d = wr_data;
+        4hB: reg_temp_guess.d = wr_data;
+        4hC: reg_temp_counter.d = wr_data;
+        4hD: reg_imposter.d = wr_data;
+        4hE: reg_error.d = wr_data;
       }
     }
     
@@ -95,13 +96,12 @@ module regfile (
       4h6: ra_data = reg_code_helper.q;
       4h7: ra_data = reg_guess.q;
       4h8: ra_data = reg_guess_helper.q;
-      4h9: ra_data = reg_white_hint_count.q;
-      4hA: ra_data = reg_red_hint_count.q;
-      4hB: ra_data = reg_temp_code.q;
-      4hC: ra_data = reg_temp_guess.q;
-      4hD: ra_data = reg_temp_counter.q;
-      4hE: ra_data = reg_imposter.q;
-      4hF: ra_data = reg_error.q;
+      4h9: ra_data = reg_hint.q;
+      4hA: ra_data = reg_temp_code.q;
+      4hB: ra_data = reg_temp_guess.q;
+      4hC: ra_data = reg_temp_counter.q;
+      4hD: ra_data = reg_imposter.q;
+      4hE: ra_data = reg_error.q;
       //4h0: ra_data = reg_temp.q;
       default: ra_data = 16b0;
     }
@@ -115,13 +115,12 @@ module regfile (
       4h6: rb_data = reg_code_helper.q;
       4h7: rb_data = reg_guess.q;
       4h8: rb_data = reg_guess_helper.q;
-      4h9: rb_data = reg_white_hint_count.q;
-      4hA: rb_data = reg_red_hint_count.q;
-      4hB: rb_data = reg_temp_code.q;
-      4hC: rb_data = reg_temp_guess.q;
-      4hD: rb_data = reg_temp_counter.q;
-      4hE: rb_data = reg_imposter.q;
-      4hF: rb_data = reg_error.q;
+      4h9: rb_data = reg_hint.q;
+      4hA: rb_data = reg_temp_code.q;
+      4hB: rb_data = reg_temp_guess.q;
+      4hC: rb_data = reg_temp_counter.q;
+      4hD: rb_data = reg_imposter.q;
+      4hE: rb_data = reg_error.q;
       //4h0: rb_data = reg_temp.q;
       default: rb_data = 16b0;
     }
@@ -130,5 +129,23 @@ module regfile (
     data = wr_data;
     ra_addr = ra;
     rb_addr = rb;
+    case (rc) {
+      4h1: rc_data = reg_current_position.q;
+      4h2: rc_data = reg_current_colour.q;
+      4h3: rc_data = reg_current_guess_count.q;
+      4h4: rc_data = reg_game_mode.q;
+      4h5: rc_data = reg_code.q;
+      4h6: rc_data = reg_code_helper.q;
+      4h7: rc_data = reg_guess.q;
+      4h8: rc_data = reg_guess_helper.q;
+      4h9: rc_data = reg_hint.q;
+      4hA: rc_data = reg_temp_code.q;
+      4hB: rc_data = reg_temp_guess.q;
+      4hC: rc_data = reg_temp_counter.q;
+      4hD: rc_data = reg_imposter.q;
+      4hE: rc_data = reg_error.q;
+      //4h0: rb_data = reg_temp.q;
+      default: rc_data = 16b0;
+    }
   }
 }

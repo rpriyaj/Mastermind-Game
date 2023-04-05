@@ -1,10 +1,665 @@
 module fsm_draft (
     input clk,  // clock
     input rst,  // reset
-    output out
+    input dips[16], // dip switches
+    input trigger_start,
+    output out[16],
+    output seg_out[4][5]
   ) {
-
+  
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  
+  
+  fsm phase_three (.clk(clk), .rst(rst)) = {GETGUESS, GETCODE, CHECKGUESS_CORRCODE,
+    SHIFTHINTRED, UPDATEHINTRED, CHANGEGUESSHELPERDEFAULT, SHIFTCODEHELPER,
+    CHECKCODEHELPER, GETNEXTCODE, SHIFTTEMPGUESS, CHECKTEMPGUESS_TEMPCODE,
+    SHIFTHINTWHITE, UPDATEHINTWHIITE};
+  
   always {
-    out = 0;
-  }
+    
+    // INITIALIZE VALUES
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    alu16.alufn_signal = 6b0;
+    
+    sel_mux.alu_data = alu16.out;
+    
+    out = 16b0;
+    seg_out =  {5b0, 5b0, 5b0, 5b0};
+    
+    slow_edge.in = slow_clock.value;
+    
+    // FSM
+    case (phase_three.q) {
+      phase_three.GETGUESS:
+        seg_out = {5d0, 5d0, 5d0, 5d1};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h7; // READ REG A - GUESS
+        regfile.rb = 4h8; // READ REG B - GUESS HELPER
+        regfile.rc = 4hB; // WRITE REG C - TEMP GUESS
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011000; // AND OPERATION
+        //sel_mux.alu_data = alu16.out;
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0111 0000 0000 0100
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b1111 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0111 0000 0000 0000 (matches ALU OUTPUT)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0111 0000 0000 0000 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.GETCODE;
+        }
+      
+      // ACTUAL TRANSITION WITHOUT BRANCH CONDITION -> NEXT CLOCK CYCLE
+      // if (slow_edge.out) {
+      //phase_three.d = phase_three.GETGUESS;
+      //}
+      
+      phase_three.GETCODE:
+        seg_out = {5d0, 5d0, 5d0, 5d2};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h5; // READ REG A - CODE
+        regfile.rb = 4h6; // READ REG B - CODE HELPER
+        regfile.rc = 4hA; // WRITE REG C - TEMP CODE
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011000; // AND OPERATION
+        //sel_mux.alu_data = alu16.out;
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0100 0110 0000 0111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b1111 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0100 0000 0000 0000 (matches ALU OUTPUT)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0100 0000 0000 0000 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.GETCODE;
+        }
+      
+      
+      phase_three.CHECKGUESS_CORRCODE:
+        seg_out = {5d0, 5d0, 5d0, 5d3};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h5; // READ REG A - TEMP CODE
+        regfile.rb = 4h6; // READ REG B - TEMP GUESS
+        regfile.rc = 4h0; // WRITE NONE
+        regfile.we = b0; // WRITE DISABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
+        //sel_mux.alu_data = alu16.out;
+        
+        // WRITE REGISTERS (ACTUAL DATA) <- wont be needed...
+        //regfile.wr_data = sel_mux.wdsel_out; // technically not needed cos we dont write anything
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0100 0000 0000 0000
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0111 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0 (no writes)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b1111 1111 1111 1111
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          if (sel_mux.wdsel_out == 16b1111111111111111) {
+            phase_three.d = phase_three.SHIFTHINTRED;
+          } else {
+            phase_three.d = phase_three.SHIFTCODEHELPER;
+          }
+        }
+      
+      phase_three.SHIFTHINTRED:
+        seg_out = {5d0, 5d18, 5d14, 5d20};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100011; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        //sel_mux.alu_data = alu16.out;
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0000
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b000 0000 0000 0000
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0000 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.UPDATEHINTRED;
+        }
+      
+      phase_three.UPDATEHINTRED:
+        seg_out = {5d0, 5d21, 5d14, 5d20};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b11; // ACCESS HARDCODE 2
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b0; // ADD OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        //sel_mux.alu_data = alu16.out;
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0010
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b000 0000 0000 0010
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0010 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.CHANGEGUESSHELPERDEFAULT;
+        }
+      
+      phase_three.CHANGEGUESSHELPERDEFAULT:
+        seg_out = {5d0, 5d12, 5d14, 5d15};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h8; // READ REG A - GUESS HELPER
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h8; // WRITE REG C - GUESS HELPER
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100011; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        //sel_mux.alu_data = alu16.out;
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b 0000 0000 0000 1111 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.CHANGEGUESSHELPERDEFAULT;
+        }
+      
+      phase_three.SHIFTCODEHELPER:
+        seg_out = {5d0, 5d18, 5d12, 5d14};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h6; // READ REG A - CODE HELPER
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h6; // WRITE REG C - CODE HELPER
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100011; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 1111 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.CHECKCODEHELPER;
+        }
+      
+      phase_three.CHECKCODEHELPER:
+        seg_out = {5d0, 5d12, 5d12, 5d14};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h6; // READ REG A - CODE HELPER
+        regfile.rb = 4h8; // READ REG B - GUESS HELPER
+        regfile.rc = 4h0; // WRITE REG C - --
+        regfile.we = b0; // WRITE DISABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA) <- wont be needed...
+        //regfile.wr_data = sel_mux.wdsel_out; // technically not needed cos we dont write anything
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b1111 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0 (no writes)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b 0000 0000 0000 0000
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          if (sel_mux.wdsel_out == 16b1111111111111111) {
+            phase_three.d = phase_three.CHANGEGUESSHELPERDEFAULT;
+          } else {
+            phase_three.d = phase_three.GETNEXTCODE;
+          }
+        }
+        
+        phase_three.GETNEXTCODE:
+        seg_out = {5d0, 5d0, 5d0, 5d2};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h5; // READ REG A - CODE
+        regfile.rb = 4h6; // READ REG B - CODE HELPER
+        regfile.rc = 4hA; // WRITE REG C - TEMP CODE
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011000; // AND OPERATION
+        //sel_mux.alu_data = alu16.out;
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0100 0110 0000 0111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 1111
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0111 (matches ALU OUTPUT)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0111 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.SHIFTTEMPGUESS;
+        }
+        
+        phase_three.SHIFTTEMPGUESS:
+        seg_out = {5d0, 5d0, 5d0, 5d18};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hB; // READ REG A - TEMP GUESS
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4hB; // WRITE REG C - TEMP GUESS
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100011; // SHCL OPERATION
+        //sel_mux.alu_data = alu16.out;
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0111 (matches ALU OUTPUT)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0111 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.CHECKTEMPGUESS_TEMPCODE;
+        }
+      
+        phase_three.CHECKTEMPGUESS_TEMPCODE:
+        seg_out = {5d0, 5d12, 5d0, 5d12};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hA; // READ REG A - TEMP CODE
+        regfile.rb = 4hB; // READ REG B - TEMP GUESS
+        regfile.rc = 4h0; // WRITE REG C - --
+        regfile.we = b0; // WRITE DISABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        // regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0111
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0111
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b0100 0000 0000 0000 (matches ALU OUTPUT)
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0100 0000 0000 0000 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          if (sel_mux.wdsel_out == 16b1111111111111111) {
+            phase_three.d = phase_three.SHIFTHINTWHITE;
+          } else {
+            phase_three.d = phase_three.SHIFTCODEHELPER;
+          }
+        }
+        
+      phase_three.SHIFTHINTWHITE:
+        seg_out = {5d0, 5d18, 5d14, 5d1};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100011; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        //sel_mux.alu_data = alu16.out;
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0000
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0000
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b000 0000 0000 0000
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0000 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.UPDATEHINTWHIITE;
+        }
+      
+      phase_three.UPDATEHINTWHIITE:
+        seg_out = {5d0, 5d21, 5d14, 5d1};
+        
+        // READ AND WRITE REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b10; // ACCESS HARDCODE 1
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        sel_mux.ra_data = regfile.ra_data;
+        sel_mux.rb_data = regfile.rb_data;
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b0; // ADD OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        //sel_mux.alu_data = alu16.out;
+        regfile.wr_data = sel_mux.wdsel_out;
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          // CHECK RA_DATA (REGFILE) -> EXPECTED: 16b0000 0000 0000 0001
+          16h0:
+            out = regfile.ra_data;
+          // CHECK RB_DATA (REGFILE) -> EXPECTED: 16b0
+          16h1:
+            out = regfile.rb_data;
+          // CHECK WRITTEN DATA (REGFILE) -> EXPECTED: 16b000 0000 0000 0001
+          16h2:
+            out = regfile.rc_data;
+          // CHECK ALU OUTPUT -> EXPECTED: 16b0000 0000 0000 0001 (CROSS CHECK WIH RC_DATA)
+          16h3:
+            out = alu16.out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.CHANGEGUESSHELPERDEFAULT;
+        }
+      
+    }
 }

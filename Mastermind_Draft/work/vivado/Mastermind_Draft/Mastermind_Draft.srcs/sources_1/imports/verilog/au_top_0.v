@@ -60,7 +60,7 @@ module au_top_0 (
   wire [20-1:0] M_man_seg_out;
   reg [16-1:0] M_man_dips;
   reg [1-1:0] M_man_trigger_start;
-  sel_mux_manual_test_4 man (
+  fsm_draft_4 man (
     .clk(clk),
     .rst(rst),
     .dips(M_man_dips),

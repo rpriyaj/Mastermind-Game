@@ -4,7 +4,7 @@
    This is a temporary file and any changes made to it will be destroyed.
 */
 
-module sel_mux_draft_9 (
+module sel_mux_9 (
     input [15:0] ra_data,
     input [15:0] rb_data,
     input [15:0] alu_data,
@@ -52,10 +52,10 @@ module sel_mux_draft_9 (
         bsel_out = 16'h000a;
       end
       3'h4: begin
-        bsel_out = 16'h0003;
+        bsel_out = 16'h0004;
       end
       3'h5: begin
-        bsel_out = 16'h0006;
+        bsel_out = 16'h0005;
       end
       3'h6: begin
         bsel_out = 16'h00ff;

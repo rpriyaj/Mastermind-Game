@@ -21,7 +21,7 @@ module alu_7 (
   reg [1-1:0] M_cmp_v;
   reg [1-1:0] M_cmp_n;
   reg [6-1:0] M_cmp_alufn_op;
-  comparator_13 cmp (
+  comparator_14 cmp (
     .rst(rst),
     .z(M_cmp_z),
     .v(M_cmp_v),
@@ -35,7 +35,7 @@ module alu_7 (
   reg [16-1:0] M_add_a;
   reg [16-1:0] M_add_b;
   reg [6-1:0] M_add_alufn;
-  adder_14 add (
+  adder_15 add (
     .rst(rst),
     .a(M_add_a),
     .b(M_add_b),
@@ -48,7 +48,7 @@ module alu_7 (
   reg [16-1:0] M_shift_a;
   reg [4-1:0] M_shift_b;
   reg [6-1:0] M_shift_alufn_op;
-  shifter_15 shift (
+  shifter_16 shift (
     .rst(rst),
     .a(M_shift_a),
     .b(M_shift_b),
@@ -60,7 +60,7 @@ module alu_7 (
   reg [16-1:0] M_bool_a;
   reg [16-1:0] M_bool_b;
   reg [6-1:0] M_bool_alufn_op;
-  boolean_16 bool (
+  boolean_17 bool (
     .rst(rst),
     .a(M_bool_a),
     .b(M_bool_b),
@@ -73,7 +73,7 @@ module alu_7 (
   reg [16-1:0] M_mult_a;
   reg [16-1:0] M_mult_b;
   reg [6-1:0] M_mult_alufn_op;
-  multiplier_17 mult (
+  multiplier_18 mult (
     .rst(rst),
     .a(M_mult_a),
     .b(M_mult_b),

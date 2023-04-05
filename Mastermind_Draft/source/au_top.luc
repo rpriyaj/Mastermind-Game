@@ -22,7 +22,7 @@ module au_top (
     edge_detector buttondetector[4](#RISE(1), #FALL(0));
     
     .rst(rst) {
-      sel_mux_manual_test man;
+      fsm_draft man;
       multi_seven_seg seg;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
     }
@@ -63,7 +63,6 @@ module au_top (
         man.trigger_start = buttondetector.out[1];
         
         seg.values = man.seg_out;
-        //io_led[2][7] = man.write_status;
         io_led[1] = man.out[15:8]; // show last 8 bits of result
         io_led[0] = man.out[7:0];
         

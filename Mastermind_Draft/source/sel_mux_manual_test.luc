@@ -10,7 +10,7 @@ module sel_mux_manual_test (
   // STEP 1: Declare my components
   alu alu16 (.rst(rst));
   regfile regfile(.clk(clk), .rst(rst));
-  sel_mux_draft sel_mux;
+  sel_mux sel_mux;
   
   // STEP 2: Setup values register (ONLY FOR TESTING!)
   // DFFS WONT APPEAR IN FINAL FSM SINCE VALUES ARE LOCAL TO each man_states
@@ -93,7 +93,7 @@ module sel_mux_manual_test (
       
       man_states.WAITALUFN:
         out = dips;
-        seg_out = {5d0, 5d0, 5d0, 5d11};
+        seg_out = {5d10, 5d1, 5d0, 5d0};
         if (trigger_start == b1) {
           alufn.d = dips[5:0];
           man_states.d = man_states.WAITASEL;
