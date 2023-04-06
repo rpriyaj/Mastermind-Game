@@ -32,7 +32,7 @@ module sel_mux (
       b010 : bsel_out = 16d1; 
       b011 : bsel_out = 16d10;
       b100 : bsel_out = 16b100; 
-      b101 : bsel_out = 16b101; 
+      b101 : bsel_out = 16b101; //5
       b110 : bsel_out = 16hFF;
       b111 : bsel_out = 16hFFFF;
       default : bsel_out = rb_data;
