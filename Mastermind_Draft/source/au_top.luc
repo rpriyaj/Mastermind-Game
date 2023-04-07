@@ -22,7 +22,7 @@ module au_top (
     edge_detector buttondetector[4](#RISE(1), #FALL(0));
     
     .rst(rst) {
-      fsm_draft man;
+      fsm_draft man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
       multi_seven_seg seg;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
     }

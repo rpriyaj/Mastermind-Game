@@ -5,7 +5,10 @@ module alu (
     input b[16],
     output out[16],
     output div_err[1],
-    output zvn[3]
+    output zvn[3],
+    output a_data[16], // DEBUG from here onwardss
+    output b_data[16],
+    output aluop_signal[6]
   ) {
   
   // STEP 1: Declare all ALU sub-units
@@ -38,6 +41,11 @@ module alu (
     
     out = 16b0;
     
+    // DEBUG ONLY
+    a_data = a;
+    b_data = b;
+    aluop_signal = alufn_signal;
+    
     // STEP 3: Access sub-unit depending on alufn opcode provided
     case (alufn_signal[5:4]) {
    
@@ -50,7 +58,6 @@ module alu (
             zvn[0] = add.zvn[0];
           b1:
             out = mult.out;
-            div_err = mult.err;
         }
         
       b01:

@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Thu Apr  6 00:44:31 2023
-# Process ID: 8244
+# Start of session at: Fri Apr  7 18:00:54 2023
+# Process ID: 17612
 # Current directory: C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1
 # Command line: vivado.exe -log au_top_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source au_top_0.tcl
 # Log file: C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.vds

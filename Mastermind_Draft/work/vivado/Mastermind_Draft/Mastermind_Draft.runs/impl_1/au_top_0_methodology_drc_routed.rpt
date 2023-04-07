@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Thu Apr  6 00:45:44 2023
+| Date         : Fri Apr  7 18:03:28 2023
 | Host         : LAPTOP-NUP5ASSV running 64-bit major release  (build 9200)
 | Command      : report_methodology -file au_top_0_methodology_drc_routed.rpt -pb au_top_0_methodology_drc_routed.pb -rpx au_top_0_methodology_drc_routed.rpx
 | Design       : au_top_0
@@ -23,15 +23,222 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 42
+             Violations found: 83
 +-----------+----------+-------------------------------+------------+
 | Rule      | Severity | Description                   | Violations |
 +-----------+----------+-------------------------------+------------+
+| SYNTH-13  | Warning  | combinational multiplier      | 1          |
+| TIMING-16 | Warning  | Large setup violation         | 40         |
 | TIMING-18 | Warning  | Missing input or output delay | 42         |
 +-----------+----------+-------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
+SYNTH-13#1 Warning
+combinational multiplier  
+Detected combinational multiplier in DSP instance man/alu16/mult/out0.
+Related violations: <none>
+
+TIMING-16#1 Warning
+Large setup violation  
+There is a large setup violation of -1.006 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_guess_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#2 Warning
+Large setup violation  
+There is a large setup violation of -1.014 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_counter_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#3 Warning
+Large setup violation  
+There is a large setup violation of -1.016 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_current_guess_count_q_reg[5]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#4 Warning
+Large setup violation  
+There is a large setup violation of -1.018 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_error_q_reg[3]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#5 Warning
+Large setup violation  
+There is a large setup violation of -1.019 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_error_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#6 Warning
+Large setup violation  
+There is a large setup violation of -1.022 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_code_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#7 Warning
+Large setup violation  
+There is a large setup violation of -1.025 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_guess_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#8 Warning
+Large setup violation  
+There is a large setup violation of -1.030 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_guess_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#9 Warning
+Large setup violation  
+There is a large setup violation of -1.032 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_hint_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#10 Warning
+Large setup violation  
+There is a large setup violation of -1.034 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_current_guess_count_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#11 Warning
+Large setup violation  
+There is a large setup violation of -1.036 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_counter_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#12 Warning
+Large setup violation  
+There is a large setup violation of -1.048 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_hint_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#13 Warning
+Large setup violation  
+There is a large setup violation of -1.050 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_counter_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#14 Warning
+Large setup violation  
+There is a large setup violation of -1.053 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_hint_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#15 Warning
+Large setup violation  
+There is a large setup violation of -1.058 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#16 Warning
+Large setup violation  
+There is a large setup violation of -1.068 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_code_helper_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#17 Warning
+Large setup violation  
+There is a large setup violation of -1.077 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_q_reg[5]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#18 Warning
+Large setup violation  
+There is a large setup violation of -1.078 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_code_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#19 Warning
+Large setup violation  
+There is a large setup violation of -1.079 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_code_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#20 Warning
+Large setup violation  
+There is a large setup violation of -1.089 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_guess_helper_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#21 Warning
+Large setup violation  
+There is a large setup violation of -1.096 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_guess_q_reg[5]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#22 Warning
+Large setup violation  
+There is a large setup violation of -1.119 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_code_q_reg[15]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#23 Warning
+Large setup violation  
+There is a large setup violation of -1.122 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_guess_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#24 Warning
+Large setup violation  
+There is a large setup violation of -1.138 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_imposter_q_reg[5]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#25 Warning
+Large setup violation  
+There is a large setup violation of -1.140 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_hint_q_reg[9]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#26 Warning
+Large setup violation  
+There is a large setup violation of -1.150 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_code_helper_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#27 Warning
+Large setup violation  
+There is a large setup violation of -1.167 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#28 Warning
+Large setup violation  
+There is a large setup violation of -1.168 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_guess_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#29 Warning
+Large setup violation  
+There is a large setup violation of -1.173 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_guess_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#30 Warning
+Large setup violation  
+There is a large setup violation of -1.207 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_guess_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#31 Warning
+Large setup violation  
+There is a large setup violation of -1.213 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_hint_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#32 Warning
+Large setup violation  
+There is a large setup violation of -1.219 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_current_colour_q_reg[5]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#33 Warning
+Large setup violation  
+There is a large setup violation of -1.229 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_guess_helper_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#34 Warning
+Large setup violation  
+There is a large setup violation of -1.291 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_current_colour_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#35 Warning
+Large setup violation  
+There is a large setup violation of -1.352 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/regfile/M_reg_temp_counter_q_reg[6]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#36 Warning
+Large setup violation  
+There is a large setup violation of -2.087 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/FSM_sequential_M_phase_three_q_reg[4]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#37 Warning
+Large setup violation  
+There is a large setup violation of -2.192 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/FSM_sequential_M_phase_three_q_reg[3]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#38 Warning
+Large setup violation  
+There is a large setup violation of -2.249 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/FSM_sequential_M_phase_three_q_reg[0]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#39 Warning
+Large setup violation  
+There is a large setup violation of -2.278 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/FSM_sequential_M_phase_three_q_reg[2]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#40 Warning
+Large setup violation  
+There is a large setup violation of -2.338 ns between man/FSM_sequential_M_phase_three_q_reg[4]/C (clocked by clk_0) and man/FSM_sequential_M_phase_three_q_reg[1]/D (clocked by clk_0). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
 TIMING-18#1 Warning
 Missing input or output delay  
 An input delay is missing on io_button[0] relative to clock(s) clk_0

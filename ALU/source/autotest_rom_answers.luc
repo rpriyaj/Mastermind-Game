@@ -94,7 +94,7 @@ module autotest_rom_answers(
                   TESTMULT14,TESTMULT13,TESTMULT12,TESTMULT11,TESTMULT10,TESTMULT9,
                   TESTSUB8,TESTSUB7,TESTSUB6,TESTSUB5,TESTADD4, TESTADD3,TESTADD2, TESTADD1};
   */
-    const TESTS = {TESTSCL2, TESTSCL1};
+    const TESTS = {TESTSCL3, TESTSCL2, TESTSCL1};
   
     always{
         answers = TESTS[address];

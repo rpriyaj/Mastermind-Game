@@ -11,7 +11,10 @@ module alu_7 (
     input [15:0] b,
     output reg [15:0] out,
     output reg [0:0] div_err,
-    output reg [2:0] zvn
+    output reg [2:0] zvn,
+    output reg [15:0] a_data,
+    output reg [15:0] b_data,
+    output reg [5:0] aluop_signal
   );
   
   
@@ -21,7 +24,7 @@ module alu_7 (
   reg [1-1:0] M_cmp_v;
   reg [1-1:0] M_cmp_n;
   reg [6-1:0] M_cmp_alufn_op;
-  comparator_14 cmp (
+  comparator_13 cmp (
     .rst(rst),
     .z(M_cmp_z),
     .v(M_cmp_v),
@@ -35,7 +38,7 @@ module alu_7 (
   reg [16-1:0] M_add_a;
   reg [16-1:0] M_add_b;
   reg [6-1:0] M_add_alufn;
-  adder_15 add (
+  adder_14 add (
     .rst(rst),
     .a(M_add_a),
     .b(M_add_b),
@@ -48,7 +51,7 @@ module alu_7 (
   reg [16-1:0] M_shift_a;
   reg [4-1:0] M_shift_b;
   reg [6-1:0] M_shift_alufn_op;
-  shifter_16 shift (
+  shifter_15 shift (
     .rst(rst),
     .a(M_shift_a),
     .b(M_shift_b),
@@ -60,7 +63,7 @@ module alu_7 (
   reg [16-1:0] M_bool_a;
   reg [16-1:0] M_bool_b;
   reg [6-1:0] M_bool_alufn_op;
-  boolean_17 bool (
+  boolean_16 bool (
     .rst(rst),
     .a(M_bool_a),
     .b(M_bool_b),
@@ -69,17 +72,15 @@ module alu_7 (
   );
   
   wire [16-1:0] M_mult_out;
-  wire [1-1:0] M_mult_err;
   reg [16-1:0] M_mult_a;
   reg [16-1:0] M_mult_b;
   reg [6-1:0] M_mult_alufn_op;
-  multiplier_18 mult (
+  multiplier_17 mult (
     .rst(rst),
     .a(M_mult_a),
     .b(M_mult_b),
     .alufn_op(M_mult_alufn_op),
-    .out(M_mult_out),
-    .err(M_mult_err)
+    .out(M_mult_out)
   );
   
   always @* begin
@@ -102,6 +103,9 @@ module alu_7 (
     M_cmp_alufn_op = alufn_signal;
     div_err = 1'h0;
     out = 16'h0000;
+    a_data = a;
+    b_data = b;
+    aluop_signal = alufn_signal;
     
     case (alufn_signal[4+1-:2])
       2'h0: begin
@@ -115,7 +119,6 @@ module alu_7 (
           end
           1'h1: begin
             out = M_mult_out;
-            div_err = M_mult_err;
           end
         endcase
       end

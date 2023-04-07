@@ -4,34 +4,33 @@
    This is a temporary file and any changes made to it will be destroyed.
 */
 
-module multiplier_18 (
+module boolean_16 (
     input rst,
     input [15:0] a,
     input [15:0] b,
     input [5:0] alufn_op,
-    output reg [15:0] out,
-    output reg [0:0] err
+    output reg [15:0] out
   );
   
   
   
   always @* begin
     
-    case (alufn_op)
+    case (alufn_op[0+3-:4])
+      4'h8: begin
+        out = a & b;
+      end
+      4'he: begin
+        out = a | b;
+      end
+      4'h6: begin
+        out = a ^ b;
+      end
+      4'ha: begin
+        out = a;
+      end
       default: begin
         out = 16'h0000;
-      end
-      6'h02: begin
-        out = a * b;
-      end
-      6'h03: begin
-        if (b != 1'h0) begin
-          out = a / b;
-          err = 1'h0;
-        end else begin
-          out = 16'h0000;
-          err = 1'h1;
-        end
       end
     endcase
   end

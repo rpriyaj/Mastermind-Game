@@ -11,56 +11,30 @@ module regfile (
     output data[16],     // DEBUG ONLY FROM HERE ON <- remove in final project
     output ra_addr[4],
     output rb_addr[4],
-    output rc_data[16]
-    
-    // OUTDATED - shd not access directly, only with address
-    //output current_position,
-    //output current_colour,
-    //output current_guess_count,
-    //output game_mode,
-    //output code,
-    //output code_helper,
-    //output guess,
-    //output guess_helper,
-    //output white_hint_count,
-    //output red_hint_count,
-    //output temp_code,
-    //output temp_guess,
-    //output temp_count,
-    //output imposter,
-    //output error,
-    //output temp
+    output rc_data[16],
+    output we_signal[1]
+   
   ) {
   
-  dff reg_current_position[16](.clk(clk), .rst(rst));
-  dff reg_current_colour[16](.clk(clk), .rst(rst));
-  dff reg_current_guess_count[16](.clk(clk), .rst(rst));
-  dff reg_game_mode[16](.clk(clk), .rst(rst));
-  dff reg_code[16](.clk(clk), .rst(rst));
-  dff reg_code_helper[16](.clk(clk), .rst(rst));
-  dff reg_guess[16](.clk(clk), .rst(rst));
-  dff reg_guess_helper[16](.clk(clk), .rst(rst));
-  dff reg_hint[16](.clk(clk), .rst(rst));
-  dff reg_temp_code[16](.clk(clk), .rst(rst));
-  dff reg_temp_guess[16](.clk(clk), .rst(rst));
-  dff reg_temp_counter[16](.clk(clk), .rst(rst));
-  dff reg_imposter[16](.clk(clk), .rst(rst));
-  dff reg_error[16](.clk(clk), .rst(rst));
-  //dff reg_temp[16](.clk(clk), .rst(rst));
+  // CHANGE DEFAULT VALUES IN #INIT(_) 
+  dff reg_current_position[16](#INIT(1), .clk(clk), .rst(rst));
+  dff reg_current_colour[16](#INIT(1), .clk(clk), .rst(rst));
+  dff reg_current_guess_count[16](#INIT(7), .clk(clk), .rst(rst));
+  dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
+  dff reg_code[16](#INIT(17921), .clk(clk), .rst(rst));
+  dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
+  dff reg_guess[16](#INIT(5760), .clk(clk), .rst(rst));
+  dff reg_guess_helper[16](#INIT(61440), .clk(clk), .rst(rst));
+  dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_temp_code[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_temp_guess[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_temp_counter[16](#INIT(1), .clk(clk), .rst(rst));
+  dff reg_imposter[16](#INIT(3),.clk(clk), .rst(rst));
+  dff reg_error[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_temp[16](#INIT(0), .clk(clk), .rst(rst));    
   
   always {
   
-    // SETUP DEFAULT VALUES
-    reg_current_position.d = 16b1; // BEGINNING POSITION
-    reg_current_colour.d = 16b1; // BEGINNING COLOUR
-    reg_code.d = 16b0100011000000111; // REPLACE WITH HARDCODED CODE TO CRACK
-    reg_guess.d = 16b0111000000000100; // REPLACE BACK TO EMPTY GUESS <- 16b0 
-    reg_current_guess_count.d = 16b1; // FIRST GUESS
-    reg_code_helper.d = 16b1111000000000000; // DONT CHANGE
-    reg_guess_helper.d = 16b1111000000000000; // DONT CHANGE
-    reg_hint.d = 16b0;
-    reg_imposter.d = 16b111; // REPLACE WITH RANDOM VALUES FROM ANOTHER MODULE
-    
     ra_data = 16b0;
     rb_data = 16b0;
     data = 16b0;
@@ -84,6 +58,7 @@ module regfile (
         4hC: reg_temp_counter.d = wr_data;
         4hD: reg_imposter.d = wr_data;
         4hE: reg_error.d = wr_data;
+        4hF: reg_temp.d = wr_data;
       }
     }
     
@@ -102,7 +77,7 @@ module regfile (
       4hC: ra_data = reg_temp_counter.q;
       4hD: ra_data = reg_imposter.q;
       4hE: ra_data = reg_error.q;
-      //4h0: ra_data = reg_temp.q;
+      4hF: ra_data = reg_temp.q;
       default: ra_data = 16b0;
     }
     
@@ -121,7 +96,7 @@ module regfile (
       4hC: rb_data = reg_temp_counter.q;
       4hD: rb_data = reg_imposter.q;
       4hE: rb_data = reg_error.q;
-      //4h0: rb_data = reg_temp.q;
+      4hF: rb_data = reg_temp.q;
       default: rb_data = 16b0;
     }
     
@@ -129,6 +104,7 @@ module regfile (
     data = wr_data;
     ra_addr = ra;
     rb_addr = rb;
+    we_signal = we;
     case (rc) {
       4h1: rc_data = reg_current_position.q;
       4h2: rc_data = reg_current_colour.q;
@@ -144,7 +120,7 @@ module regfile (
       4hC: rc_data = reg_temp_counter.q;
       4hD: rc_data = reg_imposter.q;
       4hE: rc_data = reg_error.q;
-      //4h0: rb_data = reg_temp.q;
+      4hF: rc_data = reg_temp.q;
       default: rc_data = 16b0;
     }
   }

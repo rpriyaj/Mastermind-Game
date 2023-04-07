@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Thu Apr  6 00:44:31 2023
-# Process ID: 8244
+# Start of session at: Fri Apr  7 18:00:54 2023
+# Process ID: 17612
 # Current directory: C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1
 # Command line: vivado.exe -log au_top_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source au_top_0.tcl
 # Log file: C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.vds
@@ -17,9 +17,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t
 INFO: [Device 21-403] Loading part xc7a35tftg256-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 16524
+INFO: [Synth 8-7075] Helper process launched with PID 8732
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 999.758 ; gain = 0.000
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'au_top_0' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
 	Parameter IDLE_test_mode bound to: 1'b0 
@@ -40,92 +40,119 @@ INFO: [Synth 8-6157] synthesizing module 'reset_conditioner_1' [C:/Users/dianm/D
 	Parameter STAGES bound to: 3'b100 
 INFO: [Synth 8-6155] done synthesizing module 'reset_conditioner_1' (4#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v:11]
 INFO: [Synth 8-6157] synthesizing module 'fsm_draft_4' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:7]
-	Parameter GETGUESS_phase_three bound to: 4'b0000 
-	Parameter GETCODE_phase_three bound to: 4'b0001 
-	Parameter CHECKGUESS_CORRCODE_phase_three bound to: 4'b0010 
-	Parameter SHIFTHINTRED_phase_three bound to: 4'b0011 
-	Parameter UPDATEHINTRED_phase_three bound to: 4'b0100 
-	Parameter CHANGEGUESSHELPERDEFAULT_phase_three bound to: 4'b0101 
-	Parameter SHIFTCODEHELPER_phase_three bound to: 4'b0110 
-	Parameter CHECKCODEHELPER_phase_three bound to: 4'b0111 
-	Parameter GETNEXTCODE_phase_three bound to: 4'b1000 
-	Parameter SHIFTTEMPGUESS_phase_three bound to: 4'b1001 
-	Parameter CHECKTEMPGUESS_TEMPCODE_phase_three bound to: 4'b1010 
-	Parameter SHIFTHINTWHITE_phase_three bound to: 4'b1011 
-	Parameter UPDATEHINTWHIITE_phase_three bound to: 4'b1100 
+	Parameter IDLE_phase_three bound to: 6'b000000 
+	Parameter GETGUESS_phase_three bound to: 6'b000001 
+	Parameter GETCODE_phase_three bound to: 6'b000010 
+	Parameter CHECKGUESS_CORRCODE_phase_three bound to: 6'b000011 
+	Parameter SHIFTHINTRED_phase_three bound to: 6'b000100 
+	Parameter UPDATEHINTRED_phase_three bound to: 6'b000101 
+	Parameter SHIFTGUESSHELPERDEFAULT_phase_three bound to: 6'b000110 
+	Parameter UPDATEGUESSHELPERDEFAULT_phase_three bound to: 6'b000111 
+	Parameter SHIFTCODEHELPER_phase_three bound to: 6'b001000 
+	Parameter UPDATECODEHELPER_phase_three bound to: 6'b001001 
+	Parameter CHECKCODEHELPER_phase_three bound to: 6'b001010 
+	Parameter SHIFTNOHINT_phase_three bound to: 6'b001011 
+	Parameter UPDATENOHINT_phase_three bound to: 6'b001100 
+	Parameter GETNEXTCODE_phase_three bound to: 6'b001101 
+	Parameter SHIFTTEMPGUESS_phase_three bound to: 6'b001110 
+	Parameter UPDATETEMPGUESS_phase_three bound to: 6'b001111 
+	Parameter CHECKTEMPGUESS_TEMPCODE_phase_three bound to: 6'b010000 
+	Parameter SHIFTHINTWHITE_phase_three bound to: 6'b010001 
+	Parameter UPDATEHINTWHITE_phase_three bound to: 6'b010010 
+	Parameter SHIFTCODEHELPERDEFAULT_phase_three bound to: 6'b010011 
+	Parameter UPDATECODEHELPERDEFAULT_phase_three bound to: 6'b010100 
+	Parameter COMPARETEMPCOUNTER_phase_three bound to: 6'b010101 
+	Parameter ADDTEMPCOUNTER_phase_three bound to: 6'b010110 
+	Parameter UPDATETEMPCOUNTER_phase_three bound to: 6'b010111 
+	Parameter ADDIMPOSTER_phase_three bound to: 6'b011000 
+	Parameter UPDATEIMPOSTER_phase_three bound to: 6'b011001 
+	Parameter COMPARECODE_GUESS_phase_three bound to: 6'b011010 
+	Parameter SUBATTEMPTCOUNT_phase_three bound to: 6'b011011 
+	Parameter UPDATEATTEMPTCOUNT_phase_three bound to: 6'b011100 
+	Parameter BRANCHATTEMPTCOUNT_phase_three bound to: 6'b011101 
+	Parameter LOSE_phase_three bound to: 6'b011110 
+	Parameter WIN_phase_three bound to: 6'b011111 
+	Parameter GAMEOVER_phase_three bound to: 6'b100000 
 INFO: [Synth 8-6157] synthesizing module 'alu_7' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
-INFO: [Synth 8-6157] synthesizing module 'comparator_14' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_14.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'comparator_14' (5#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_14.v:7]
-INFO: [Synth 8-6157] synthesizing module 'adder_15' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_15.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'adder_15' (6#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_15.v:7]
-INFO: [Synth 8-6157] synthesizing module 'shifter_16' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_16.v:7]
-INFO: [Synth 8-226] default block is never used [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_16.v:19]
-INFO: [Synth 8-6155] done synthesizing module 'shifter_16' (7#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_16.v:7]
-INFO: [Synth 8-6157] synthesizing module 'boolean_17' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_17.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'boolean_17' (8#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_17.v:7]
-INFO: [Synth 8-6157] synthesizing module 'multiplier_18' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_18.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'multiplier_18' (9#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_18.v:7]
+INFO: [Synth 8-6157] synthesizing module 'comparator_13' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_13.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'comparator_13' (5#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_13.v:7]
+INFO: [Synth 8-6157] synthesizing module 'adder_14' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_14.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'adder_14' (6#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_14.v:7]
+INFO: [Synth 8-6157] synthesizing module 'shifter_15' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_15.v:7]
+INFO: [Synth 8-226] default block is never used [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_15.v:19]
+INFO: [Synth 8-6155] done synthesizing module 'shifter_15' (7#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_15.v:7]
+INFO: [Synth 8-6157] synthesizing module 'boolean_16' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_16.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'boolean_16' (8#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_16.v:7]
+INFO: [Synth 8-6157] synthesizing module 'multiplier_17' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_17.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'multiplier_17' (9#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_17.v:7]
 INFO: [Synth 8-6155] done synthesizing module 'alu_7' (10#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
 INFO: [Synth 8-6157] synthesizing module 'regfile_8' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:86]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:81]
 INFO: [Synth 8-6155] done synthesizing module 'regfile_8' (11#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
 INFO: [Synth 8-6157] synthesizing module 'sel_mux_9' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
-INFO: [Synth 8-226] default block is never used [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:41]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:71]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:68]
 INFO: [Synth 8-6155] done synthesizing module 'sel_mux_9' (12#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
-INFO: [Synth 8-6157] synthesizing module 'counter_10' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_10.v:14]
-	Parameter SIZE bound to: 1'b1 
-	Parameter DIV bound to: 5'b11010 
-	Parameter TOP bound to: 1'b0 
-	Parameter UP bound to: 1'b1 
-	Parameter MAX_VALUE bound to: 27'b011111111111111111111111111 
-INFO: [Synth 8-6155] done synthesizing module 'counter_10' (13#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_10.v:14]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:152]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:186]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:219]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:257]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:291]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:325]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:359]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:392]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:430]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:464]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:497]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:535]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:569]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:135]
-INFO: [Synth 8-6155] done synthesizing module 'fsm_draft_4' (14#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:7]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:165]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:215]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:265]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:319]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:369]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:419]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:469]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:519]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:573]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:623]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:673]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:723]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:773]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:823]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:877]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:927]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:977]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1027]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1077]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1127]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1181]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1231]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1281]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1331]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1381]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1435]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1485]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:1535]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:148]
+INFO: [Synth 8-6155] done synthesizing module 'fsm_draft_4' (13#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/fsm_draft_4.v:7]
 INFO: [Synth 8-6157] synthesizing module 'multi_seven_seg_5' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
 	Parameter DIGITS bound to: 3'b100 
 	Parameter DIV bound to: 5'b10000 
 	Parameter DIGIT_BITS bound to: 2'b10 
-INFO: [Synth 8-6157] synthesizing module 'counter_11' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
+INFO: [Synth 8-6157] synthesizing module 'counter_10' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_10.v:14]
 	Parameter SIZE bound to: 2'b10 
 	Parameter DIV bound to: 5'b10000 
 	Parameter TOP bound to: 4'b0011 
 	Parameter UP bound to: 1'b1 
 	Parameter MAX_VALUE bound to: 20'b00111111111111111111 
-INFO: [Synth 8-6155] done synthesizing module 'counter_11' (15#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
-INFO: [Synth 8-6157] synthesizing module 'seven_seg_12' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_12.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'seven_seg_12' (16#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_12.v:7]
-INFO: [Synth 8-6157] synthesizing module 'decoder_13' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_13.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'counter_10' (14#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_10.v:14]
+INFO: [Synth 8-6157] synthesizing module 'seven_seg_11' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_11.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'seven_seg_11' (15#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_11.v:7]
+INFO: [Synth 8-6157] synthesizing module 'decoder_12' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_12.v:11]
 	Parameter WIDTH bound to: 2'b10 
-INFO: [Synth 8-6155] done synthesizing module 'decoder_13' (17#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_13.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'multi_seven_seg_5' (18#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
-INFO: [Synth 8-6155] done synthesizing module 'au_top_0' (19#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'decoder_12' (16#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_12.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'multi_seven_seg_5' (17#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'au_top_0' (18#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.015 . Memory (MB): peak = 999.758 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.013 . Memory (MB): peak = 999.770 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -142,38 +169,67 @@ Parsing XDC File [C:/Program Files/Alchitry/Alchitry Labs/library/components/au.
 Finished Parsing XDC File [C:/Program Files/Alchitry/Alchitry Labs/library/components/au.xdc]
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 999.758 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 999.770 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 999.758 ; gain = 0.000
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a35tftg256-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'M_phase_three_q_reg' in module 'fsm_draft_4'
-WARNING: [Synth 8-327] inferring latch for variable 'err_reg' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_18.v:30]
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
 ---------------------------------------------------------------------------------------------------
-    GETGUESS_phase_three |                                0 |                             0000
-     GETCODE_phase_three |                                1 |                             0001
+        IDLE_phase_three |                            00000 |                           000000
+    GETGUESS_phase_three |                            00001 |                           000001
+     GETCODE_phase_three |                            00010 |                           000010
+CHECKGUESS_CORRCODE_phase_three |                            00011 |                           000011
+SHIFTHINTRED_phase_three |                            00100 |                           000100
+UPDATEHINTRED_phase_three |                            00101 |                           000101
+SHIFTCODEHELPER_phase_three |                            00110 |                           001000
+UPDATECODEHELPER_phase_three |                            00111 |                           001001
+CHECKCODEHELPER_phase_three |                            01000 |                           001010
+ SHIFTNOHINT_phase_three |                            01001 |                           001011
+UPDATENOHINT_phase_three |                            01010 |                           001100
+ GETNEXTCODE_phase_three |                            01011 |                           001101
+SHIFTTEMPGUESS_phase_three |                            01100 |                           001110
+UPDATETEMPGUESS_phase_three |                            01101 |                           001111
+CHECKTEMPGUESS_TEMPCODE_phase_three |                            01110 |                           010000
+SHIFTHINTWHITE_phase_three |                            01111 |                           010001
+UPDATEHINTWHITE_phase_three |                            10000 |                           010010
+SHIFTGUESSHELPERDEFAULT_phase_three |                            10001 |                           000110
+UPDATEGUESSHELPERDEFAULT_phase_three |                            10010 |                           000111
+UPDATECODEHELPERDEFAULT_phase_three |                            10011 |                           010100
+COMPARETEMPCOUNTER_phase_three |                            10100 |                           010101
+ ADDIMPOSTER_phase_three |                            10101 |                           011000
+UPDATEIMPOSTER_phase_three |                            10110 |                           011001
+COMPARECODE_GUESS_phase_three |                            10111 |                           011010
+         WIN_phase_three |                            11000 |                           011111
+SUBATTEMPTCOUNT_phase_three |                            11001 |                           011011
+UPDATEATTEMPTCOUNT_phase_three |                            11010 |                           011100
+BRANCHATTEMPTCOUNT_phase_three |                            11011 |                           011101
+        LOSE_phase_three |                            11100 |                           011110
+    GAMEOVER_phase_three |                            11101 |                           100000
+ADDTEMPCOUNTER_phase_three |                            11110 |                           010110
+UPDATETEMPCOUNTER_phase_three |                            11111 |                           010111
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'M_phase_three_q_reg' using encoding 'sequential' in module 'fsm_draft_4'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:11 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -189,28 +245,32 @@ Detailed RTL Component Info :
 	   2 Input      1 Bit         XORs := 2     
 +---Registers : 
 	               18 Bit    Registers := 1     
-	               16 Bit    Registers := 14    
+	               16 Bit    Registers := 15    
 	                4 Bit    Registers := 1     
 	                2 Bit    Registers := 4     
-	                1 Bit    Registers := 6     
+	                1 Bit    Registers := 5     
 +---Muxes : 
 	   2 Input   24 Bit        Muxes := 1     
+	  32 Input   20 Bit        Muxes := 1     
 	   2 Input   20 Bit        Muxes := 1     
 	   2 Input   18 Bit        Muxes := 1     
-	   3 Input   16 Bit        Muxes := 5     
-	   4 Input   16 Bit        Muxes := 5     
-	   2 Input   16 Bit        Muxes := 8     
-	  15 Input   16 Bit        Muxes := 9     
+	   3 Input   16 Bit        Muxes := 1     
+	   4 Input   16 Bit        Muxes := 4     
+	   2 Input   16 Bit        Muxes := 4     
 	   8 Input   16 Bit        Muxes := 1     
-	   2 Input   15 Bit        Muxes := 3     
-	   2 Input   12 Bit        Muxes := 1     
+	  32 Input   16 Bit        Muxes := 1     
+	  32 Input    6 Bit        Muxes := 1     
+	  32 Input    5 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 6     
 	   4 Input    5 Bit        Muxes := 1     
-	   2 Input    4 Bit        Muxes := 3     
+	  32 Input    4 Bit        Muxes := 3     
 	   4 Input    3 Bit        Muxes := 1     
-	   2 Input    3 Bit        Muxes := 2     
-	   4 Input    1 Bit        Muxes := 5     
-	   2 Input    1 Bit        Muxes := 7     
-	  15 Input    1 Bit        Muxes := 5     
+	   2 Input    3 Bit        Muxes := 1     
+	  32 Input    3 Bit        Muxes := 1     
+	   4 Input    1 Bit        Muxes := 4     
+	  16 Input    1 Bit        Muxes := 15    
+	  32 Input    1 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 2     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -229,7 +289,7 @@ Start Cross Boundary and Area Optimization
 DSP Report: Generating DSP mult/out0, operation Mode is: A*B.
 DSP Report: operator mult/out0 is absorbed into DSP mult/out0.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:18 ; elapsed = 00:00:21 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -239,7 +299,8 @@ ROM: Preliminary Mapping	Report
 +-------------+------------------+---------------+----------------+
 |Module Name  | RTL Object       | Depth x Width | Implemented As | 
 +-------------+------------------+---------------+----------------+
-|seven_seg_12 | segs             | 32x7          | LUT            | 
+|seven_seg_11 | segs             | 32x7          | LUT            | 
+|fsm_draft_4  | seg_out0         | 32x20         | LUT            | 
 |au_top_0     | seg/seg_dec/segs | 32x7          | LUT            | 
 +-------------+------------------+---------------+----------------+
 
@@ -248,7 +309,7 @@ DSP: Preliminary Mapping	Report (see note below)
 +--------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
 |Module Name   | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
 +--------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
-|multiplier_18 | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|multiplier_17 | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
 +--------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
 
 Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
@@ -259,19 +320,19 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:13 ; elapsed = 00:00:16 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:24 ; elapsed = 00:00:27 . Memory (MB): peak = 999.770 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:16 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Timing Optimization : Time (s): cpu = 00:00:33 ; elapsed = 00:00:37 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:13 ; elapsed = 00:00:16 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Technology Mapping : Time (s): cpu = 00:00:33 ; elapsed = 00:00:38 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -289,37 +350,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished IO Insertion : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -332,42 +393,45 @@ Report BlackBoxes:
 +-+--------------+----------+
 
 Report Cell Usage: 
-+------+-------+------+
-|      |Cell   |Count |
-+------+-------+------+
-|1     |BUFG   |     1|
-|2     |CARRY4 |    15|
-|3     |LUT1   |     8|
-|4     |LUT2   |     7|
-|5     |LUT3   |     6|
-|6     |LUT4   |    22|
-|7     |LUT5   |    22|
-|8     |LUT6   |     8|
-|9     |FDRE   |    73|
-|10    |FDSE   |     4|
-|11    |IBUF   |    21|
-|12    |OBUF   |    45|
-+------+-------+------+
++------+--------+------+
+|      |Cell    |Count |
++------+--------+------+
+|1     |BUFG    |     1|
+|2     |CARRY4  |    23|
+|3     |DSP48E1 |     1|
+|4     |LUT1    |     7|
+|5     |LUT2    |    58|
+|6     |LUT3    |    48|
+|7     |LUT4    |   127|
+|8     |LUT5    |   126|
+|9     |LUT6    |   409|
+|10    |MUXF7   |    71|
+|11    |MUXF8   |    33|
+|12    |FDRE    |   243|
+|13    |FDSE    |    23|
+|14    |IBUF    |    21|
+|15    |OBUF    |    45|
++------+--------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:35 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 1 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:10 ; elapsed = 00:00:16 . Memory (MB): peak = 999.758 ; gain = 0.000
-Synthesis Optimization Complete : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 999.758 ; gain = 0.000
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:31 ; elapsed = 00:00:39 . Memory (MB): peak = 1207.262 ; gain = 207.492
+Synthesis Optimization Complete : Time (s): cpu = 00:00:36 ; elapsed = 00:00:40 . Memory (MB): peak = 1207.262 ; gain = 207.492
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 999.758 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 15 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 1207.262 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 128 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 999.758 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1207.262 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
 INFO: [Common 17-83] Releasing license: Synthesis
-74 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+86 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:18 ; elapsed = 00:00:28 . Memory (MB): peak = 999.758 ; gain = 0.000
+synth_design: Time (s): cpu = 00:00:39 ; elapsed = 00:00:46 . Memory (MB): peak = 1207.262 ; gain = 207.492
 INFO: [Common 17-1381] The checkpoint 'C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file au_top_0_utilization_synth.rpt -pb au_top_0_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Apr  6 00:45:01 2023...
+INFO: [Common 17-206] Exiting Vivado at Fri Apr  7 18:01:42 2023...

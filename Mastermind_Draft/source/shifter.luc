@@ -1,7 +1,7 @@
 module shifter (
     input rst,
     input a[16],
-    input b[4], //no of bits
+    input b[4], 
     input alufn_op[6],
     output out[16]
   ) {

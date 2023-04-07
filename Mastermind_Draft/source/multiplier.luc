@@ -3,8 +3,7 @@ module multiplier (
     input a[16],
     input b[16],
     input alufn_op[6],
-    output out[16],
-    output err[1] // general error flag
+    output out[16]
   ) {
   
   always {
@@ -15,18 +14,7 @@ module multiplier (
       
       // MULT - normal multiplication (ALUFN)
       b000010: out = a * b;
-      
-      // DIV - normal division, check for 0 division error
-      b000011:
-        if (b != 0) {
-          out = a / b;
-          err = b0;
-        }
-        
-        else {
-          out = 16b0;
-          err = b1;
-        }        
+       
     }
   }
 }

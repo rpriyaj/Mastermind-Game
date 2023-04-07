@@ -49,7 +49,7 @@ module sel_mux_9 (
         bsel_out = 16'h0001;
       end
       3'h3: begin
-        bsel_out = 16'h000a;
+        bsel_out = 16'h0003;
       end
       3'h4: begin
         bsel_out = 16'h0004;
@@ -57,11 +57,8 @@ module sel_mux_9 (
       3'h5: begin
         bsel_out = 16'h0005;
       end
-      3'h6: begin
-        bsel_out = 16'h00ff;
-      end
       3'h7: begin
-        bsel_out = 16'hffff;
+        bsel_out = 16'h0008;
       end
       default: begin
         bsel_out = rb_data;
