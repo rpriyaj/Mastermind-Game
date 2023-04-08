@@ -1,0 +1,110 @@
+//Need to configure in au_top: colour button, confirm button
+
+module phaseTwo_fsm (
+    input clk,  // clock
+    input rst,  // reset
+    input dips[16], // dip switches
+    input trigger_start,
+    input colour_button, //Colour_button
+    input confirm_button, //confirm_button
+    output out[16],
+    output seg_out[4][5]
+  ) {
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  
+  fsm phase_two(.clk(clk), .rst(rst)) = {POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,BACKTOFIRSTCOLOURINDEX};
+  
+  
+  always {
+    // INITIALIZE VALUES
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    alu16.alufn_signal = 6b0;
+    
+    sel_mux.alu_data = alu16.out;
+    
+    out = 16b0;
+    seg_out =  {5b0, 5b0, 5b0, 5b0};
+    
+    slow_edge.in = slow_clock.value;
+    
+    // FSM
+    case(phase_two.q){
+      phase_two.POSITION:
+        seg_out={5d0, 5d19, 5d0,5d18}; // 7seg: "0P0S"
+        if (colour_button){
+          phase_two.d = phase_two.BRANCHCOLOURINDEX;
+        }
+        
+        
+     
+      phase_two.BRANCHCOLOURINDEX: // 7seg: "0BCI"
+        seg_out={5d0, 5d11, 5d12,5d1};
+       
+        
+        // I want to read colour index regfile. 
+        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b101;
+        
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b110101; // CMPLT OPERATION
+        
+        // If it is <5, i will go to state INCREASECOLOURINDEX
+        if (sel_mux.wdsel_out){
+          phase_two.d = phase_two.INCREASECOLOURINDEX;
+        }
+        else{ // Else if its = 5, I will go to state BACKTOFIRSTCOLOURINDEX
+        
+          phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
+        }
+        
+        // Debugging: asel_out,bsel_out, wdsel_out, 
+        
+        case(dips){
+          
+          16h0: //Check asel_out
+            out = sel_mux.asel_out;
+         
+          16h1: //Check bsel_out
+            out = sel_mux.bsel_out;
+         
+          16h2: // check alu16.out 
+            out = alu16.out;
+          
+          16h3: //check wdsel_out
+            out = sel_mux.wdsel_out;
+        }
+        
+      phase_two.INCREASECOLOURINDEX:
+      
+        seg_out={5d0, 5d11, 5d12,5d1};
+      phase_two.BACKTOFIRSTCOLOURINDEX:
+        
+        seg_out={5d0, 5d11, 5d12,5d1};
+    }
+    
+    
+}
+}
+
