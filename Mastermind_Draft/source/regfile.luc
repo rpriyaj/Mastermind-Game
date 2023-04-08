@@ -17,8 +17,8 @@ module regfile (
   ) {
   
   // CHANGE DEFAULT VALUES IN #INIT(_) 
-  dff reg_current_position[16](#INIT(1), .clk(clk), .rst(rst));
-  dff reg_current_colour[16](#INIT(1), .clk(clk), .rst(rst));
+  dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_current_colour[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_current_guess_count[16](#INIT(7), .clk(clk), .rst(rst));
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
   dff reg_code[16](#INIT(17921), .clk(clk), .rst(rst));

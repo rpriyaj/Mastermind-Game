@@ -109,8 +109,9 @@ module phaseTwo_fsm_4 (
   localparam POSITION_phase_two = 3'd1;
   localparam BRANCHCOLOURINDEX_phase_two = 3'd2;
   localparam INCREASECOLOURINDEX_phase_two = 3'd3;
-  localparam BACKTOFIRSTCOLOURINDEX_phase_two = 3'd4;
-  localparam FINISH_phase_two = 3'd5;
+  localparam UPDATECOLOURINDEX_phase_two = 3'd4;
+  localparam BACKTOFIRSTCOLOURINDEX_phase_two = 3'd5;
+  localparam FINISH_phase_two = 3'd6;
   
   reg [2:0] M_phase_two_d, M_phase_two_q = IDLE_phase_two;
   
@@ -122,6 +123,7 @@ module phaseTwo_fsm_4 (
     M_regfile_rc = 4'h0;
     M_regfile_we = 1'h0;
     M_regfile_wr_data = 1'h0;
+    M_alu16_alufn_signal = 6'h00;
     M_sel_mux_asel_signal = 2'h0;
     M_sel_mux_bsel_signal = 3'h0;
     M_sel_mux_wdsel_signal = 2'h0;
@@ -129,8 +131,8 @@ module phaseTwo_fsm_4 (
     M_sel_mux_rb_data = M_regfile_rb_data;
     M_alu16_a = M_sel_mux_asel_out;
     M_alu16_b = M_sel_mux_bsel_out;
-    M_alu16_alufn_signal = 6'h00;
     M_sel_mux_alu_data = M_alu16_out;
+    M_regfile_wr_data = M_sel_mux_wdsel_out;
     out = 16'h0000;
     seg_out = 20'h00000;
     M_slow_edge_in = M_slow_clock_value;
@@ -156,60 +158,129 @@ module phaseTwo_fsm_4 (
         M_alu16_a = M_sel_mux_asel_out;
         M_alu16_b = M_sel_mux_bsel_out;
         M_alu16_alufn_signal = 6'h35;
-        if (M_sel_mux_wdsel_out && M_slow_edge_out) begin
+        if (M_sel_mux_wdsel_out && confirm_button) begin
           M_phase_two_d = INCREASECOLOURINDEX_phase_two;
         end else begin
-          if (M_slow_edge_out) begin
+          if (confirm_button) begin
             M_phase_two_d = BACKTOFIRSTCOLOURINDEX_phase_two;
           end
         end
         
         case (dips)
           16'h0000: begin
-            out = M_alu16_a_data;
-          end
-          16'h0001: begin
-            out = M_alu16_b_data;
-          end
-          16'h0003: begin
-            out = M_alu16_aluop_signal;
-          end
-          16'h0004: begin
-            out = M_alu16_out;
-          end
-          16'h0005: begin
             out = M_regfile_ra_data;
           end
-          16'h0006: begin
+          16'h0001: begin
             out = M_regfile_rb_data;
           end
-          16'h0007: begin
-            out = M_regfile_rc_data;
-          end
-          16'h0008: begin
-            out = M_regfile_we_signal;
-          end
-          16'h0009: begin
+          16'h0003: begin
             out = M_sel_mux_asel_out;
           end
-          16'h000a: begin
+          16'h0004: begin
             out = M_sel_mux_bsel_out;
           end
-          16'h000b: begin
+          16'h0005: begin
+            out = M_alu16_a_data;
+          end
+          16'h0006: begin
+            out = M_alu16_b_data;
+          end
+          16'h0007: begin
+            out = M_alu16_aluop_signal;
+          end
+          16'h0008: begin
+            out = M_alu16_out;
+          end
+          16'h0009: begin
             out = M_sel_mux_wdsel_out;
+          end
+          16'h000a: begin
+            out = M_regfile_we_signal;
+          end
+          16'h000b: begin
+            out = M_regfile_rc_data;
           end
         endcase
       end
       INCREASECOLOURINDEX_phase_two: begin
         seg_out = 20'h00581;
         M_regfile_ra = 4'h2;
+        M_regfile_rb = 4'h0;
         M_sel_mux_asel_signal = 1'h0;
         M_sel_mux_bsel_signal = 3'h2;
         M_sel_mux_wdsel_signal = 2'h0;
         M_alu16_a = M_sel_mux_asel_out;
         M_alu16_b = M_sel_mux_bsel_out;
         M_alu16_alufn_signal = 6'h00;
+        M_regfile_rc = 4'hf;
+        M_regfile_we = 1'h1;
+        if (confirm_button) begin
+          M_phase_two_d = UPDATECOLOURINDEX_phase_two;
+        end
+        
+        case (dips)
+          16'h0000: begin
+            out = M_regfile_ra_data;
+          end
+          16'h0001: begin
+            out = M_regfile_rb_data;
+          end
+          16'h0003: begin
+            out = M_sel_mux_asel_out;
+          end
+          16'h0004: begin
+            out = M_sel_mux_bsel_out;
+          end
+          16'h0005: begin
+            out = M_alu16_a_data;
+          end
+          16'h0006: begin
+            out = M_alu16_b_data;
+          end
+          16'h0007: begin
+            out = M_alu16_aluop_signal;
+          end
+          16'h0008: begin
+            out = M_alu16_out;
+          end
+          16'h0009: begin
+            out = M_sel_mux_wdsel_out;
+          end
+          16'h000a: begin
+            out = M_regfile_we_signal;
+          end
+          16'h000b: begin
+            out = M_regfile_rc_data;
+          end
+        endcase
+      end
+      UPDATECOLOURINDEX_phase_two: begin
+        seg_out = 20'h05581;
+        M_regfile_ra = 4'hf;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 1'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h2;
+        M_regfile_we = 1'h1;
+        if (confirm_button) begin
+          M_phase_two_d = BACKTOFIRSTCOLOURINDEX_phase_two;
+        end
+      end
+      BACKTOFIRSTCOLOURINDEX_phase_two: begin
+        seg_out = 20'h5c581;
+        M_regfile_ra = 4'h2;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 3'h2;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h01;
+        M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         if (confirm_button) begin
           M_phase_two_d = FINISH_phase_two;
@@ -217,84 +288,78 @@ module phaseTwo_fsm_4 (
         
         case (dips)
           16'h0000: begin
-            out = M_alu16_a_data;
-          end
-          16'h0001: begin
-            out = M_alu16_b_data;
-          end
-          16'h0003: begin
-            out = M_alu16_aluop_signal;
-          end
-          16'h0004: begin
-            out = M_alu16_out;
-          end
-          16'h0005: begin
             out = M_regfile_ra_data;
           end
-          16'h0006: begin
-            out = M_regfile_rb_data;
-          end
-          16'h0007: begin
-            out = M_regfile_rc_data;
-          end
-          16'h0008: begin
-            out = M_regfile_we_signal;
-          end
-          16'h0009: begin
-            out = M_sel_mux_asel_out;
-          end
-          16'h000a: begin
-            out = M_sel_mux_bsel_out;
-          end
-          16'h000b: begin
-            out = M_sel_mux_wdsel_out;
-          end
-        endcase
-      end
-      BACKTOFIRSTCOLOURINDEX_phase_two: begin
-        seg_out = 20'h5c581;
-        if (confirm_button) begin
-          M_phase_two_d = FINISH_phase_two;
-        end
-        
-        case (dips)
-          16'h0000: begin
-            out = M_alu16_a_data;
-          end
           16'h0001: begin
-            out = M_alu16_b_data;
+            out = M_regfile_rb_data;
           end
           16'h0003: begin
-            out = M_alu16_aluop_signal;
-          end
-          16'h0004: begin
-            out = M_alu16_out;
-          end
-          16'h0005: begin
-            out = M_regfile_ra_data;
-          end
-          16'h0006: begin
-            out = M_regfile_rb_data;
-          end
-          16'h0007: begin
-            out = M_regfile_rc_data;
-          end
-          16'h0008: begin
-            out = M_regfile_we_signal;
-          end
-          16'h0009: begin
             out = M_sel_mux_asel_out;
           end
-          16'h000a: begin
+          16'h0004: begin
             out = M_sel_mux_bsel_out;
           end
-          16'h000b: begin
+          16'h0005: begin
+            out = M_alu16_a_data;
+          end
+          16'h0006: begin
+            out = M_alu16_b_data;
+          end
+          16'h0007: begin
+            out = M_alu16_aluop_signal;
+          end
+          16'h0008: begin
+            out = M_alu16_out;
+          end
+          16'h0009: begin
             out = M_sel_mux_wdsel_out;
+          end
+          16'h000a: begin
+            out = M_regfile_we_signal;
+          end
+          16'h000b: begin
+            out = M_regfile_rc_data;
           end
         endcase
       end
       FINISH_phase_two: begin
         seg_out = 20'h8864e;
+        
+        case (dips)
+          16'h0000: begin
+            out = M_regfile_ra_data;
+          end
+          16'h0001: begin
+            out = M_regfile_rb_data;
+          end
+          16'h0003: begin
+            out = M_sel_mux_asel_out;
+          end
+          16'h0004: begin
+            out = M_sel_mux_bsel_out;
+          end
+          16'h0005: begin
+            out = M_alu16_a_data;
+          end
+          16'h0006: begin
+            out = M_alu16_b_data;
+          end
+          16'h0007: begin
+            out = M_alu16_aluop_signal;
+          end
+          16'h0008: begin
+            out = M_alu16_out;
+          end
+          16'h0009: begin
+            out = M_sel_mux_wdsel_out;
+          end
+          16'h000a: begin
+            out = M_regfile_we_signal;
+          end
+          16'h000b: begin
+            out = M_regfile_rc_data;
+          end
+        endcase
       end
     endcase
   end

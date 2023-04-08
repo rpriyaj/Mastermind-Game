@@ -23,9 +23,9 @@ module regfile_8 (
   
   
   
-  reg [15:0] M_reg_current_position_d, M_reg_current_position_q = 1'h1;
+  reg [15:0] M_reg_current_position_d, M_reg_current_position_q = 1'h0;
   
-  reg [15:0] M_reg_current_colour_d, M_reg_current_colour_q = 1'h1;
+  reg [15:0] M_reg_current_colour_d, M_reg_current_colour_q = 1'h0;
   
   reg [15:0] M_reg_current_guess_count_d, M_reg_current_guess_count_q = 3'h7;
   
@@ -287,18 +287,36 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_current_position_q <= 1'h1;
+      M_reg_code_helper_q <= 16'hf000;
     end else begin
-      M_reg_current_position_q <= M_reg_current_position_d;
+      M_reg_code_helper_q <= M_reg_code_helper_d;
     end
   end
   
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_temp_guess_q <= 1'h0;
+      M_reg_current_guess_count_q <= 3'h7;
     end else begin
-      M_reg_temp_guess_q <= M_reg_temp_guess_d;
+      M_reg_current_guess_count_q <= M_reg_current_guess_count_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_current_colour_q <= 1'h0;
+    end else begin
+      M_reg_current_colour_q <= M_reg_current_colour_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_hint_q <= 1'h0;
+    end else begin
+      M_reg_hint_q <= M_reg_hint_d;
     end
   end
   
@@ -314,27 +332,9 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_error_q <= 1'h0;
+      M_reg_guess_helper_q <= 16'hf000;
     end else begin
-      M_reg_error_q <= M_reg_error_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_code_q <= 15'h4601;
-    end else begin
-      M_reg_code_q <= M_reg_code_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_temp_q <= 1'h0;
-    end else begin
-      M_reg_temp_q <= M_reg_temp_d;
+      M_reg_guess_helper_q <= M_reg_guess_helper_d;
     end
   end
   
@@ -359,54 +359,18 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_temp_code_q <= 1'h0;
+      M_reg_error_q <= 1'h0;
     end else begin
-      M_reg_temp_code_q <= M_reg_temp_code_d;
+      M_reg_error_q <= M_reg_error_d;
     end
   end
   
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_hint_q <= 1'h0;
+      M_reg_temp_guess_q <= 1'h0;
     end else begin
-      M_reg_hint_q <= M_reg_hint_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_current_colour_q <= 1'h1;
-    end else begin
-      M_reg_current_colour_q <= M_reg_current_colour_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_guess_helper_q <= 16'hf000;
-    end else begin
-      M_reg_guess_helper_q <= M_reg_guess_helper_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_current_guess_count_q <= 3'h7;
-    end else begin
-      M_reg_current_guess_count_q <= M_reg_current_guess_count_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_code_helper_q <= 16'hf000;
-    end else begin
-      M_reg_code_helper_q <= M_reg_code_helper_d;
+      M_reg_temp_guess_q <= M_reg_temp_guess_d;
     end
   end
   
@@ -416,6 +380,42 @@ module regfile_8 (
       M_reg_guess_q <= 13'h1680;
     end else begin
       M_reg_guess_q <= M_reg_guess_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_current_position_q <= 1'h0;
+    end else begin
+      M_reg_current_position_q <= M_reg_current_position_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_temp_q <= 1'h0;
+    end else begin
+      M_reg_temp_q <= M_reg_temp_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_code_q <= 15'h4601;
+    end else begin
+      M_reg_code_q <= M_reg_code_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_temp_code_q <= 1'h0;
+    end else begin
+      M_reg_temp_code_q <= M_reg_temp_code_d;
     end
   end
   

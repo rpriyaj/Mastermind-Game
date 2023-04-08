@@ -1,10 +1,11 @@
 //Need to configure in au_top: colour button, confirm button
 
+
 module phaseTwo_fsm (
     input clk,  // clock
     input rst,  // reset
     input dips[16], // dip switches
-    input trigger_start,
+    input trigger_start, //This is a debug button to move from states to states
     input colour_button, //Colour_button
     input confirm_button, //confirm_button
     output out[16],
@@ -17,7 +18,7 @@ module phaseTwo_fsm (
   counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
-  fsm phase_two(.clk(clk), .rst(rst)) = {IDLE,POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,BACKTOFIRSTCOLOURINDEX,FINISH};
+  fsm phase_two(.clk(clk), .rst(rst)) = {IDLE,POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,UPDATECOLOURINDEX,BACKTOFIRSTCOLOURINDEX,FINISH};
   
   
   always {
@@ -27,18 +28,18 @@ module phaseTwo_fsm (
     regfile.rc = 4b0;
     regfile.we = b0;
     regfile.wr_data = b0;
-    
+    alu16.alufn_signal = 6b0;
     sel_mux.asel_signal = 2b0;
     sel_mux.bsel_signal = 3b0;
     sel_mux.wdsel_signal = 2b0;
+    
+    // CONNECTIONS
     sel_mux.ra_data = regfile.ra_data;
     sel_mux.rb_data = regfile.rb_data;
-    
     alu16.a = sel_mux.asel_out;
     alu16.b = sel_mux.bsel_out;
-    alu16.alufn_signal = 6b0;
-    
     sel_mux.alu_data = alu16.out;
+    regfile.wr_data = sel_mux.wdsel_out;
     
     out = 16b0;
     seg_out =  {5b0, 5b0, 5b0, 5b0};
@@ -63,8 +64,10 @@ module phaseTwo_fsm (
         seg_out={5d0, 5d11, 5d12,5d1};
        
         
-        // I want to read colour index regfile. 
-        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        // Purpose: Branch - If colour index ==5, go back to 1. Else increase colour index 
+        
+        regfile.ra = 4h2; 
+        //regfile.rb = 4h0; // we dont use this 
         sel_mux.asel_signal= b0;
         sel_mux.bsel_signal= b101;
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
@@ -74,47 +77,52 @@ module phaseTwo_fsm (
         alu16.b = sel_mux.bsel_out;
         alu16.alufn_signal = 6b110101; // CMPLT OPERATION
         
+        
+        
         // If it is <5, i will go to state INCREASECOLOURINDEX
-        if (sel_mux.wdsel_out && slow_edge.out){
+        // TODO need to change this to slow edge out
+        if (sel_mux.wdsel_out && confirm_button){  
           phase_two.d = phase_two.INCREASECOLOURINDEX;
         }
-        else if (slow_edge.out){ // Else if its = 5, I will go to state BACKTOFIRSTCOLOURINDEX
+        else if (confirm_button){ // Else if its = 5, I will go to state BACKTOFIRSTCOLOURINDEX
         
           phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
         }
         
         case(dips){
           16h0:
-            out = alu16.a_data;
+            out = regfile.ra_data ;  //expecting a 0 
           16h1:
-            out = alu16.b_data;
+            out = regfile.rb_data ; // expecting a 7
           16h3:
-            out = alu16.aluop_signal;
+            out = sel_mux.asel_out ;
           16h4:
-            out = alu16.out; //16b0001 0000 0000 0000
+            out = sel_mux.bsel_out ; 
           16h5:
-            out = regfile.ra_data; //16b0001 0110 1000 0000
+            out = alu16.a_data; 
           16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
+            out = alu16.b_data; 
           16h7:
-            out = regfile.rc_data; //16b0001 0000 0000 0000
+            out = alu16.aluop_signal ; 
           16h8:
-            out = regfile.we_signal;
+            out = alu16.out ;
           16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
             out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
         }
         
       phase_two.INCREASECOLOURINDEX:
       
         seg_out={5d0, 5d1, 5d12,5d1}; //7SEG: 01C1
-        // Read current colour index, +1 to it, and write back to the colour index reg file 
+        // Purpose: Read current colour index, +1 to it, and write back to the colour index reg file 
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h0; // we don't use this 
+        
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
@@ -127,74 +135,148 @@ module phaseTwo_fsm (
         alu16.alufn_signal = 6b000000; // ADD OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h2; // WRITE REG C - back to colour register
+        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register 
         regfile.we = b1; // WRITE ENABLED
         
         if (confirm_button){
-          phase_two.d = phase_two.FINISH;
+          phase_two.d = phase_two.UPDATECOLOURINDEX;
           }
+        
         
         // DEBUG PURPOSES ONLY
         case(dips){
           16h0:
-            out = alu16.a_data;
+            out = regfile.ra_data ;
           16h1:
-            out = alu16.b_data;
+            out = regfile.rb_data ;
           16h3:
-            out = alu16.aluop_signal;
+            out = sel_mux.asel_out ;
           16h4:
-            out = alu16.out; //16b0001 0000 0000 0000
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
           16h5:
-            out = regfile.ra_data; //16b0001 0110 1000 0000
+            out = alu16.a_data; //16b0001 0110 1000 0000
           16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
+            out = alu16.b_data; //16b1111 0000 0000 0000
           16h7:
-            out = regfile.rc_data; //16b0001 0000 0000 0000
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
           16h8:
-            out = regfile.we_signal;
+            out = alu16.out ;
           16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
             out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
         }
         
+      phase_two.UPDATECOLOURINDEX:
+      
+        seg_out={5d0, 5d21, 5d12,5d1}; //7SEG: 0UC1
+        // Purpose: Update colour index register 
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h2; // WRITE REG C - back to colour register // test write to temp register 
+        regfile.we = b1; // WRITE ENABLED
+        if (confirm_button){
+          phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
+        }
+        
+        
+          
       phase_two.BACKTOFIRSTCOLOURINDEX:
         
         seg_out={5d11, 5d17, 5d12,5d1}; // 7SEG: BFCI
-        // Read current colour index, -5 to it, and write back to the colour index reg file 
+        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b010; // output is 1 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b000001; // SUB OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register 
+        regfile.we = b1; // WRITE ENABLED
+        
         
         if (confirm_button){
           phase_two.d =phase_two.FINISH;
         }
         case(dips){
           16h0:
-            out = alu16.a_data;
+            out = regfile.ra_data ;
           16h1:
-            out = alu16.b_data;
+            out = regfile.rb_data ;
           16h3:
-            out = alu16.aluop_signal;
+            out = sel_mux.asel_out ;
           16h4:
-            out = alu16.out; //16b0001 0000 0000 0000
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
           16h5:
-            out = regfile.ra_data; //16b0001 0110 1000 0000
+            out = alu16.a_data; //16b0001 0110 1000 0000
           16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
+            out = alu16.b_data; //16b1111 0000 0000 0000
           16h7:
-            out = regfile.rc_data; //16b0001 0000 0000 0000
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
           16h8:
-            out = regfile.we_signal;
+            out = alu16.out ;
           16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
             out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
         }
         
       phase_two.FINISH:
         seg_out={5d17, 5d1, 5d18,5d14};
+        
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
     }
     
     
