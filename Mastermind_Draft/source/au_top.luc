@@ -22,7 +22,7 @@ module au_top (
     edge_detector buttondetector[4](#RISE(1), #FALL(0));
     
     .rst(rst) {
-      fsm_draft man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
+      phaseTwo_fsm man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
       multi_seven_seg seg;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
     }
@@ -43,6 +43,8 @@ module au_top (
     buttoncond.in = io_button[3:0];
     buttondetector.in = buttoncond.out;
     switch_state = buttondetector.out[0];
+    man.confirm_button=buttondetector.out[1];
+    man.colour_button=buttondetector.out[2];
     man.trigger_start = b0;
     man.dips = 16b0;
     
