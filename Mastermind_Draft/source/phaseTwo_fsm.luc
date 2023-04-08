@@ -50,7 +50,7 @@ module phaseTwo_fsm (
 
       phase_two.IDLE:
         if (trigger_start == b1) {
-          phase_three.d = phase_three.POSITION; // rmbr does not reset values...
+          phase_two.d = phase_two.POSITION; // rmbr does not reset values...
         }
 
       phase_two.POSITION:

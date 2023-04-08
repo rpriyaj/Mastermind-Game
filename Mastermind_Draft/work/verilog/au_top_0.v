@@ -60,11 +60,15 @@ module au_top_0 (
   wire [20-1:0] M_man_seg_out;
   reg [16-1:0] M_man_dips;
   reg [1-1:0] M_man_trigger_start;
-  fsm_draft_4 man (
+  reg [1-1:0] M_man_colour_button;
+  reg [1-1:0] M_man_confirm_button;
+  phaseTwo_fsm_4 man (
     .clk(clk),
     .rst(rst),
     .dips(M_man_dips),
     .trigger_start(M_man_trigger_start),
+    .colour_button(M_man_colour_button),
+    .confirm_button(M_man_confirm_button),
     .out(M_man_out),
     .seg_out(M_man_seg_out)
   );
@@ -96,6 +100,8 @@ module au_top_0 (
     M_buttoncond_in = io_button[0+3-:4];
     M_buttondetector_in = M_buttoncond_out;
     switch_state = M_buttondetector_out[0+0-:1];
+    M_man_confirm_button = M_buttondetector_out[1+0-:1];
+    M_man_colour_button = M_buttondetector_out[2+0-:1];
     M_man_trigger_start = 1'h0;
     M_man_dips = 16'h0000;
     M_seg_values = 20'h001c1;
