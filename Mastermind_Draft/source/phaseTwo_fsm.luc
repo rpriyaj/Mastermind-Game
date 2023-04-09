@@ -18,7 +18,8 @@ module phaseTwo_fsm (
   counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
-  fsm phase_two(.clk(clk), .rst(rst)) = {IDLE,POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,UPDATECOLOURINDEX,BACKTOFIRSTCOLOURINDEX,FINISH};
+  fsm phase_two(.clk(clk), .rst(rst)) = {IDLE,POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,UPDATECOLOURINDEX,
+  BACKTOFIRSTCOLOURINDEX, WRITEGUESSREGISTER, BRANCHCHECKPOSITIONINDEX,INCREASEPOSITIONINDEX,UPDATEPOSITIONINDEX,FINISH};
   
   
   always {
@@ -56,15 +57,52 @@ module phaseTwo_fsm (
 
       phase_two.POSITION:
         seg_out={5d0, 5d19, 5d0,5d18}; // 7seg: "0P0S"
+        // Purpose: Reset colour index register to 0 again 
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h1; //Position index 
+        regfile.rb = 4h2; //Colour index 
+        
+        
         if (colour_button ){
           phase_two.d = phase_two.BRANCHCOLOURINDEX;
         }
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
+        
+        
+        
      
       phase_two.BRANCHCOLOURINDEX: // 7seg: "0BCI"
         seg_out={5d0, 5d11, 5d12,5d1};
        
         
         // Purpose: Branch - If colour index ==5, go back to 1. Else increase colour index 
+        // I need to check this 
         
         regfile.ra = 4h2; 
         //regfile.rb = 4h0; // we dont use this 
@@ -192,7 +230,10 @@ module phaseTwo_fsm (
         regfile.rc = 4h2; // WRITE REG C - back to colour register // test write to temp register 
         regfile.we = b1; // WRITE ENABLED
         if (confirm_button){
-          phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
+          phase_two.d = phase_two.WRITEGUESSREGISTER;
+        }
+        else if (colour_button){
+          phase_two.d = phase_two.BRANCHCOLOURINDEX;
         }
         
         
@@ -200,10 +241,12 @@ module phaseTwo_fsm (
       phase_two.BACKTOFIRSTCOLOURINDEX:
         
         seg_out={5d11, 5d17, 5d12,5d1}; // 7SEG: BFCI
-        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        
+        // Purpose: Write 0 to colour index 
+        // TODO we can probably delete this state, since by default 4hF = 0
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        regfile.ra = 4h0; // Refile rb = -- regfile rc = -- 
         regfile.rb = 4h0; // we don't use this 
         
         
@@ -215,15 +258,15 @@ module phaseTwo_fsm (
         // PASS THROUGH ALU
         alu16.a = sel_mux.asel_out;
         alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b000001; // SUB OPERATION
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register 
+        regfile.rc = 4hF; // Write to temp register
         regfile.we = b1; // WRITE ENABLED
         
         
         if (confirm_button){
-          phase_two.d =phase_two.FINISH;
+          phase_two.d =phase_two.UPDATECOLOURINDEX;
         }
         case(dips){
           16h0:
@@ -250,9 +293,205 @@ module phaseTwo_fsm (
             out = regfile.rc_data;
         }
         
+      
+          
+        
+      phase_two.WRITEGUESSREGISTER:
+        seg_out={5d0, 5d0, 5d14,5d20}; //7SEG:"00WR'
+        // TOOD Need help from dian how to write to guess register
+        
+        // Purpose: Write the colour to guess register
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // not using
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h7; // Write to guess register
+        regfile.we = b1; // WRITE ENABLED
+        
+        if (confirm_button){
+          phase_two.d =phase_two.BRANCHCHECKPOSITIONINDEX;
+        }
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
+          
+      phase_two.BRANCHCHECKPOSITIONINDEX:
+          seg_out={5d11, 5d12, 5d19,5d1}; // 7SEG: BCPI
+        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h1; // position index
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b011; // output is 3 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b110101; // CMPLT OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h0; // No writing
+        regfile.we = b0; // WRITE DISABLED
+        
+        // If position index < 3, go to state to increase position index 
+        if (sel_mux.wdsel_out && confirm_button){
+          phase_two.d =phase_two.INCREASEPOSITIONINDEX;
+        }
+        
+        // Else if position index is ==3, go to phase 3  
+        else if(confirm_button){
+          phase_two.d = phase_two.FINISH;
+        }
+        
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
+        
+      phase_two.INCREASEPOSITIONINDEX:
+        seg_out={5d0, 5d1, 5d19,5d1}; // 7SEG: BCPI
+        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h1; // position index
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b010; // output is 1 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b000000; // ADD OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // Write to temp register first 
+        regfile.we = b1; // WRITE ENABLED
+        
+        // Go to position state to wait for colour button press 
+        if (confirm_button){
+          phase_two.d = phase_two.UPDATEPOSITIONINDEX;
+        }
+        
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
+          
+      phase_two.UPDATEPOSITIONINDEX:
+      
+        seg_out={5d0, 5d21, 5d19,5d1}; //7SEG: 0UC1
+        // Purpose: Update position index register 
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h1; // Update position index register
+        regfile.we = b1; // WRITE ENABLED
+        if (confirm_button){
+          phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
+        }
+        
       phase_two.FINISH:
         seg_out={5d17, 5d1, 5d18,5d14};
-        
+        if (confirm_button){
+          phase_two.d = phase_two.POSITION;
+        }
+       
         case(dips){
           16h0:
             out = regfile.ra_data ;

@@ -11,6 +11,7 @@ module regfile (
     output data[16],     // DEBUG ONLY FROM HERE ON <- remove in final project
     output ra_addr[4],
     output rb_addr[4],
+    output rc_addr[4],
     output rc_data[16],
     output we_signal[1]
    
@@ -40,6 +41,7 @@ module regfile (
     data = 16b0;
     ra_addr = 4b0;
     rb_addr = 4b0;
+    rc_addr = 4b0;
     rc_data = 16b0;
     
     if (we) {
@@ -104,6 +106,7 @@ module regfile (
     data = wr_data;
     ra_addr = ra;
     rb_addr = rb;
+    rc_addr = rc;
     we_signal = we;
     case (rc) {
       4h1: rc_data = reg_current_position.q;
