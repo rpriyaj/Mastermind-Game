@@ -22,7 +22,7 @@ module au_top (
     edge_detector buttondetector[4](#RISE(1), #FALL(0));
     
     .rst(rst) {
-      phaseTwo_fsm_1_debug man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
+      combined_fsm_1_debug man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
       multi_seven_seg seg;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
     }
@@ -77,5 +77,5 @@ module au_top (
     io_seg = ~seg.seg; //seg_msg
     io_sel = ~seg.sel;
   }
-au_debugger debugger (#NONCE(82389330), #DATA_WIDTH(144), #CAPTURE_DEPTH(256), .clk(clk));always debugger.data = c{$flatten(man.debug__)};
+au_debugger debugger (#NONCE(766756695), #DATA_WIDTH(322), #CAPTURE_DEPTH(256), .clk(clk));always debugger.data = c{$flatten(man.debug__)};
 }

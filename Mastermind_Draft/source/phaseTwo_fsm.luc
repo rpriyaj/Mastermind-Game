@@ -102,13 +102,13 @@ module phaseTwo_fsm (
         seg_out={5d0, 5d11, 5d12,5d1};
        
         
-        // Purpose: Branch - If colour index ==5, go back to 1. Else increase colour index 
+        // Purpose: Branch - If colour index ==8, go back to 2. Else increase colour index 
         // I need to check this 
         
         regfile.ra = 4h2; 
         //regfile.rb = 4h0; // we dont use this 
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b101;
+        sel_mux.bsel_signal= b111;
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -123,7 +123,7 @@ module phaseTwo_fsm (
         if (sel_mux.wdsel_out && confirm_button){  
           phase_two.d = phase_two.INCREASECOLOURINDEX;
         }
-        else if (confirm_button){ // Else if its = 5, I will go to state BACKTOFIRSTCOLOURINDEX
+        else if (confirm_button){ // Else if its ==8, I will go to state BACKTOFIRSTCOLOURINDEX
         
           phase_two.d = phase_two.BACKTOFIRSTCOLOURINDEX;
         }
@@ -231,7 +231,7 @@ module phaseTwo_fsm (
         regfile.rc = 4h2; // WRITE REG C - back to colour register // test write to temp register 
         regfile.we = b1; // WRITE ENABLED
         if (confirm_button){
-          phase_two.d = phase_two.ADDTOGUESSINDEX;
+          phase_two.d = phase_two.SHIFTLEFTGUESSINDEX;
         }
         else if (colour_button){
           phase_two.d = phase_two.BRANCHCOLOURINDEX;
@@ -243,7 +243,7 @@ module phaseTwo_fsm (
         
         seg_out={5d11, 5d17, 5d12,5d1}; // 7SEG: BFCI
         
-        // Purpose: Write 0 to colour index 
+        // Purpose: I want to 8-6
         // TODO we can probably delete this state, since by default 4hF = 0
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
@@ -252,14 +252,14 @@ module phaseTwo_fsm (
         
         
         // SELECTOR MUX
-        sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b010; // output is 1 from bsel 
+        sel_mux.asel_signal=  b11; // output is 2 from asel 
+        sel_mux.bsel_signal= b0; 
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
         alu16.a = sel_mux.asel_out;
         alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        alu16.alufn_signal = 6b011010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hF; // Write to temp register
@@ -294,6 +294,81 @@ module phaseTwo_fsm (
             out = regfile.rc_data;
         }
         
+      phase_two.SHIFTLEFTGUESSINDEX:
+        // Purpose: Shift the guess index left by 4
+        
+        seg_out = {5d0, 5d18, 5d14, 5d20};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h7; // READ GUESS REG
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODED VALUE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b100111; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C -TEMP
+        regfile.we = b1; // WRITE ENABLED
+        
+        if (confirm_button){
+          phase_two.d =phase_two.UPDATESHIFTEDGUESSINDEX;
+        }
+        case(dips){
+          16h0:
+            out = regfile.ra_data ;
+          16h1:
+            out = regfile.rb_data ;
+          16h3:
+            out = sel_mux.asel_out ;
+          16h4:
+            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
+          16h5:
+            out = alu16.a_data; //16b0001 0110 1000 0000
+          16h6:
+            out = alu16.b_data; //16b1111 0000 0000 0000
+          16h7:
+            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
+          16h8:
+            out = alu16.out ;
+          16h9:
+            out = sel_mux.wdsel_out;
+          16hA:
+            out = regfile.we_signal;
+          16hB:
+            out = regfile.rc_data;
+        }
+        
+      phase_two.UPDATESHIFTEDGUESSINDEX:
+        
+        // Purpose: Update guess index after being shifted
+        
+        seg_out={5d21, 5d18, 5d21,5d1}; //7SEG: USU1
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // 
+        regfile.rb = 4h0; // we don't use this 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h7; // Write to guess index 
+        regfile.we = b1; // WRITE ENABLED
+        if (confirm_button){
+          phase_two.d = phase_two.ADDTOGUESSINDEX;
+        }    
       phase_two.ADDTOGUESSINDEX:
         seg_out={5d0, 5d0, 5d10,5d20}; //7SEG:"00AR'
         
@@ -371,85 +446,11 @@ module phaseTwo_fsm (
         regfile.rc = 4h7; // Write to guess index 
         regfile.we = b1; // WRITE ENABLED
         if (confirm_button){
-          phase_two.d = phase_two.SHIFTLEFTGUESSINDEX;
+          phase_two.d = phase_two.BRANCHCHECKPOSITIONINDEX;
         }
          
         
-      phase_two.SHIFTLEFTGUESSINDEX:
-        // Purpose: Shift the guess index left by 4
-        
-        seg_out = {5d0, 5d18, 5d14, 5d20};
-        
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h7; // READ GUESS REG
-        regfile.rb = 4h0; // READ REG B - --
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal = 2b0; // ACCESS RA
-        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODED VALUE 4
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.alufn_signal = 6b100111; // SHCL OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // WRITE REG C -TEMP
-        regfile.we = b1; // WRITE ENABLED
-        
-        if (confirm_button){
-          phase_two.d =phase_two.UPDATESHIFTEDGUESSINDEX;
-        }
-        case(dips){
-          16h0:
-            out = regfile.ra_data ;
-          16h1:
-            out = regfile.rb_data ;
-          16h3:
-            out = sel_mux.asel_out ;
-          16h4:
-            out = sel_mux.bsel_out ; //16b0001 0000 0000 0000
-          16h5:
-            out = alu16.a_data; //16b0001 0110 1000 0000
-          16h6:
-            out = alu16.b_data; //16b1111 0000 0000 0000
-          16h7:
-            out = alu16.aluop_signal ; //16b0001 0000 0000 0000
-          16h8:
-            out = alu16.out ;
-          16h9:
-            out = sel_mux.wdsel_out;
-          16hA:
-            out = regfile.we_signal;
-          16hB:
-            out = regfile.rc_data;
-        }
-        
-      phase_two.UPDATESHIFTEDGUESSINDEX:
-        
-        // Purpose: Update guess index after being shifted
-        
-        seg_out={5d21, 5d18, 5d21,5d1}; //7SEG: USU1
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; // 
-        regfile.rb = 4h0; // we don't use this 
-        
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel 
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.a = sel_mux.asel_out;
-        alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b11010; // "A" OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h7; // Write to guess index 
-        regfile.we = b1; // WRITE ENABLED
-        if (confirm_button){
-          phase_two.d = phase_two.BRANCHCHECKPOSITIONINDEX;
-        }  
+      
           
       phase_two.BRANCHCHECKPOSITIONINDEX:
           seg_out={5d11, 5d12, 5d19,5d1}; // 7SEG: BCPI

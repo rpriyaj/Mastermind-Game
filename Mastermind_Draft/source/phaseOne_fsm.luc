@@ -1,7 +1,7 @@
 //Need to configure in au_top: colour button, confirm button
 
 
-module phaseTwo_fsm (
+module phaseOne_fsm (
     input clk,  // clock
     input rst,  // reset
     input dips[16], // dip switches

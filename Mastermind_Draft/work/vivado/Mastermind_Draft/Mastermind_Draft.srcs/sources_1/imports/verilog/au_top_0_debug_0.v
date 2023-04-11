@@ -58,12 +58,12 @@ module au_top_0 (
   endgenerate
   wire [16-1:0] M_man_out;
   wire [20-1:0] M_man_seg_out;
-  wire [144-1:0] M_man_debug__;
+  wire [322-1:0] M_man_debug__;
   reg [16-1:0] M_man_dips;
   reg [1-1:0] M_man_trigger_start;
   reg [1-1:0] M_man_colour_button;
   reg [1-1:0] M_man_confirm_button;
-  phaseTwo_fsm_1_debug_4 man (
+  combined_fsm_1_debug_4 man (
     .clk(clk),
     .rst(rst),
     .dips(M_man_dips),
@@ -130,7 +130,7 @@ module au_top_0 (
     io_sel = ~M_seg_sel;
   end
   
-  reg [144-1:0] M_debugger_data;
+  reg [322-1:0] M_debugger_data;
   au_debugger_6 debugger (
     .clk(clk),
     .data(M_debugger_data)

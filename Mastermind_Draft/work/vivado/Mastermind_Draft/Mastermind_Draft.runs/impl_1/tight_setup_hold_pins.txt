@@ -1,0 +1,12 @@
++====================+===================+====================================+
+| Launch Setup Clock | Launch Hold Clock | Pin                                |
++====================+===================+====================================+
+| clk_0              | clk_0             | debugger/M_state_q_reg[1]/D        |
+| clk_0              | clk_0             | debugger/M_state_q_reg[0]/D        |
+| clk_0              | clk_0             | man/M_phase_q_reg[1]/D             |
+| clk_0              | clk_0             | man/FSM_onehot_M_phase_q_reg[4]/D  |
+| clk_0              | clk_0             | man/M_phase_q_reg[3]/D             |
+| clk_0              | clk_0             | man/FSM_onehot_M_phase_q_reg[3]/D  |
+| clk_0              | clk_0             | man/FSM_onehot_M_phase_q_reg[28]/D |
+| clk_0              | clk_0             | man/M_phase_q_reg[5]/D             |
++--------------------+-------------------+------------------------------------+

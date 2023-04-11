@@ -13,18 +13,18 @@ module regfile_2_debug (
     output rb_addr[4],
     output rc_addr[4],
     output rc_data[16],
-    output we_signal[1], output debug__ [64]
+    output we_signal[1], output debug__ [208]
    
   ) {
   
   // CHANGE DEFAULT VALUES IN #INIT(_) 
   dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
-  dff reg_current_colour[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_current_colour[16](#INIT(2), .clk(clk), .rst(rst));
   dff reg_current_guess_count[16](#INIT(7), .clk(clk), .rst(rst));
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
-  dff reg_code[16](#INIT(17921), .clk(clk), .rst(rst));
+  dff reg_code[16](#INIT(17959), .clk(clk), .rst(rst));
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
-  dff reg_guess[16](#INIT(5760), .clk(clk), .rst(rst));
+  dff reg_guess[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_guess_helper[16](#INIT(61440), .clk(clk), .rst(rst));
   dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_code[16](#INIT(0), .clk(clk), .rst(rst));
@@ -127,5 +127,5 @@ module regfile_2_debug (
       default: rc_data = 16b0;
     }
   }
-always debug__ = c{$flatten(reg_current_position.q), $flatten(reg_current_colour.q), $flatten(reg_guess.q), $flatten(reg_temp.q)};
+always debug__ = c{$flatten(reg_current_position.q), $flatten(reg_current_colour.q), $flatten(reg_current_guess_count.q), $flatten(reg_game_mode.q), $flatten(reg_code.q), $flatten(reg_code_helper.q), $flatten(reg_guess.q), $flatten(reg_guess_helper.q), $flatten(reg_hint.q), $flatten(reg_temp_code.q), $flatten(reg_temp_guess.q), $flatten(reg_temp_counter.q), $flatten(reg_temp.q)};
 }

@@ -19,12 +19,12 @@ module regfile (
   
   // CHANGE DEFAULT VALUES IN #INIT(_) 
   dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
-  dff reg_current_colour[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_current_colour[16](#INIT(2), .clk(clk), .rst(rst));
   dff reg_current_guess_count[16](#INIT(7), .clk(clk), .rst(rst));
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
-  dff reg_code[16](#INIT(17921), .clk(clk), .rst(rst));
+  dff reg_code[16](#INIT(17959), .clk(clk), .rst(rst));
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
-  dff reg_guess[16](#INIT(5760), .clk(clk), .rst(rst));
+  dff reg_guess[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_guess_helper[16](#INIT(61440), .clk(clk), .rst(rst));
   dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_code[16](#INIT(0), .clk(clk), .rst(rst));
