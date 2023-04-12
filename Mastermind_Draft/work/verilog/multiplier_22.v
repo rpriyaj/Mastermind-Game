@@ -4,20 +4,25 @@
    This is a temporary file and any changes made to it will be destroyed.
 */
 
-/*
-   Parameters:
-     WIDTH = DIGIT_BITS
-*/
-module decoder_10 (
-    input [1:0] in,
-    output reg [3:0] out
+module multiplier_22 (
+    input rst,
+    input [15:0] a,
+    input [15:0] b,
+    input [5:0] alufn_op,
+    output reg [15:0] out
   );
   
-  localparam WIDTH = 2'h2;
   
   
   always @* begin
-    out = 1'h0;
-    out[(in)*1+0-:1] = 1'h1;
+    
+    case (alufn_op)
+      default: begin
+        out = 16'h0000;
+      end
+      6'h02: begin
+        out = a * b;
+      end
+    endcase
   end
 endmodule

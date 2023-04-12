@@ -4,7 +4,7 @@
    This is a temporary file and any changes made to it will be destroyed.
 */
 
-module led_out_5 (
+module led_out_11 (
     input clk,
     input rst,
     input update,
@@ -35,7 +35,7 @@ module led_out_5 (
   wire [1-1:0] M_led_strip_reset;
   reg [1-1:0] M_led_strip_update;
   reg [24-1:0] M_led_strip_color;
-  ws2812b_writer_11 led_strip (
+  ws2812b_writer_23 led_strip (
     .clk(clk),
     .rst(rst),
     .update(M_led_strip_update),
@@ -91,18 +91,18 @@ module led_out_5 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_state_q <= 1'h0;
+      M_temp_encoding_q <= 1'h0;
     end else begin
-      M_state_q <= M_state_d;
+      M_temp_encoding_q <= M_temp_encoding_d;
     end
   end
   
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_temp_encoding_q <= 1'h0;
+      M_state_q <= 1'h0;
     end else begin
-      M_temp_encoding_q <= M_temp_encoding_d;
+      M_state_q <= M_state_d;
     end
   end
   

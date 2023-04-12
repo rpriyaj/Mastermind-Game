@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Mastermind_Draft" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <component>pipeline.luc</component>
     <src top="true">au_top.luc</src>
-    <component>counter.luc</component>
-    <src>fsm_draft.luc</src>
-    <src>led_tester.luc</src>
-    <src>adder.luc</src>
-    <src>shifter.luc</src>
-    <src>boolean.luc</src>
-    <src>regfile_manual_test.luc</src>
-    <src>ws2812b_writer.luc</src>
-    <src>alu.luc</src>
-    <component>reset_conditioner.luc</component>
-    <src>regfile.luc</src>
-    <component>button_conditioner.luc</component>
-    <src>combined_fsm.luc</src>
-    <src>seven_seg.luc</src>
-    <src>sel_mux_manual_test.luc</src>
     <src>phaseOne_fsm.luc</src>
+    <component>pipeline.luc</component>
+    <src>regfile.luc</src>
+    <component>counter.luc</component>
+    <src>boolean.luc</src>
+    <src>adder.luc</src>
+    <src>multiplier.luc</src>
+    <src>shifter.luc</src>
+    <src>phaseThree_fsm.luc</src>
+    <src>seven_seg.luc</src>
+    <src>led_out.luc</src>
+    <src>phaseTwo_fsm.luc</src>
+    <component>reset_conditioner.luc</component>
+    <src>sel_mux_manual_test.luc</src>
+    <src>comparator.luc</src>
+    <component>button_conditioner.luc</component>
+    <src>regfile_manual_test.luc</src>
+    <src>led_tester.luc</src>
+    <src>ws2812b_writer.luc</src>
+    <src>combined_fsm.luc</src>
+    <src>fsm_draft.luc</src>
+    <component>decoder.luc</component>
     <src>sel_mux.luc</src>
     <src>multi_seven_seg.luc</src>
-    <src>comparator.luc</src>
-    <src>led_out.luc</src>
-    <component>decoder.luc</component>
-    <src>phaseTwo_fsm.luc</src>
-    <src>multiplier.luc</src>
     <component>edge_detector.luc</component>
+    <src>alu.luc</src>
     <constraint>custom.acf</constraint>
-    <constraint lib="true">au.xdc</constraint>
+    <constraint>bypass.xdc</constraint>
   </files>
 </project>

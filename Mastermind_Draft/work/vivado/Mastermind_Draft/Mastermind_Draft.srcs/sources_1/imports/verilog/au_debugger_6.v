@@ -6,18 +6,18 @@
 
 /*
    Parameters:
-     DATA_WIDTH = 48
+     DATA_WIDTH = 72
      CAPTURE_DEPTH = 256
-     NONCE = 2739258501
+     NONCE = 1401917182
 */
 module au_debugger_6 (
     input clk,
-    input [47:0] data
+    input [71:0] data
   );
   
-  localparam DATA_WIDTH = 6'h30;
+  localparam DATA_WIDTH = 7'h48;
   localparam CAPTURE_DEPTH = 9'h100;
-  localparam NONCE = 32'ha345c485;
+  localparam NONCE = 31'h538f8efe;
   
   
   localparam VERSION = 2'h3;
@@ -143,7 +143,7 @@ module au_debugger_6 (
   reg [1-1:0] M_config_fifo_din;
   reg [1-1:0] M_config_fifo_wput;
   reg [1-1:0] M_config_fifo_rget;
-  async_fifo_12 config_fifo (
+  async_fifo_16 config_fifo (
     .wclk(M_config_scan_TCK),
     .wrst(1'h0),
     .rclk(clk),
@@ -163,8 +163,8 @@ module au_debugger_6 (
   
   reg [1:0] M_state_d, M_state_q = IDLE_state;
   reg [7:0] M_waddr_d, M_waddr_q = 1'h0;
-  reg [47:0] M_data_old_d, M_data_old_q = 1'h0;
-  reg [191:0] M_trigger_data_d, M_trigger_data_q = 1'h0;
+  reg [71:0] M_data_old_d, M_data_old_q = 1'h0;
+  reg [287:0] M_trigger_data_d, M_trigger_data_q = 1'h0;
   wire [1-1:0] M_arm_sync_out;
   reg [1-1:0] M_arm_sync_in;
   pipeline_7 arm_sync (
@@ -181,8 +181,8 @@ module au_debugger_6 (
   );
   
   reg [7:0] M_raddr_d, M_raddr_q = 1'h0;
-  reg [5:0] M_offset_d, M_offset_q = 1'h0;
-  reg [47:0] M_rdata_d, M_rdata_q = 1'h0;
+  reg [6:0] M_offset_d, M_offset_q = 1'h0;
+  reg [71:0] M_rdata_d, M_rdata_q = 1'h0;
   
   wire [1-1:0] M_status_sync_out;
   reg [1-1:0] M_status_sync_in;
@@ -193,12 +193,12 @@ module au_debugger_6 (
   );
   reg M_force_d, M_force_q = 1'h0;
   
-  wire [48-1:0] M_ram_read_data;
+  wire [72-1:0] M_ram_read_data;
   reg [8-1:0] M_ram_waddr;
-  reg [48-1:0] M_ram_write_data;
+  reg [72-1:0] M_ram_write_data;
   reg [1-1:0] M_ram_write_en;
   reg [8-1:0] M_ram_raddr;
-  simple_dual_ram_13 #(.SIZE(6'h30), .DEPTH(9'h100)) ram (
+  simple_dual_ram_17 #(.SIZE(7'h48), .DEPTH(9'h100)) ram (
     .rclk(M_data_scan_TCK),
     .wclk(clk),
     .waddr(M_ram_waddr),
@@ -212,7 +212,7 @@ module au_debugger_6 (
   
   reg triggered;
   
-  reg [191:0] trigger_type;
+  reg [287:0] trigger_type;
   
   always @* begin
     M_state_d = M_state_q;
@@ -227,7 +227,7 @@ module au_debugger_6 (
     
     if (M_info_scan_SEL) begin
       if (M_info_scan_CAPTURE) begin
-        M_status_d = 104'h030000010000000030a345c485;
+        M_status_d = 104'h030000010000000048538f8efe;
       end else begin
         if (M_info_scan_SHIFT) begin
           M_status_d = {M_status_q[0+0-:1], M_status_q[1+102-:103]};
@@ -240,7 +240,7 @@ module au_debugger_6 (
     M_config_scan_TDO = 1'h0;
     M_config_fifo_rget = 1'h1;
     if (!M_config_fifo_empty) begin
-      M_trigger_data_d = {M_config_fifo_dout, M_trigger_data_q[1+190-:191]};
+      M_trigger_data_d = {M_config_fifo_dout, M_trigger_data_q[1+286-:287]};
     end
     M_ram_waddr = M_waddr_q;
     M_ram_write_data = data;
@@ -257,7 +257,7 @@ module au_debugger_6 (
       end
       ARMED_state: begin
         triggered = 1'h1;
-        for (i = 1'h0; i < 6'h30; i = i + 1) begin
+        for (i = 1'h0; i < 7'h48; i = i + 1) begin
           triggered = triggered & ((trigger_type[(i)*4+0+0-:1] && M_data_old_q[(i)*1+0-:1] == 1'h0 && data[(i)*1+0-:1] == 1'h1) || (trigger_type[(i)*4+1+0-:1] && M_data_old_q[(i)*1+0-:1] == 1'h1 && data[(i)*1+0-:1] == 1'h0) || (trigger_type[(i)*4+2+0-:1] && data[(i)*1+0-:1] == 1'h0) || (trigger_type[(i)*4+3+0-:1] && data[(i)*1+0-:1] == 1'h1) || trigger_type[(i)*4+3-:4] == 4'h0);
         end
         if (triggered || M_force_sync_out) begin
@@ -283,9 +283,9 @@ module au_debugger_6 (
         M_offset_d = 1'h0;
       end else begin
         if (M_data_scan_SHIFT) begin
-          M_rdata_d = {1'h0, M_rdata_q[1+46-:47]};
+          M_rdata_d = {1'h0, M_rdata_q[1+70-:71]};
           M_offset_d = M_offset_q + 1'h1;
-          if (M_offset_q == 7'h2f) begin
+          if (M_offset_q == 8'h47) begin
             M_offset_d = 1'h0;
             M_rdata_d = M_ram_read_data;
             M_raddr_d = M_raddr_q + 1'h1;
@@ -307,15 +307,6 @@ module au_debugger_6 (
     end
   end
   
-  always @(posedge M_capture_scan_TCK) begin
-    if (!M_capture_scan_SEL == 1'b1) begin
-      M_force_q <= 1'h0;
-    end else begin
-      M_force_q <= M_force_d;
-    end
-  end
-  
-  
   always @(posedge M_info_scan_TCK) begin
     M_status_q <= M_status_d;
   end
@@ -331,6 +322,15 @@ module au_debugger_6 (
     end else begin
       M_waddr_q <= M_waddr_d;
       M_state_q <= M_state_d;
+    end
+  end
+  
+  
+  always @(posedge M_capture_scan_TCK) begin
+    if (!M_capture_scan_SEL == 1'b1) begin
+      M_force_q <= 1'h0;
+    end else begin
+      M_force_q <= M_force_d;
     end
   end
   

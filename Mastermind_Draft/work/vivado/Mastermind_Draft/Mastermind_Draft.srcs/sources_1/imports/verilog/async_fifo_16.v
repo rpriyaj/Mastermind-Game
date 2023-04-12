@@ -9,7 +9,7 @@
      SIZE = 1
      DEPTH = 8
 */
-module async_fifo_12 (
+module async_fifo_16 (
     input wclk,
     input wrst,
     input [0:0] din,
@@ -43,7 +43,7 @@ module async_fifo_12 (
   reg [1-1:0] M_ram_write_en;
   reg [1-1:0] M_ram_rclk;
   reg [3-1:0] M_ram_raddr;
-  simple_dual_ram_14 #(.SIZE(1'h1), .DEPTH(4'h8)) ram (
+  simple_dual_ram_24 #(.SIZE(1'h1), .DEPTH(4'h8)) ram (
     .wclk(M_ram_wclk),
     .waddr(M_ram_waddr),
     .write_data(M_ram_write_data),
@@ -104,19 +104,6 @@ module async_fifo_12 (
     dout = M_ram_read_data;
   end
   
-  always @(posedge rclk) begin
-    if (rrst == 1'b1) begin
-      M_raddr_q <= 1'h0;
-      M_rsync_q <= 1'h0;
-      M_grsync_q <= 1'h0;
-    end else begin
-      M_raddr_q <= M_raddr_d;
-      M_rsync_q <= M_rsync_d;
-      M_grsync_q <= M_grsync_d;
-    end
-  end
-  
-  
   always @(posedge wclk) begin
     if (wrst == 1'b1) begin
       M_waddr_q <= 1'h0;
@@ -126,6 +113,19 @@ module async_fifo_12 (
       M_waddr_q <= M_waddr_d;
       M_wsync_q <= M_wsync_d;
       M_gwsync_q <= M_gwsync_d;
+    end
+  end
+  
+  
+  always @(posedge rclk) begin
+    if (rrst == 1'b1) begin
+      M_raddr_q <= 1'h0;
+      M_rsync_q <= 1'h0;
+      M_grsync_q <= 1'h0;
+    end else begin
+      M_raddr_q <= M_raddr_d;
+      M_rsync_q <= M_rsync_d;
+      M_grsync_q <= M_grsync_d;
     end
   end
   

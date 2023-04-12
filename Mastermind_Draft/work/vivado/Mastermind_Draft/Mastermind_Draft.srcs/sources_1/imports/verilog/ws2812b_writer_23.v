@@ -8,7 +8,7 @@
    Parameters:
      PIXEL_COUNT = PIXEL_COUNT
 */
-module ws2812b_writer_11 (
+module ws2812b_writer_23 (
     input clk,
     input rst,
     input update,
