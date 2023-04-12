@@ -14,7 +14,7 @@ module fsm_draft_1_debug_4 (
     output reg [15:0] out,
     output reg [19:0] seg_out,
     output reg [3:0] outled,
-    output reg [71:0] debug__
+    output reg [19:0] debug__
   );
   
   
@@ -51,7 +51,7 @@ module fsm_draft_1_debug_4 (
   wire [4-1:0] M_regfile_rc_addr;
   wire [16-1:0] M_regfile_rc_data;
   wire [1-1:0] M_regfile_we_signal;
-  wire [72-1:0] M_regfile_debug__;
+  wire [20-1:0] M_regfile_debug__;
   reg [4-1:0] M_regfile_ra;
   reg [4-1:0] M_regfile_rb;
   reg [4-1:0] M_regfile_rc;
@@ -174,9 +174,14 @@ module fsm_draft_1_debug_4 (
   localparam SHIFTATTEMPTCOUNT_phase = 6'd41;
   localparam UPDATEATTEMPTCOUNT_phase = 6'd42;
   localparam BRANCHATTEMPTCOUNT_phase = 6'd43;
-  localparam LOSE_phase = 6'd44;
-  localparam WIN_phase = 6'd45;
-  localparam GAMEOVER_phase = 6'd46;
+  localparam RESETPOSITION_phase = 6'd44;
+  localparam RESETCOLOUR_phase = 6'd45;
+  localparam RESETHINT_phase = 6'd46;
+  localparam RESETCOUNTER_phase = 6'd47;
+  localparam RESETATTEMPT_phase = 6'd48;
+  localparam LOSE_phase = 6'd49;
+  localparam WIN_phase = 6'd50;
+  localparam GAMEOVER_phase = 6'd51;
   
   reg [5:0] M_phase_d, M_phase_q = IDLE_phase;
   
@@ -215,6 +220,15 @@ module fsm_draft_1_debug_4 (
         seg_out = 20'h04c12;
         M_regfile_ra = 4'h1;
         M_regfile_rb = 4'h2;
+        
+        case (dips)
+          1'h1: begin
+            out = M_sel_mux_asel_out;
+          end
+          2'h2: begin
+            out = M_sel_mux_bsel_out;
+          end
+        endcase
         if (colour_button) begin
           M_phase_d = BRANCHCOLOURINDEX_phase;
         end
@@ -296,7 +310,7 @@ module fsm_draft_1_debug_4 (
         M_sel_mux_asel_signal = 2'h0;
         M_sel_mux_bsel_signal = 3'h4;
         M_sel_mux_wdsel_signal = 2'h0;
-        M_alu16_alufn_signal = 6'h23;
+        M_alu16_alufn_signal = 6'h20;
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         if (trigger_start) begin
@@ -843,8 +857,50 @@ module fsm_draft_1_debug_4 (
           if (M_sel_mux_wdsel_out == 16'h0001) begin
             M_phase_d = LOSE_phase;
           end else begin
-            M_phase_d = IDLE_phase;
+            M_phase_d = RESETPOSITION_phase;
           end
+        end
+      end
+      RESETPOSITION_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h2;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h1;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = RESETCOLOUR_phase;
+        end
+      end
+      RESETCOLOUR_phase: begin
+        seg_out = 20'ha5282;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h3;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h2;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = RESETHINT_phase;
+        end
+      end
+      RESETHINT_phase: begin
+        seg_out = 20'ha5283;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h2;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h9;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = IDLE_phase;
         end
       end
       LOSE_phase: begin
@@ -861,6 +917,34 @@ module fsm_draft_1_debug_4 (
       end
       GAMEOVER_phase: begin
         seg_out = 20'h8864e;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = RESETCOUNTER_phase;
+        end
+      end
+      RESETCOUNTER_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h1;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'hc;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = RESETATTEMPT_phase;
+        end
+      end
+      RESETATTEMPT_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 3'h4;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'hc;
+        M_regfile_we = 1'h1;
         if (trigger_start == 1'h1) begin
           M_phase_d = IDLE_phase;
         end

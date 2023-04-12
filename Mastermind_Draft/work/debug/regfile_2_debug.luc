@@ -13,14 +13,14 @@ module regfile_2_debug (
     output rb_addr[4],
     output rc_addr[4],
     output rc_data[16],
-    output we_signal[1], output debug__ [72]
+    output we_signal[1], output debug__ [20]
    
   ) {
   
   // CHANGE DEFAULT VALUES IN #INIT(_) 
   dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_current_colour[16](#INIT(2), .clk(clk), .rst(rst));
-  dff reg_current_guess_count[8](#INIT(128), .clk(clk), .rst(rst)); //h80
+  dff reg_current_guess_count[4](#INIT(8), .clk(clk), .rst(rst)); //h80
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
   dff reg_code[16](#INIT(17959), .clk(clk), .rst(rst));
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
@@ -127,5 +127,5 @@ module regfile_2_debug (
       default: rc_data = 16b0;
     }
   }
-always debug__ = c{$flatten(reg_current_guess_count.q), $flatten(reg_code.q), $flatten(reg_guess.q), $flatten(reg_hint.q), $flatten(reg_temp.q)};
+always debug__ = c{$flatten(reg_current_guess_count.q), $flatten(reg_hint.q)};
 }
