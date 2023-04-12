@@ -3,7 +3,7 @@ module sel_mux (
     input rb_data[16],
     input alu_data[16],
     input asel_signal[2],
-    input bsel_signal[3],
+    input bsel_signal[4],
     input wdsel_signal[2],
     output asel_out[16],
     output bsel_out[16],
@@ -36,7 +36,9 @@ module sel_mux (
       b100 : bsel_out = 16b100; 
       b101 : bsel_out = 16b101; 
       b110 : bsel_out = 16b110;
-      b111 : bsel_out = 16b1000;
+      b111 : bsel_out = 16b111;
+      b1000: bsel_out = 16b1000;
+      b1100: bsel_out = 16b1100; //12 
       default : bsel_out = rb_data;
     }
     

@@ -15,7 +15,7 @@ module au_top (
   
   sig rst;                  // reset signal
   var index;
-  sig trigger_led;
+  //sig trigger_led;
   sig switch_state;
   
   .clk(clk) {
@@ -27,7 +27,9 @@ module au_top (
     
     .rst(rst) {
       //combined_fsm man; 
-      fsm_draft man;
+      //fsm_draft man;
+      //led_phasetwo man;
+      led2 man;
       multi_seven_seg seg;
       //led_out led_out[4]; // for now its 4 but later its 8 strips (hint)
       //led_tester led_test;
@@ -49,11 +51,11 @@ module au_top (
     io_seg = 8hff;          // turn segments off
     io_sel = 4hf;           // select no digits
     
-    buttoncond.in[3:0] = io_button[3:0];
-    buttoncond.in[5:4] = inbutton;
+    buttoncond.in[4:0] = io_button[4:0];
+    //buttoncond.in[5:4] = inbutton;
     buttondetector.in = buttoncond.out;
     switch_state = buttondetector.out[0];
-    trigger_led = buttondetector.out[1];
+    //trigger_led = buttondetector.out[1];
     
     /* LED DEBUGGING
     // NOTE: JUST FOR DEBUGGING
@@ -114,8 +116,8 @@ module au_top (
         man.dips[7:0] = io_dip[0];
         man.dips[15:8] = io_dip[1];
         man.trigger_start = buttondetector.out[3];
-        man.confirm_button = buttondetector.out[4];
-        man.colour_button = buttondetector.out[5];
+        man.confirm_button = buttondetector.out[1];
+        man.colour_button = buttondetector.out[2];
         
         outled[3:0] = man.outled;                
         seg.values = man.seg_out;

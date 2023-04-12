@@ -1,17 +1,17 @@
 module regfile (
     input clk,           // clock
     input rst,           // reset
-    input ra[4],         // hex address of ra
-    input rb[4],         // hex address of rb
-    input rc[4],         // hex address of rc
+    input ra[5],         // hex address of ra
+    input rb[5],         // hex address of rb
+    input rc[5],         // hex address of rc
     input we,            // write signal
     input wr_data[16],   // data to write to register
     output ra_data[16],  // data in ra
     output rb_data[16],  // data in rb
     output data[16],     // DEBUG ONLY FROM HERE ON <- remove in final project
-    output ra_addr[4],
-    output rb_addr[4],
-    output rc_addr[4],
+    output ra_addr[5],
+    output rb_addr[5],
+    output rc_addr[5],
     output rc_data[16],
     output we_signal[1]
    
@@ -26,14 +26,15 @@ module regfile (
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
   dff reg_guess[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_guess_helper[16](#INIT(61440), .clk(clk), .rst(rst));
-  dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst)); 
   dff reg_temp_code[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_guess[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_counter[16](#INIT(1), .clk(clk), .rst(rst));
   dff reg_imposter[16](#INIT(3),.clk(clk), .rst(rst));
-  dff reg_error[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_error[16](#INIT(16b0010001000100010), .clk(clk), .rst(rst));
   dff reg_temp[16](#INIT(0), .clk(clk), .rst(rst));    
-  
+  dff reg_and[16](#INIT(16b0000111111111111), .clk(clk), .rst(rst));
+  dff reg_led_colour[16](#INIT(16b0011001100110011), .clk(clk), .rst(rst));
   always {
   
     ra_data = 16b0;
@@ -61,6 +62,8 @@ module regfile (
         4hD: reg_imposter.d = wr_data;
         4hE: reg_error.d = wr_data;
         4hF: reg_temp.d = wr_data;
+        5h10:reg_and.d = wr_data;
+        5h11: reg_led_colour.d = wr_data;
       }
     }
     
@@ -80,6 +83,8 @@ module regfile (
       4hD: ra_data = reg_imposter.q;
       4hE: ra_data = reg_error.q;
       4hF: ra_data = reg_temp.q;
+      5h10: ra_data = reg_and.q;
+      5h11: ra_data = reg_led_colour.q;
       default: ra_data = 16b0;
     }
     
@@ -99,6 +104,8 @@ module regfile (
       4hD: rb_data = reg_imposter.q;
       4hE: rb_data = reg_error.q;
       4hF: rb_data = reg_temp.q;
+      5h10: rb_data = reg_and.q;
+      5h11: rb_data = reg_led_colour.q;
       default: rb_data = 16b0;
     }
     
@@ -124,6 +131,8 @@ module regfile (
       4hD: rc_data = reg_imposter.q;
       4hE: rc_data = reg_error.q;
       4hF: rc_data = reg_temp.q;
+      5h10: rc_data = reg_and.q;
+      5h11: rc_data = reg_led_colour.q;
       default: rc_data = 16b0;
     }
   }

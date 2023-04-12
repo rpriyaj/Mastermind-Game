@@ -1,0 +1,117 @@
+module led_phasetwo (
+    input clk,  // clock
+    input rst,  // reset
+    input dips[16], // dip switches
+    input trigger_start, //This is a debug button to move from states to states -> most left button
+    input colour_button, //Colour_button -> C2
+    input confirm_button, //confirm_button -> C3
+    output out[16],
+    output seg_out[4][5],
+    // add output from ledout[4][1]
+    output outled[4]
+  ) {
+  
+  var index;
+  var current_colour[16];
+  var current_position[16];
+  
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  
+  // INSTANTIATE LEDOUT IN FSM HERE
+  led_out led_out[4](.clk(clk), .rst(rst));
+  
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  
+  fsm phase(.clk(clk), .rst(rst)) = {
+    
+    // PHASE 2
+    IDLE,
+    POSITION,
+    FINISH
+    };
+  
+  
+  always {
+    // INITIALIZE VALUES
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    alu16.alufn_signal = 6b0;
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    
+    // CONNECTIONS
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    sel_mux.alu_data = alu16.out;
+    regfile.wr_data = sel_mux.wdsel_out;
+    
+    out = 16b0;
+    seg_out =  {5b0, 5b0, 5b0, 5b0};
+    
+    slow_edge.in = slow_clock.value;
+    
+    led_out.update = 4x{0};
+    led_out.encode = 4x{{16b0}};
+    
+    // ALWAYS CONNECT OUTPUT OF LEDOUT
+    outled = led_out.led;
+    
+    // FSM
+    case(phase.q){
+      
+      phase.IDLE:
+        if (trigger_start == b1) {
+          phase.d = phase.POSITION; // rmbr does not reset values...
+        }
+      
+      phase.POSITION:
+        seg_out={5d0, 5d19, 5d0,5d18}; // 7seg: "0P0S"
+        // Purpose: Read led strip as all red 
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hE; // Refile rb = -- regfile rc = -- 
+        regfile.rb = 4h3; // READ REG B - CURRENT LED
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // 
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011010; // "A" OPERATION
+        
+        
+        //current_colour = sel_mux.bsel_out;
+        //current_colour[15:12] = sel_mux.asel_out; //this is ok because colour index <=8
+        //current_position = 4b0001;
+        led_out.encode = 4x{{sel_mux.asel_out}};
+        led_out.update = 4x{0};
+        
+        out = sel_mux.asel_out;
+        /*
+        for (index = 0; index<4; index++) {
+          led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
+        }
+        */
+
+        
+        if (confirm_button){
+          phase.d = phase.FINISH;
+        }
+        
+      phase.FINISH:
+        seg_out = {5d17, 5d1, 5d18, 5d14};
+          
+    }
