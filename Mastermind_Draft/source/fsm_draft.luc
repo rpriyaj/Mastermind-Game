@@ -24,17 +24,17 @@ module fsm_draft (
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
   fsm phase(.clk(clk), .rst(rst)) = {
-  
+    
     // PHASE 2
     IDLE,
     POSITION,
     BRANCHCOLOURINDEX,
     INCREASECOLOURINDEX,
     UPDATECOLOURINDEX,
-    BACKTOFIRSTCOLOURINDEX, 
+    BACKTOFIRSTCOLOURINDEX,
     ADDTOGUESSINDEX,
-    UPDATEGUESSINDEX, 
-    SHIFTLEFTGUESSINDEX, 
+    UPDATEGUESSINDEX,
+    SHIFTLEFTGUESSINDEX,
     UPDATESHIFTEDGUESSINDEX,
     BRANCHCHECKPOSITIONINDEX,
     INCREASEPOSITIONINDEX,
@@ -113,24 +113,24 @@ module fsm_draft (
     led_out.update = 4x{0};
     led_out.encode = 4x{{16b0}};
     
-    // ALWAYS CONNECT OUTPUT OF LEDOUT 
+    // ALWAYS CONNECT OUTPUT OF LEDOUT
     outled = led_out.led;
     
     // FSM
     case(phase.q){
-
+      
       phase.IDLE:
         if (trigger_start == b1) {
           phase.d = phase.POSITION; // rmbr does not reset values...
         }
-
+      
       phase.POSITION:
         seg_out={5d0, 5d19, 5d0,5d18}; // 7seg: "0P0S"
-        // Purpose: Reset colour index register to 0 again 
+        // Purpose: Reset colour index register to 0 again
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h1; // Position index 
-        regfile.rb = 4h2; // Colour index 
+        regfile.ra = 4h1; // Position index
+        regfile.rb = 4h2; // Colour index
         
         case(dips) {
           b1:
@@ -142,15 +142,15 @@ module fsm_draft (
         if (colour_button){
           phase.d = phase.BRANCHCOLOURINDEX;
         }
-     
+      
       phase.BRANCHCOLOURINDEX: // 7seg: "0BCI"
         seg_out={5d0, 5d11, 5d12,5d1};
         
-        // Purpose: Branch - If colour index ==8, go back to 2. Else increase colour index 
-        // I need to check this 
+        // Purpose: Branch - If colour index ==8, go back to 2. Else increase colour index
+        // I need to check this
         
-        regfile.ra = 4h2; 
-        //regfile.rb = 4h0; // we dont use this 
+        regfile.ra = 4h2;
+        //regfile.rb = 4h0; // we dont use this
         sel_mux.asel_signal= b0;
         sel_mux.bsel_signal= b111; // ACCESS HARDCODE VALUE 8
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
@@ -169,20 +169,20 @@ module fsm_draft (
         else if (trigger_start){ // Else if its ==8, I will go to state BACKTOFIRSTCOLOURINDEX
           phase.d = phase.BACKTOFIRSTCOLOURINDEX;
         }
-        
-      phase.INCREASECOLOURINDEX:
       
+      phase.INCREASECOLOURINDEX:
+        
         seg_out={5d0, 5d1, 5d12,5d1}; //7SEG: 01C1
-        // Purpose: Read current colour index, +1 to it, and write back to the colour index reg file 
+        // Purpose: Read current colour index, +1 to it, and write back to the colour index reg file
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h2; // Refile rb = -- regfile rc = -- 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4h2; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b010; // output is 1 from bsel 
+        sel_mux.bsel_signal= b010; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -191,26 +191,26 @@ module fsm_draft (
         alu16.alufn_signal = 6b000000; // ADD OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register 
+        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register
         regfile.we = b1; // WRITE ENABLED
         
         if (trigger_start){ // NOTE: why confirm_button?
           phase.d = phase.UPDATECOLOURINDEX;
-          }
-       
-        
-      phase.UPDATECOLOURINDEX:
+        }
       
+      
+      phase.UPDATECOLOURINDEX:
+        
         seg_out={5d0, 5d21, 5d12,5d1}; //7SEG: 0UC1
-        // Purpose: Update colour index register 
+        // Purpose: Update colour index register
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; // Refile rb = -- regfile rc = -- 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.bsel_signal= b0; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -219,7 +219,7 @@ module fsm_draft (
         alu16.alufn_signal = 6b11010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h2; // WRITE REG C - back to colour register // test write to temp register 
+        regfile.rc = 4h2; // WRITE REG C - back to colour register // test write to temp register
         regfile.we = b1; // WRITE ENABLED
         
         out = sel_mux.asel_out;
@@ -230,7 +230,7 @@ module fsm_draft (
         else if (colour_button){
           phase.d = phase.BRANCHCOLOURINDEX;
         }
-          
+      
       phase.BACKTOFIRSTCOLOURINDEX:
         
         seg_out={5d11, 5d17, 5d12,5d1}; // 7SEG: BFCI
@@ -239,13 +239,13 @@ module fsm_draft (
         // TODO we can probably delete this state, since by default 4hF = 0
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h0; // Refile rb = -- regfile rc = -- 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4h0; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
-        sel_mux.asel_signal=  b11; // output is 2 from asel 
-        sel_mux.bsel_signal= b0; 
+        sel_mux.asel_signal=  b11; // output is 2 from asel
+        sel_mux.bsel_signal= b0;
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -261,7 +261,7 @@ module fsm_draft (
         if (trigger_start){ // NOTE: why confirm_button ?
           phase.d = phase.UPDATECOLOURINDEX;
         }
-        
+      
       phase.SHIFTLEFTGUESSINDEX:
         // Purpose: Shift the guess index left by 4
         
@@ -286,20 +286,20 @@ module fsm_draft (
         if (trigger_start){ //NOTE: why use confirm_button?
           phase.d =phase.UPDATESHIFTEDGUESSINDEX;
         }
-        
+      
       phase.UPDATESHIFTEDGUESSINDEX:
         
         // Purpose: Update guess index after being shifted
         
         seg_out={5d21, 5d18, 5d21,5d1}; //7SEG: USU1
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; // 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4hF; //
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.bsel_signal= b0; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -308,27 +308,27 @@ module fsm_draft (
         alu16.alufn_signal = 6b11010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h7; // Write to guess index 
+        regfile.rc = 4h7; // Write to guess index
         regfile.we = b1; // WRITE ENABLED
         if (trigger_start){ // NOTE: why use confirm_button?
           phase.d = phase.ADDTOGUESSINDEX;
-        }    
-        
+        }
+      
       phase.ADDTOGUESSINDEX:
         seg_out={5d0, 5d0, 5d10,5d20}; //7SEG:"00AR'
         
-        // Purpose: Add colour index and guess index to temp reg 
+        // Purpose: Add colour index and guess index to temp reg
         // Next state is update the guess register
-        // Next next state is to shift left the guess register 
+        // Next next state is to shift left the guess register
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h2; // colour index 
-        regfile.rb = 4h7; // guess index 
+        regfile.ra = 4h2; // colour index
+        regfile.rb = 4h7; // guess index
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; 
+        sel_mux.bsel_signal= b0;
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -343,19 +343,19 @@ module fsm_draft (
         if (trigger_start){ // NOTE: why use confirm_button?
           phase.d =phase.UPDATEGUESSINDEX;
         }
-        
-      phase.UPDATEGUESSINDEX:
       
+      phase.UPDATEGUESSINDEX:
+        
         seg_out={5d0, 5d21, 5d21,5d1}; //7SEG: 0UU1
         // Purpose: Update guess index register
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; // 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4hF; //
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.bsel_signal= b0; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -364,24 +364,24 @@ module fsm_draft (
         alu16.alufn_signal = 6b11010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h7; // Write to guess index 
+        regfile.rc = 4h7; // Write to guess index
         regfile.we = b1; // WRITE ENABLED
         if (trigger_start){ // NOTE: why use confirm_button?
           phase.d = phase.BRANCHCHECKPOSITIONINDEX;
         }
-         
+      
       phase.BRANCHCHECKPOSITIONINDEX:
-          seg_out={5d11, 5d12, 5d19,5d1}; // 7SEG: BCPI
-        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        seg_out={5d11, 5d12, 5d19,5d1}; // 7SEG: BCPI
+        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h1; // position index
-        regfile.rb = 4h0; // we don't use this 
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b011; // output is 3 from bsel 
+        sel_mux.bsel_signal= b011; // output is 3 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -393,29 +393,29 @@ module fsm_draft (
         regfile.rc = 4h0; // No writing
         regfile.we = b0; // WRITE DISABLED
         
-        // If position index < 3, go to state to increase position index 
+        // If position index < 3, go to state to increase position index
         if (sel_mux.wdsel_out && trigger_start){ // NOTE: why use confirm_button?
           phase.d =phase.INCREASEPOSITIONINDEX;
         }
         
-        // Else if position index is ==3, go to phase 3  
+        // Else if position index is ==3, go to phase 3
         else if(trigger_start){ // NOTE: why use confirm_button?
           phase.d = phase.FINISH;
         }
-        
-        
+      
+      
       phase.INCREASEPOSITIONINDEX:
         seg_out={5d0, 5d1, 5d19,5d1}; // 7SEG: BCPI
-        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file 
+        // Purpose: Read current colour index, -5 to it, and write back to the colour index reg file
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h1; // position index
-        regfile.rb = 4h0; // we don't use this 
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b010; // output is 1 from bsel 
+        sel_mux.bsel_signal= b010; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -424,27 +424,27 @@ module fsm_draft (
         alu16.alufn_signal = 6b000000; // ADD OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // Write to temp register first 
+        regfile.rc = 4hF; // Write to temp register first
         regfile.we = b1; // WRITE ENABLED
         
-        // Go to position state to wait for colour button press 
+        // Go to position state to wait for colour button press
         if (trigger_start){ // NOTE: why use confirm_button?
           phase.d = phase.UPDATEPOSITIONINDEX;
         }
-        
-          
-      phase.UPDATEPOSITIONINDEX:
       
+      
+      phase.UPDATEPOSITIONINDEX:
+        
         seg_out={5d0, 5d21, 5d19,5d1}; //7SEG: 0UC1
-        // Purpose: Update position index register 
+        // Purpose: Update position index register
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; // Refile rb = -- regfile rc = -- 
-        regfile.rb = 4h0; // we don't use this 
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
         
         
         // SELECTOR MUX
         sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel 
+        sel_mux.bsel_signal= b0; // output is 1 from bsel
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -458,13 +458,13 @@ module fsm_draft (
         if (trigger_start){ // NOTE: why use confirm_button?
           phase.d = phase.BACKTOFIRSTCOLOURINDEX;
         }
-        
+      
       phase.FINISH:
         seg_out={5d17, 5d1, 5d18,5d14};
         if (confirm_button){ // NOTE: why use confirm_button?
           phase.d = phase.GETGUESS;
         }
-        
+      
       // DONE - WORKS
       phase.GETGUESS:
         seg_out = {5d0, 5d0, 5d0, 5d1};
@@ -672,7 +672,7 @@ module fsm_draft (
             phase.d = phase.GETNEXTCODE;
           }
         }
-        
+      
       phase.SHIFTNOHINT:
         seg_out = {5d0, 5d0, 5d0, 5d14};
         
@@ -696,10 +696,10 @@ module fsm_draft (
         if (trigger_start == b1) {
           phase.d = phase.UPDATENOHINT;
         }
-        
-      // DONE - 
+      
+      // DONE -
       phase.UPDATENOHINT:
-      seg_out = {5d21, 5d0, 5d0, 5d14};
+        seg_out = {5d21, 5d0, 5d0, 5d14};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4hF; // READ REG A - TEMP
@@ -900,7 +900,7 @@ module fsm_draft (
         if (trigger_start == b1) {
           phase.d = phase.UPDATEGUESSHELPERDEFAULT;
         }
-              
+      
       // DONE - CHECKING
       phase.UPDATEGUESSHELPERDEFAULT:
         seg_out = {5d0, 5d21, 5d14, 5d15};
@@ -925,8 +925,8 @@ module fsm_draft (
         if (trigger_start == b1) {
           phase.d = phase.UPDATECODEHELPERDEFAULT;
         }
-        
-      // DONE - 
+      
+      // DONE -
       phase.UPDATECODEHELPERDEFAULT:
         seg_out = {5d0, 5d12, 5d12, 5d15};
         
@@ -979,7 +979,7 @@ module fsm_draft (
           }
         }
       
-      // DONE - 
+      // DONE -
       phase.ADDTEMPCOUNTER:
         seg_out = {5d10, 5d12, 5d12, 5d0};
         
@@ -1003,7 +1003,7 @@ module fsm_draft (
           phase.d = phase.UPDATETEMPCOUNTER;
         }
       
-      // DONE - 
+      // DONE -
       phase.UPDATETEMPCOUNTER:
         seg_out = {5d21, 5d12, 5d12, 5d12};
         
@@ -1028,7 +1028,7 @@ module fsm_draft (
           phase.d = phase.GETGUESS;
         }
       
-      // DONE - 
+      // DONE -
       phase.ADDIMPOSTER:
         seg_out = {5d10, 5d10, 5d1, 5d1};
         
@@ -1079,37 +1079,7 @@ module fsm_draft (
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
-          phase.d = phase.COMPARECODE_GUESS;
-        }
-      
-      // CALL LEDOUT HERE TO UPDATE(CHANGE GUESS COUNT GUESS TO THE SHIFTING ONE) AND ENCODE(REGISTER ITSELF) LED STRIPS
-      phase.COMPARECODE_GUESS:
-        seg_out = {5d12, 5d12, 5d12, 5d12};
-        
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h5; // READ REG A - CODE
-        regfile.rb = 4h7; // READ REG B - GUESS
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal = 2b0; // ACCESS RA
-        sel_mux.bsel_signal = 3b0; // ACCESS RB
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h0; // WRITE REG C - --
-        regfile.we = b0; // WRITE DISABLED
-
-        
-        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
-          if (sel_mux.wdsel_out == 16b1) {
-            phase.d = phase.WIN;
-          } else {
-            phase.d = phase.UPDATEHINTLED; // PREV SHIFTATTEMPTCOUNT
-          }
+          phase.d = phase.UPDATEHINTLED; // PrEV COMPARECODE_GUESS
         }
         
       phase.UPDATEHINTLED:
@@ -1140,10 +1110,40 @@ module fsm_draft (
           led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
         }
         
+        // NOTE make this transition into BRANCHGAMEMODE AND transition using clock (will disappear hints in next state)
         if (trigger_start == b1) {
-          phase.d = phase.SHIFTATTEMPTCOUNT;
-        }
+          phase.d = phase.COMPARECODE_GUESS;
+        }  
+      
+      // CALL LEDOUT HERE TO UPDATE(CHANGE GUESS COUNT GUESS TO THE SHIFTING ONE) AND ENCODE(REGISTER ITSELF) LED STRIPS
+      phase.COMPARECODE_GUESS:
+        seg_out = {5d12, 5d12, 5d12, 5d12};
         
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h5; // READ REG A - CODE
+        regfile.rb = 4h7; // READ REG B - GUESS
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h0; // WRITE REG C - --
+        regfile.we = b0; // WRITE DISABLED
+        
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          if (sel_mux.wdsel_out == 16b1) {
+            phase.d = phase.WIN;
+          } else {
+            phase.d = phase.SHIFTATTEMPTCOUNT; // PREV SHIFTATTEMPTCOUNT
+          }
+        }
       
       phase.SHIFTATTEMPTCOUNT:
         seg_out = {5d10, 5d10, 5d12, 5d12};
@@ -1158,7 +1158,7 @@ module fsm_draft (
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
-        alu16.alufn_signal = 6b100100; // SHCR OPERATION
+        alu16.alufn_signal = 6b100001; // SHR OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hF; // WRITE REG C - TEMP
@@ -1218,11 +1218,11 @@ module fsm_draft (
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.LOSE;
           } else {
-            phase.d = phase.RESETPOSITION; 
+            phase.d = phase.RESETPOSITION;
           }
         }
-        
-      // ADD Reset states to Position and colour values   
+      
+      // ADD Reset states to Position and colour values
       phase.RESETPOSITION:
         seg_out = {5d20, 5d20, 5d20, 5d1};
         
@@ -1245,9 +1245,9 @@ module fsm_draft (
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.RESETCOLOUR;
-        } 
-          
-      // ADD Reset states to position and colour values   
+        }
+      
+      // ADD Reset states to position and colour values
       phase.RESETCOLOUR:
         seg_out = {5d20, 5d20, 5d20, 5d2};
         
@@ -1271,7 +1271,7 @@ module fsm_draft (
         if (trigger_start == b1) {
           phase.d = phase.RESETHINT;
         }
-        
+      
       phase.RESETHINT:
         seg_out = {5d20, 5d20, 5d20, 5d3};
         
@@ -1293,35 +1293,14 @@ module fsm_draft (
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
-          phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
-        }
-        
-      phase.LOSE:
-        seg_out = {5d16, 5d0, 5d18, 5d13};
-        
-        if (trigger_start == b1) {
-          phase.d = phase.GAMEOVER;
-        }
- 
-      phase.WIN:
-        seg_out = {5d19, 5d10, 5d18, 5d18};
-        
-        if (trigger_start == b1) {
-          phase.d = phase.GAMEOVER;
-        }
-
-      phase.GAMEOVER:
-        seg_out = {5d17, 5d1, 5d18, 5d14};
-        
-        if (trigger_start == b1) {
           phase.d = phase.RESETCOUNTER;
         }
-        
+      
       phase.RESETCOUNTER:
         seg_out = {5d20, 5d20, 5d20, 5d1};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h0; // READ REG A - -- 
+        regfile.ra = 4h0; // READ REG A - --
         regfile.rb = 4h0; // READ REG B - --
         
         // SELECTOR MUX
@@ -1338,14 +1317,35 @@ module fsm_draft (
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
-          phase.d = phase.RESETATTEMPT; // GO BACK TO CARINA's CODE
+          phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
         }
+      
+      phase.LOSE:
+        seg_out = {5d16, 5d0, 5d18, 5d13};
         
+        if (trigger_start == b1) {
+          phase.d = phase.GAMEOVER;
+        }
+      
+      phase.WIN:
+        seg_out = {5d19, 5d10, 5d18, 5d18};
+        
+        if (trigger_start == b1) {
+          phase.d = phase.GAMEOVER;
+        }
+      
+      phase.GAMEOVER:
+        seg_out = {5d17, 5d1, 5d18, 5d14};
+        
+        if (trigger_start == b1) {
+          phase.d = phase.RESETATTEMPT;
+        }
+      
       phase.RESETATTEMPT:
         seg_out = {5d20, 5d20, 5d20, 5d1};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h0; // READ REG A - -- 
+        regfile.ra = 4h0; // READ REG A - --
         regfile.rb = 4h0; // READ REG B - --
         
         // SELECTOR MUX
@@ -1363,8 +1363,7 @@ module fsm_draft (
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
-        }  
-    }  
+        }
     }
+  }
 }
-

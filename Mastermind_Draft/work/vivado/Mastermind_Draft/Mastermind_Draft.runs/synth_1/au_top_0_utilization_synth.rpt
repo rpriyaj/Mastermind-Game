@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Thu Apr 13 00:30:26 2023
+| Date         : Thu Apr 13 01:43:10 2023
 | Host         : LAPTOP-NUP5ASSV running 64-bit major release  (build 9200)
 | Command      : report_utilization -file au_top_0_utilization_synth.rpt -pb au_top_0_utilization_synth.pb
 | Design       : au_top_0
@@ -30,13 +30,13 @@ Table of Contents
 +----------------------------+------+-------+-----------+-------+
 |          Site Type         | Used | Fixed | Available | Util% |
 +----------------------------+------+-------+-----------+-------+
-| Slice LUTs*                |  978 |     0 |     20800 |  4.70 |
-|   LUT as Logic             |  965 |     0 |     20800 |  4.64 |
-|   LUT as Memory            |   13 |     0 |      9600 |  0.14 |
+| Slice LUTs*                | 1143 |     0 |     20800 |  5.50 |
+|   LUT as Logic             | 1131 |     0 |     20800 |  5.44 |
+|   LUT as Memory            |   12 |     0 |      9600 |  0.13 |
 |     LUT as Distributed RAM |    2 |     0 |           |       |
-|     LUT as Shift Register  |   11 |     0 |           |       |
-| Slice Registers            |  855 |     0 |     41600 |  2.06 |
-|   Register as Flip Flop    |  855 |     0 |     41600 |  2.06 |
+|     LUT as Shift Register  |   10 |     0 |           |       |
+| Slice Registers            | 1243 |     0 |     41600 |  2.99 |
+|   Register as Flip Flop    | 1243 |     0 |     41600 |  2.99 |
 |   Register as Latch        |    0 |     0 |     41600 |  0.00 |
 | F7 Muxes                   |   23 |     0 |     16300 |  0.14 |
 | F8 Muxes                   |    0 |     0 |      8150 |  0.00 |
@@ -58,8 +58,8 @@ Table of Contents
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 51    |          Yes |         Set |            - |
-| 804   |          Yes |       Reset |            - |
+| 54    |          Yes |         Set |            - |
+| 1189  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -69,8 +69,9 @@ Table of Contents
 +-------------------+------+-------+-----------+-------+
 |     Site Type     | Used | Fixed | Available | Util% |
 +-------------------+------+-------+-----------+-------+
-| Block RAM Tile    |  0.5 |     0 |        50 |  1.00 |
-|   RAMB36/FIFO*    |    0 |     0 |        50 |  0.00 |
+| Block RAM Tile    |  1.5 |     0 |        50 |  3.00 |
+|   RAMB36/FIFO*    |    1 |     0 |        50 |  2.00 |
+|     RAMB36E1 only |    1 |       |           |       |
 |   RAMB18          |    1 |     0 |       100 |  1.00 |
 |     RAMB18E1 only |    1 |       |           |       |
 +-------------------+------+-------+-----------+-------+
@@ -150,23 +151,24 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     |  804 |        Flop & Latch |
-| LUT6     |  519 |                 LUT |
-| LUT2     |  177 |                 LUT |
-| LUT5     |  138 |                 LUT |
-| LUT3     |  126 |                 LUT |
-| LUT4     |  109 |                 LUT |
-| FDSE     |   51 |        Flop & Latch |
+| FDRE     | 1189 |        Flop & Latch |
+| LUT6     |  602 |                 LUT |
+| LUT5     |  226 |                 LUT |
+| LUT2     |  176 |                 LUT |
+| LUT4     |  116 |                 LUT |
+| LUT3     |  103 |                 LUT |
+| FDSE     |   54 |        Flop & Latch |
 | OBUF     |   49 |                  IO |
 | CARRY4   |   49 |          CarryLogic |
-| LUT1     |   24 |                 LUT |
 | MUXF7    |   23 |               MuxFx |
+| LUT1     |   23 |                 LUT |
 | IBUF     |   23 |                  IO |
 | SRL16E   |    8 |  Distributed Memory |
 | BSCANE2  |    4 |              Others |
-| SRLC32E  |    3 |  Distributed Memory |
 | BUFG     |    3 |               Clock |
+| SRLC32E  |    2 |  Distributed Memory |
 | RAMD32   |    2 |  Distributed Memory |
+| RAMB36E1 |    1 |        Block Memory |
 | RAMB18E1 |    1 |        Block Memory |
 | DSP48E1  |    1 |    Block Arithmetic |
 +----------+------+---------------------+

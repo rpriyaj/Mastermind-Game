@@ -65,7 +65,7 @@ module au_top_0 (
   wire [16-1:0] M_man_out;
   wire [20-1:0] M_man_seg_out;
   wire [4-1:0] M_man_outled;
-  wire [20-1:0] M_man_debug__;
+  wire [84-1:0] M_man_debug__;
   reg [16-1:0] M_man_dips;
   reg [1-1:0] M_man_trigger_start;
   reg [1-1:0] M_man_colour_button;
@@ -146,7 +146,7 @@ module au_top_0 (
     io_sel = ~M_seg_sel;
   end
   
-  reg [20-1:0] M_debugger_data;
+  reg [84-1:0] M_debugger_data;
   au_debugger_6 debugger (
     .clk(clk),
     .data(M_debugger_data)

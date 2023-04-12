@@ -14,7 +14,7 @@ module fsm_draft_1_debug_4 (
     output reg [15:0] out,
     output reg [19:0] seg_out,
     output reg [3:0] outled,
-    output reg [19:0] debug__
+    output reg [83:0] debug__
   );
   
   
@@ -51,7 +51,7 @@ module fsm_draft_1_debug_4 (
   wire [4-1:0] M_regfile_rc_addr;
   wire [16-1:0] M_regfile_rc_data;
   wire [1-1:0] M_regfile_we_signal;
-  wire [20-1:0] M_regfile_debug__;
+  wire [84-1:0] M_regfile_debug__;
   reg [4-1:0] M_regfile_ra;
   reg [4-1:0] M_regfile_rb;
   reg [4-1:0] M_regfile_rc;
@@ -775,25 +775,7 @@ module fsm_draft_1_debug_4 (
         M_regfile_we = 1'h1;
         out = M_sel_mux_asel_out;
         if (trigger_start == 1'h1) begin
-          M_phase_d = COMPARECODE_GUESS_phase;
-        end
-      end
-      COMPARECODE_GUESS_phase: begin
-        seg_out = 20'h6318c;
-        M_regfile_ra = 4'h5;
-        M_regfile_rb = 4'h7;
-        M_sel_mux_asel_signal = 2'h0;
-        M_sel_mux_bsel_signal = 3'h0;
-        M_sel_mux_wdsel_signal = 2'h0;
-        M_alu16_alufn_signal = 6'h33;
-        M_regfile_rc = 4'h0;
-        M_regfile_we = 1'h0;
-        if (trigger_start == 1'h1) begin
-          if (M_sel_mux_wdsel_out == 16'h0001) begin
-            M_phase_d = WIN_phase;
-          end else begin
-            M_phase_d = UPDATEHINTLED_phase;
-          end
+          M_phase_d = UPDATEHINTLED_phase;
         end
       end
       UPDATEHINTLED_phase: begin
@@ -812,7 +794,25 @@ module fsm_draft_1_debug_4 (
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         if (trigger_start == 1'h1) begin
-          M_phase_d = SHIFTATTEMPTCOUNT_phase;
+          M_phase_d = COMPARECODE_GUESS_phase;
+        end
+      end
+      COMPARECODE_GUESS_phase: begin
+        seg_out = 20'h6318c;
+        M_regfile_ra = 4'h5;
+        M_regfile_rb = 4'h7;
+        M_sel_mux_asel_signal = 2'h0;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h33;
+        M_regfile_rc = 4'h0;
+        M_regfile_we = 1'h0;
+        if (trigger_start == 1'h1) begin
+          if (M_sel_mux_wdsel_out == 16'h0001) begin
+            M_phase_d = WIN_phase;
+          end else begin
+            M_phase_d = SHIFTATTEMPTCOUNT_phase;
+          end
         end
       end
       SHIFTATTEMPTCOUNT_phase: begin
@@ -822,7 +822,7 @@ module fsm_draft_1_debug_4 (
         M_sel_mux_asel_signal = 2'h0;
         M_sel_mux_bsel_signal = 3'h2;
         M_sel_mux_wdsel_signal = 2'h0;
-        M_alu16_alufn_signal = 6'h24;
+        M_alu16_alufn_signal = 6'h21;
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         if (trigger_start == 1'h1) begin
@@ -900,6 +900,20 @@ module fsm_draft_1_debug_4 (
         M_regfile_rc = 4'h9;
         M_regfile_we = 1'h1;
         if (trigger_start == 1'h1) begin
+          M_phase_d = RESETCOUNTER_phase;
+        end
+      end
+      RESETCOUNTER_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h1;
+        M_sel_mux_bsel_signal = 3'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'hc;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
           M_phase_d = IDLE_phase;
         end
       end
@@ -917,20 +931,6 @@ module fsm_draft_1_debug_4 (
       end
       GAMEOVER_phase: begin
         seg_out = 20'h8864e;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETCOUNTER_phase;
-        end
-      end
-      RESETCOUNTER_phase: begin
-        seg_out = 20'ha5281;
-        M_regfile_ra = 4'h0;
-        M_regfile_rb = 4'h0;
-        M_sel_mux_asel_signal = 2'h1;
-        M_sel_mux_bsel_signal = 3'h0;
-        M_sel_mux_wdsel_signal = 2'h0;
-        M_alu16_alufn_signal = 6'h1a;
-        M_regfile_rc = 4'hc;
-        M_regfile_we = 1'h1;
         if (trigger_start == 1'h1) begin
           M_phase_d = RESETATTEMPT_phase;
         end

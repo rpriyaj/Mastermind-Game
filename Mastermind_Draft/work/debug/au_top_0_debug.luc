@@ -133,5 +133,5 @@ module au_top (
     io_seg = ~seg.seg; //seg_msg
     io_sel = ~seg.sel;
   }
-au_debugger debugger (#NONCE(2740557316), #DATA_WIDTH(20), #CAPTURE_DEPTH(256), .clk(clk));always debugger.data = c{$flatten(man.debug__)};
+au_debugger debugger (#NONCE(2404063322), #DATA_WIDTH(84), #CAPTURE_DEPTH(256), .clk(clk));always debugger.data = c{$flatten(man.debug__)};
 }
