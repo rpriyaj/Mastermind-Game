@@ -1,0 +1,79 @@
+//Need to configure in au_top: colour button, confirm button
+
+
+module phaseOne_fsm (
+    input clk,  // clock
+    input rst,  // reset
+    input dips[16], // dip switches
+    input trigger_start, //This is a debug button to move from states to states
+    input colour_button, //Colour_button
+    input confirm_button, //confirm_button
+    output out[16],
+    output seg_out[4][5]
+  ) {
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  fsm phase_one(.clk(clk), .rst(rst)) = {IDLE,GAMEMODE1,GAMEMODE2,GAMESTART};
+  always {
+    // INITIALIZE VALUES
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    alu16.alufn_signal = 6b0;
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    
+    // CONNECTIONS
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    sel_mux.alu_data = alu16.out;
+    regfile.wr_data = sel_mux.wdsel_out;
+    
+    out = 16b0;
+    seg_out =  {5b0, 5b0, 5b0, 5b0};
+    
+    slow_edge.in = slow_clock.value;
+    
+    case(phase_one.q){
+      phase_one.IDLE:
+         seg_out={5d19, 5d14, 5d18,5d1}; // 7seg: "PHS1"
+         if (colour_button){
+          phase_one.d = phase_one.GAMEMODE1;
+        }
+        
+      phase_one.GAMEMODE1:
+        seg_out={5d1, 5d1, 5d1,5d1}; // 7seg: "1111"
+        if (colour_button){
+          phase_one.d = phase_one.GAMEMODE2;
+        }
+        
+        else if (confirm_button){
+          phase_one.d = phase_one.GAMESTART;
+        }
+        
+      phase_one.GAMEMODE2:
+        seg_out={5d2, 5d2, 5d2,5d2}; // 7seg: "2222"
+        if (colour_button){
+          phase_one.d = phase_one.GAMEMODE1;
+        }
+        else if (confirm_button){
+          phase_one.d = phase_one.GAMESTART;
+        }
+        
+      phase_one.GAMESTART:
+        seg_out={5d17, 5d1, 5d18,5d14}; // 7seg: "FISH"
+      
+      
+      
+        
+  }
+}

@@ -107,32 +107,6 @@ module fsm_draft (
         regfile.rc = 4hB; // WRITE REG C - TEMP GUESS
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0001 0000 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b0001 0110 1000 0000
-          16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
-          16h7:
-            out = regfile.rc_data; //16b0001 0000 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.GETCODE;
@@ -157,32 +131,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hA; // WRITE REG C - TEMP CODE
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0100 0000 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b0100 0110 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
-          16h7:
-            out = regfile.rc_data; //16b0100 0000 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -209,31 +157,6 @@ module fsm_draft (
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0
-          16h5:
-            out = regfile.ra_data; //16b0100 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0001 0000 0000 0000
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -264,32 +187,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C -TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0001 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0001 0000 0001 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATEHINTRED;
@@ -314,32 +211,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h9; // WRITE REG C - HINT
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0001 0001 0000 0011
-          16h5:
-            out = regfile.ra_data; //16b0001 0001 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0001 0001 0000 0011
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -366,32 +237,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 1111
-          16h5:
-            out = regfile.ra_data; //16b1111 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 1111
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATECODEHELPER;
         }
@@ -416,31 +261,6 @@ module fsm_draft (
         regfile.rc = 4h6; // WRITE REG C - CODE HELPER
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 1111
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 1111
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 1111
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         if (trigger_start == b1) {
           phase_three.d = phase_three.CHECKCODEHELPER;
         }
@@ -464,32 +284,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h0; // WRITE REG C - PEEK AT CODE HELPER
         regfile.we = b0; // WRITE DISABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //160
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 1111
-          16h6:
-            out = regfile.rb_data; //16b1111 0000 0000 0000
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
@@ -518,32 +312,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0001 0001 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0001 0001
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0001 0001 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATENOHINT;
@@ -568,32 +336,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h9; // WRITE REG C - HINT
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0001 0001 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 0001 0001 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0001 0001 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -620,32 +362,6 @@ module fsm_draft (
         regfile.rc = 4hA; // WRITE REG C - TEMP CODE
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 0001
-          16h5:
-            out = regfile.ra_data; //16b0100 0110 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0000 0000 0000 1111
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 0001
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.SHIFTTEMPGUESS;
@@ -670,32 +386,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 0001
-          16h5:
-            out = regfile.ra_data; //16b0001 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 0001
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -722,32 +412,6 @@ module fsm_draft (
         regfile.rc = 4hB; // WRITE REG C - TEMP GUESS
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 0001
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 0001
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.CHECKTEMPGUESS_TEMPCODE;
@@ -772,32 +436,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b1
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0000 0000 0000 0001
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -828,32 +466,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0000 0000 0000 0000
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATEHINTWHITE;
@@ -878,32 +490,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h9; // WRITE REG C - HINT
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 0000 0000 0001
-          16h5:
-            out = regfile.ra_data; //16b0000 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 0000 0000 0001
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -930,32 +516,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 1111 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b1111 0000 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 1111 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATEGUESSHELPERDEFAULT;
@@ -980,32 +540,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h8; // WRITE REG C - GUESS HELPER
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 1111 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 1111 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 1111 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -1034,32 +568,6 @@ module fsm_draft (
         regfile.rc = 4h6; // WRITE REG C - CODE HELPER
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0000 1111 0000 0000
-          16h5:
-            out = regfile.ra_data; //16b0000 1111 0000 0000
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0000 1111 0000 0000
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.COMPARETEMPCOUNTER;
@@ -1084,32 +592,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0
-          16h5:
-            out = regfile.ra_data; //16b1
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
@@ -1139,32 +621,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b10
-          16h5:
-            out = regfile.ra_data; //16b1
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b10
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATETEMPCOUNTER;
         }
@@ -1188,32 +644,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hC; // WRITE REG C - TEMP COUNTER
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b10
-          16h5:
-            out = regfile.ra_data; //16b10
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b10
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -1240,32 +670,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0001 0011 0000 0011
-          16h5:
-            out = regfile.ra_data; //16b0001 0011 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0000 0000 0000 0011
-          16h7:
-            out = regfile.rc_data; //16b0001 0011 0000 0011
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATEIMPOSTER;
@@ -1291,32 +695,6 @@ module fsm_draft (
         regfile.rc = 4h9; // WRITE REG C - HINT
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0001 0011 0000 0011
-          16h5:
-            out = regfile.ra_data; //16b0001 0011 0000 0011
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0001 0011 0000 0011
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase_three.d = phase_three.COMPARECODE_GUESS;
@@ -1341,32 +719,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0
-          16h5:
-            out = regfile.ra_data; //16b0100 0110 0000 0001
-          16h6:
-            out = regfile.rb_data; //16b0001 0110 1000 0000
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -1396,32 +748,6 @@ module fsm_draft (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b110
-          16h5:
-            out = regfile.ra_data; //16b111
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b110
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
-        
         if (trigger_start == b1) {
           phase_three.d = phase_three.UPDATEATTEMPTCOUNT;
         }
@@ -1445,32 +771,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h3; // WRITE REG C - CURRENT ATTEMPT COUNT
         regfile.we = b1; // WRITE ENABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b110
-          16h5:
-            out = regfile.ra_data; //16b110
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b110
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -1496,32 +796,6 @@ module fsm_draft (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
-        
-        // DEBUG PURPOSES ONLY
-        case(dips){
-          16h0:
-            out = alu16.a_data;
-          16h1:
-            out = alu16.b_data;
-          16h3:
-            out = alu16.aluop_signal;
-          16h4:
-            out = alu16.out; //16b0
-          16h5:
-            out = regfile.ra_data; //16b110
-          16h6:
-            out = regfile.rb_data; //16b0
-          16h7:
-            out = regfile.rc_data; //16b0
-          16h8:
-            out = regfile.we_signal;
-          16h9:
-            out = sel_mux.asel_out;
-          16hA:
-            out = sel_mux.bsel_out;
-          16hB:
-            out = sel_mux.wdsel_out;
-        }
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
