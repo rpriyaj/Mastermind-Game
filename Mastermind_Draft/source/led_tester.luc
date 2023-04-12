@@ -1,0 +1,68 @@
+module led_tester (
+    input clk,  // clock
+    input rst,  // reset
+    //input dips[16], // dip switches
+    input trigger_start, //This is a debug button to move from states to states
+    //input colour_button, //Colour_button
+    //input confirm_button, //confirm_button
+    output out[16],
+    output seg_out[4][5],
+    output update_button, //There are 16 instances i think? 
+    output update_colour,
+    output led_strip
+  ) {
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  led_out led_out[4](.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
+  fsm phase_led(.clk(clk), .rst(rst)) = {IDLE,GUESS1, GUESS2, FINISH};
+  always {
+    // INITIALIZE VALUES
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    alu16.alufn_signal = 6b0;
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    
+    // CONNECTIONS
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    sel_mux.alu_data = alu16.out;
+    regfile.wr_data = sel_mux.wdsel_out;
+    
+    out = 16b0;
+    update_button = 16b0;
+    update_colour = 16b0100010001000100;
+    seg_out =  {5b0, 5b0, 5b0, 5b0};
+    led_out.encode= 4x{{16b0}};
+    led_out.update = 0;
+    led_strip = 0;
+    
+    slow_edge.in = slow_clock.value;
+    
+    case(phase_led.q){
+      phase_led.IDLE:
+         seg_out={5d19, 5d14, 5d18,5d1}; // 7seg: "PHS1"
+         if (trigger_start){
+          phase_led.d = phase_led.GUESS1;
+        }
+        
+      phase_led.GUESS1:
+      
+        seg_out={5d1, 5d1, 5d1,5d1}; // 7seg: "1111"
+        //led_out.encode = 
+        //led_out.update = 4b0000;
+        
+        if (trigger_start){
+          phase_led.d = phase_led.GUESS2;
+        }
+    
+}

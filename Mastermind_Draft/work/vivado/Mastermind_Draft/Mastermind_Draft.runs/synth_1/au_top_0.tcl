@@ -84,28 +84,20 @@ set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_verilog -library xil_defaultlib {
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_18.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_8.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/async_fifo_15.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/async_fifo_12.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_debugger_6.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_20.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/button_conditioner_2.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/combined_fsm_1_debug_4.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_17.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_12.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_14.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_8.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_10.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/edge_detector_3.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_21.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led_out_5.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_4.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/pipeline_7.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_2_debug_9.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_10.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_13.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_19.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/simple_dual_ram_16.v
-  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/simple_dual_ram_22.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_9.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/simple_dual_ram_13.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/simple_dual_ram_14.v
+  C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/ws2812b_writer_11.v
   C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0_debug_0.v
 }
 OPTRACE "Adding files" END { }
@@ -117,14 +109,11 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/alchitry.xdc
-set_property used_in_implementation false [get_files C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/alchitry.xdc]
+read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc
+set_property used_in_implementation false [get_files C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc]
 
 read_xdc {{C:/Program Files/Alchitry/Alchitry Labs/library/components/au.xdc}}
 set_property used_in_implementation false [get_files {{C:/Program Files/Alchitry/Alchitry Labs/library/components/au.xdc}}]
-
-read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/io.xdc
-set_property used_in_implementation false [get_files C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/io.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]

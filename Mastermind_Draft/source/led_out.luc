@@ -1,0 +1,69 @@
+module led_out (
+    input clk,              // 100MHz clock
+    input rst,            // reset button (active low)
+    input update,
+    input encode[16],
+    output led
+  ) {
+  
+  const PIXEL_COUNT = 4;   // light up 12 LEDs in the strip
+  const ENCODING_AMOUNT = 8; // how many different encodings are used?
+  
+  sig transformed_pixel_address[$clog2(PIXEL_COUNT*4)];
+  sig current_color_encoding[$clog2(ENCODING_AMOUNT)+1];
+  var index;
+
+  
+  // YELLOW (b1111 = h7), FLAMINGO (b0110 = h6), PINK (b0101 = h5), BLUE (b0100 = h4), 
+  // RED (b0011 = h3), GREEN (b0010 = h2), WHITE (b0001 = h1), NO COLOUR (b0000 = h0)
+  const LEDCOLOR = {24h003333, 24h66FF66, 24h4C9900, 24h330000, 24h003300, 24h000033, 24h606060, 24h000000}; 
+  
+  // (end of strip) WHITE, GREEN, RED, BLUE (connector)
+  // e.g: E is 1110 ---> 10 first (BLUE) then 11 (WHITE)
+  dff led_encoding[PIXEL_COUNT*4](.clk(clk), .rst(rst), #INIT(0)); // 2 bit to encode a color 
+  dff temp_encoding[PIXEL_COUNT*4](.clk(clk), .rst(rst), #INIT(0));
+  ws2812b_writer led_strip(#PIXEL_COUNT(PIXEL_COUNT), .clk(clk), .rst(rst)); 
+  fsm state(.clk(clk), .rst(rst)) = {IDLE, LOAD};
+  
+  always {
+    
+    // use io_dip[1:0]  to encode 4 pixel values at most (16 bits)
+    case (state.q){
+      state.IDLE:
+             if (update){
+                temp_encoding.d = encode;
+                state.d = state.LOAD;
+              }
+      
+      state.LOAD:
+            // wait until we are at RESET  state
+            if (led_strip.reset){
+                // load the dff with new value 
+                led_encoding.d = temp_encoding.q;
+                state.d = state.IDLE;
+            }
+    }
+
+    led_strip.update = 1; // always write
+    
+    // led_strip.pixel_address will vary between 00 to 10 
+    // address 0 --> bit 2:0 
+    // address 1 --> bit 5:3 
+    // address 2 --> bit 8:7
+    // address 3 --> bit 11:8
+    // address N --> bit N*4+1:N*4
+
+    transformed_pixel_address = led_strip.pixel_address * 4; 
+    for (index=0; index<$clog2(ENCODING_AMOUNT); index++){
+       current_color_encoding[index] = led_encoding.q[transformed_pixel_address+index];
+    }
+    
+    // current_color_encoding[0] = led_encoding.q[transformed_pixel_address];
+    // current_color_encoding[1] = led_encoding.q[transformed_pixel_address+1];
+    
+    // based on the encoding extracted from dff led_encoding, we get the 24bit color value
+    led_strip.color = LEDCOLOR[current_color_encoding] ; 
+    led =led_strip.led;
+    
+  }
+}

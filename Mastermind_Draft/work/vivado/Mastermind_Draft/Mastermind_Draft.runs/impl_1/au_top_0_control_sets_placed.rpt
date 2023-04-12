@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
-| Date         : Tue Apr 11 18:14:33 2023
+| Date         : Wed Apr 12 17:20:08 2023
 | Host         : LAPTOP-0QHGE09O running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file au_top_0_control_sets_placed.rpt
 | Design       : au_top_0
@@ -23,11 +23,11 @@ Table of Contents
 +----------------------------------------------------------+-------+
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
-| Total control sets                                       |    31 |
-|    Minimum number of control sets                        |    31 |
+| Total control sets                                       |    39 |
+|    Minimum number of control sets                        |    39 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    71 |
+| Unused register locations in slices containing registers |   115 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -39,15 +39,15 @@ Table of Contents
 +--------------------+-------+
 |       Fanout       | Count |
 +--------------------+-------+
-| Total control sets |    31 |
+| Total control sets |    39 |
 | >= 0 to < 4        |     2 |
-| >= 4 to < 6        |     2 |
-| >= 6 to < 8        |     0 |
-| >= 8 to < 10       |     4 |
-| >= 10 to < 12      |     0 |
-| >= 12 to < 14      |     1 |
+| >= 4 to < 6        |     6 |
+| >= 6 to < 8        |     5 |
+| >= 8 to < 10       |     2 |
+| >= 10 to < 12      |     1 |
+| >= 12 to < 14      |    13 |
 | >= 14 to < 16      |     0 |
-| >= 16              |    22 |
+| >= 16              |    10 |
 +--------------------+-------+
 * Control sets can be remapped at either synth_design or opt_design
 
@@ -58,52 +58,60 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |             335 |          183 |
+| No           | No                    | No                     |              88 |           40 |
 | No           | No                    | Yes                    |               0 |            0 |
-| No           | Yes                   | No                     |              26 |            9 |
-| Yes          | No                    | No                     |            1614 |          357 |
+| No           | Yes                   | No                     |              63 |           17 |
+| Yes          | No                    | No                     |             245 |           49 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |             418 |          177 |
+| Yes          | Yes                   | No                     |             369 |           89 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
 4. Detailed Control Set Information
 -----------------------------------
 
-+------------------------------+------------------------------------------------------+-------------------------------------------------------+------------------+----------------+--------------+
-|         Clock Signal         |                     Enable Signal                    |                    Set/Reset Signal                   | Slice Load Count | Bel Load Count | Bels / Slice |
-+------------------------------+------------------------------------------------------+-------------------------------------------------------+------------------+----------------+--------------+
-|  debugger/M_config_scan_TCK  | debugger/config_fifo/ram/M_ram_write_en              |                                                       |                1 |              2 |         2.00 |
-|  debugger/M_capture_scan_TCK |                                                      |                                                       |                2 |              3 |         1.50 |
-|  clk_IBUF_BUFG               |                                                      | debugger/M_info_scan_RESET                            |                2 |              4 |         2.00 |
-|  clk_IBUF_BUFG               |                                                      | reset_cond/M_reset_cond_in                            |                2 |              4 |         2.00 |
-|  M_info_scan_TCK             | debugger/p_0_in[0]                                   |                                                       |                3 |              8 |         2.67 |
-|  M_data_scan_TCK             | debugger/M_raddr_q[7]_i_2_n_0                        | debugger/M_raddr_q[7]_i_1_n_0                         |                2 |              8 |         4.00 |
-|  clk_IBUF_BUFG               | debugger/force_sync/E[0]                             | debugger/reset_conditioner/Q[0]                       |                4 |              8 |         2.00 |
-|  M_data_scan_TCK             | debugger/M_offset_q[8]_i_2_n_0                       | debugger/M_offset_q[8]_i_1_n_0                        |                4 |              9 |         2.25 |
-|  debugger/M_config_scan_TCK  |                                                      |                                                       |                2 |             12 |         6.00 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_imposter_d                         | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_current_guess_count_d              | reset_cond/Q[0]                                       |               10 |             16 |         1.60 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_guess_helper_d                     | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_temp_counter_d                     | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_temp_code_d                        | reset_cond/Q[0]                                       |                6 |             16 |         2.67 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_code_helper_d                      | reset_cond/Q[0]                                       |                6 |             16 |         2.67 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_error_d                            | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_guess_d                            | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_temp_d                             | reset_cond/Q[0]                                       |                8 |             16 |         2.00 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_current_colour_d                   | reset_cond/Q[0]                                       |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_current_position_d                 | reset_cond/Q[0]                                       |               10 |             16 |         1.60 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_hint_d                             | reset_cond/Q[0]                                       |                8 |             16 |         2.00 |
-|  clk_IBUF_BUFG               | man/regfile/M_reg_temp_guess_d                       | reset_cond/Q[0]                                       |                8 |             16 |         2.00 |
-|  clk_IBUF_BUFG               |                                                      | seg/ctr/M_ctr_q[0]_i_1__2_n_0                         |                5 |             18 |         3.60 |
-|  clk_IBUF_BUFG               | buttoncond_gen_0[0].buttoncond/M_ctr_q[0]_i_2_n_0    | buttoncond_gen_0[0].buttoncond/sync/M_pipe_q_reg[1]_0 |                5 |             20 |         4.00 |
-|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/M_ctr_q[0]_i_2__1_n_0 | buttoncond_gen_0[1].buttoncond/sync/M_pipe_q_reg[1]_0 |                5 |             20 |         4.00 |
-|  clk_IBUF_BUFG               | buttoncond_gen_0[2].buttoncond/M_ctr_q[0]_i_2__0_n_0 | buttoncond_gen_0[2].buttoncond/sync/M_pipe_q_reg[1]_0 |                5 |             20 |         4.00 |
-|  clk_IBUF_BUFG               | man/M_phase_d                                        | reset_cond/Q[0]                                       |               23 |             51 |         2.22 |
-|  M_info_scan_TCK             | debugger/p_0_in[0]                                   | debugger/M_status_d[0]                                |               19 |             74 |         3.89 |
-|  M_data_scan_TCK             | debugger/M_rdata_q[321]_i_1_n_0                      |                                                       |               55 |            322 |         5.85 |
-|  clk_IBUF_BUFG               |                                                      |                                                       |              179 |            326 |         1.82 |
-|  clk_IBUF_BUFG               | debugger/config_fifo/E[0]                            |                                                       |              299 |           1288 |         4.31 |
-+------------------------------+------------------------------------------------------+-------------------------------------------------------+------------------+----------------+--------------+
++------------------------------+--------------------------------------------------------------+--------------------------------------------------------------+------------------+----------------+--------------+
+|         Clock Signal         |                         Enable Signal                        |                       Set/Reset Signal                       | Slice Load Count | Bel Load Count | Bels / Slice |
++------------------------------+--------------------------------------------------------------+--------------------------------------------------------------+------------------+----------------+--------------+
+|  debugger/M_config_scan_TCK  | debugger/config_fifo/ram/M_ram_write_en                      |                                                              |                1 |              2 |         2.00 |
+|  debugger/M_capture_scan_TCK |                                                              |                                                              |                3 |              3 |         1.00 |
+|  clk_IBUF_BUFG               |                                                              | debugger/M_info_scan_RESET                                   |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG               |                                                              | reset_cond/M_reset_cond_in                                   |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[0].led_out/led_strip/M_bit_ctr_q[4]_i_1_n_0    | reset_cond/Q[0]                                              |                2 |              5 |         2.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[1].led_out/led_strip/M_bit_ctr_q[4]_i_1__0_n_0 | reset_cond/Q[0]                                              |                2 |              5 |         2.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[2].led_out/led_strip/M_bit_ctr_q[4]_i_1__1_n_0 | reset_cond/Q[0]                                              |                2 |              5 |         2.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[3].led_out/led_strip/M_bit_ctr_q[4]_i_1__2_n_0 | reset_cond/Q[0]                                              |                1 |              5 |         5.00 |
+|  M_data_scan_TCK             | debugger/M_offset_q[5]_i_2_n_0                               | debugger/M_offset_q[5]_i_1_n_0                               |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[0].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[1].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[2].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG               | led_out_gen_0[3].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG               | debugger/force_sync/E[0]                                     | debugger/reset_conditioner/Q[0]                              |                3 |              8 |         2.67 |
+|  M_data_scan_TCK             | debugger/M_raddr_q[7]_i_2_n_0                                | debugger/M_raddr_d__0[0]                                     |                2 |              8 |         4.00 |
+|  M_info_scan_TCK             | debugger/M_status_q[30]_i_2_n_0                              |                                                              |                2 |             10 |         5.00 |
+|  debugger/M_config_scan_TCK  |                                                              |                                                              |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[0].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                              |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/M_count_left_q_reg[2][0]      | reset_cond/Q[0]                                              |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/M_count_left_q_reg[1][0]      | reset_cond/Q[0]                                              |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/M_count_left_q_reg[0][0]      | reset_cond/Q[0]                                              |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/E[0]                          | reset_cond/Q[0]                                              |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[1].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                              |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[2].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                              |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[3].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                              |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG               | led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_2_n_0    | led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_1_n_0    |                4 |             13 |         3.25 |
+|  clk_IBUF_BUFG               | led_out_gen_0[1].led_out/led_strip/M_rst_ctr_q[0]_i_2__0_n_0 | led_out_gen_0[1].led_out/led_strip/M_rst_ctr_q[0]_i_1__0_n_0 |                4 |             13 |         3.25 |
+|  clk_IBUF_BUFG               | led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_2__1_n_0 | led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_1__1_n_0 |                4 |             13 |         3.25 |
+|  clk_IBUF_BUFG               | led_out_gen_0[3].led_out/led_strip/M_rst_ctr_q[0]_i_2__2_n_0 | led_out_gen_0[3].led_out/led_strip/M_rst_ctr_q[0]_i_1__2_n_0 |                4 |             13 |         3.25 |
+|  clk_IBUF_BUFG               |                                                              | seg/ctr/M_ctr_q[0]_i_1_n_0                                   |                5 |             18 |         3.60 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[2].buttoncond/M_ctr_q[0]_i_2__0_n_0         | buttoncond_gen_0[2].buttoncond/sync/M_pipe_q_reg[1]_0        |                5 |             20 |         4.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[3].buttoncond/M_ctr_q[0]_i_2_n_0            | buttoncond_gen_0[3].buttoncond/sync/clear                    |                5 |             20 |         4.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[0].buttoncond/M_ctr_q[0]_i_2__2_n_0         | buttoncond_gen_0[0].buttoncond/sync/M_pipe_q_reg[1]_0        |                5 |             20 |         4.00 |
+|  clk_IBUF_BUFG               | buttoncond_gen_0[1].buttoncond/M_ctr_q[0]_i_2__1_n_0         | buttoncond_gen_0[1].buttoncond/sync/M_pipe_q_reg[1]_0        |                5 |             20 |         4.00 |
+|  clk_IBUF_BUFG               |                                                              | reset_cond/Q[0]                                              |                9 |             37 |         4.11 |
+|  M_data_scan_TCK             | debugger/M_rdata_q[47]_i_1_n_0                               |                                                              |               12 |             48 |         4.00 |
+|  M_info_scan_TCK             | debugger/M_status_q[30]_i_2_n_0                              | debugger/M_status_d[0]                                       |               12 |             71 |         5.92 |
+|  clk_IBUF_BUFG               |                                                              |                                                              |               34 |             79 |         2.32 |
+|  clk_IBUF_BUFG               | debugger/config_fifo/E[0]                                    |                                                              |               35 |            192 |         5.49 |
++------------------------------+--------------------------------------------------------------+--------------------------------------------------------------+------------------+----------------+--------------+
 
 

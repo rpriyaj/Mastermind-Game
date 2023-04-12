@@ -9,6 +9,7 @@ module au_top_0 (
     input rst_n,
     output reg [7:0] led,
     input usb_rx,
+    output reg [3:0] outled,
     output reg usb_tx,
     output reg [23:0] io_led,
     output reg [7:0] io_seg,
@@ -20,6 +21,10 @@ module au_top_0 (
   
   
   reg rst;
+  
+  integer index;
+  
+  reg trigger_led;
   
   reg switch_state;
   
@@ -56,41 +61,43 @@ module au_top_0 (
     );
   end
   endgenerate
-  wire [16-1:0] M_man_out;
-  wire [20-1:0] M_man_seg_out;
-  wire [322-1:0] M_man_debug__;
-  reg [16-1:0] M_man_dips;
-  reg [1-1:0] M_man_trigger_start;
-  reg [1-1:0] M_man_colour_button;
-  reg [1-1:0] M_man_confirm_button;
-  combined_fsm_1_debug_4 man (
-    .clk(clk),
-    .rst(rst),
-    .dips(M_man_dips),
-    .trigger_start(M_man_trigger_start),
-    .colour_button(M_man_colour_button),
-    .confirm_button(M_man_confirm_button),
-    .out(M_man_out),
-    .seg_out(M_man_seg_out),
-    .debug__(M_man_debug__)
-  );
   wire [7-1:0] M_seg_seg;
   wire [4-1:0] M_seg_sel;
   reg [20-1:0] M_seg_values;
-  multi_seven_seg_5 seg (
+  multi_seven_seg_4 seg (
     .clk(clk),
     .rst(rst),
     .values(M_seg_values),
     .seg(M_seg_seg),
     .sel(M_seg_sel)
   );
+  wire [(3'h4+0)-1:0] M_led_out_led;
+  reg [(3'h4+0)-1:0] M_led_out_update;
+  reg [(3'h4+0)*16-1:0] M_led_out_encode;
+  
+  genvar GEN_led_out0;
+  generate
+  for (GEN_led_out0=0;GEN_led_out0<3'h4;GEN_led_out0=GEN_led_out0+1) begin: led_out_gen_0
+    led_out_5 led_out (
+      .clk(clk),
+      .rst(rst),
+      .update(M_led_out_update[GEN_led_out0*(1)+(1)-1-:(1)]),
+      .encode(M_led_out_encode[GEN_led_out0*(5'h10)+(5'h10)-1-:(5'h10)]),
+      .led(M_led_out_led[GEN_led_out0*(1)+(1)-1-:(1)])
+    );
+  end
+  endgenerate
   localparam IDLE_test_mode = 1'd0;
   localparam MANUAL_test_mode = 1'd1;
   
   reg M_test_mode_d, M_test_mode_q = IDLE_test_mode;
+  reg [3:0] M_count_left_d, M_count_left_q = 3'h4;
+  reg [15:0] M_temp_encode_d, M_temp_encode_q = 1'h0;
   
   always @* begin
     M_test_mode_d = M_test_mode_q;
+    M_temp_encode_d = M_temp_encode_q;
+    M_count_left_d = M_count_left_q;
     
     M_reset_cond_in = ~rst_n;
     rst = M_reset_cond_out;
@@ -102,10 +109,17 @@ module au_top_0 (
     M_buttoncond_in = io_button[0+3-:4];
     M_buttondetector_in = M_buttoncond_out;
     switch_state = M_buttondetector_out[0+0-:1];
-    M_man_confirm_button = M_buttondetector_out[1+0-:1];
-    M_man_colour_button = M_buttondetector_out[2+0-:1];
-    M_man_trigger_start = 1'h0;
-    M_man_dips = 16'h0000;
+    trigger_led = M_buttondetector_out[1+0-:1];
+    M_temp_encode_d = {io_dip[8+7-:8], io_dip[0+7-:8]};
+    M_count_left_d = io_dip[16+0+3-:4];
+    M_led_out_encode = {3'h4{{M_temp_encode_q}}};
+    M_led_out_update = 4'h0;
+    if (trigger_led) begin
+      for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        M_led_out_update[(index)*1+0-:1] = M_count_left_q[(index)*1+0-:1];
+      end
+    end
+    outled = M_led_out_led;
     M_seg_values = 20'h001c1;
     
     case (M_test_mode_q)
@@ -115,12 +129,6 @@ module au_top_0 (
         end
       end
       MANUAL_test_mode: begin
-        M_man_dips[0+7-:8] = io_dip[0+7-:8];
-        M_man_dips[8+7-:8] = io_dip[8+7-:8];
-        M_man_trigger_start = M_buttondetector_out[1+0-:1];
-        M_seg_values = M_man_seg_out;
-        io_led[8+7-:8] = M_man_out[8+7-:8];
-        io_led[0+7-:8] = M_man_out[0+7-:8];
         if (switch_state) begin
           M_test_mode_d = IDLE_test_mode;
         end
@@ -130,20 +138,24 @@ module au_top_0 (
     io_sel = ~M_seg_sel;
   end
   
-  reg [322-1:0] M_debugger_data;
+  reg [48-1:0] M_debugger_data;
   au_debugger_6 debugger (
     .clk(clk),
     .data(M_debugger_data)
   );
   
   always @* begin
-    M_debugger_data = {M_man_debug__};
+    M_debugger_data = {io_button, io_dip, M_temp_encode_q, M_test_mode_q, M_buttondetector_out, M_led_out_led};
   end
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
+      M_count_left_q <= 3'h4;
+      M_temp_encode_q <= 1'h0;
       M_test_mode_q <= 1'h0;
     end else begin
+      M_count_left_q <= M_count_left_d;
+      M_temp_encode_q <= M_temp_encode_d;
       M_test_mode_q <= M_test_mode_d;
     end
   end

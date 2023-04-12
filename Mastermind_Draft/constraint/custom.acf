@@ -1,3 +1,29 @@
+//alchitry.acf
+pin clk CLOCK;
+clock clk 100MHz;
+
+pin rst_n RESET;
+
+pin led[0] LED0;
+pin led[1] LED1;
+pin led[2] LED2;
+pin led[3] LED3;
+pin led[4] LED4;
+pin led[5] LED5;
+pin led[6] LED6;
+pin led[7] LED7;
+
+// flip the Tx/Rx lines
+pin usb_rx USB_TX;
+pin usb_tx USB_RX;
+
+// custom pins
+pin outled[0] C45;
+pin outled[1] C46;
+pin outled[2] C49;
+pin outled[3] C48;
+
+//IO 
 pin io_led[0][0] B21;
 pin io_led[0][1] B20;
 pin io_led[0][2] B18;

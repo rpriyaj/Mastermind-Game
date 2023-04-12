@@ -137,9 +137,8 @@ OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
   add_files -quiet C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp
 OPTRACE "read constraints: implementation" START { }
-  read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/alchitry.xdc
+  read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc
   read_xdc {{C:/Program Files/Alchitry/Alchitry Labs/library/components/au.xdc}}
-  read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/io.xdc
 OPTRACE "read constraints: implementation" END { }
 OPTRACE "add files" END { }
 OPTRACE "link_design" START { }
