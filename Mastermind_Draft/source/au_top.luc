@@ -29,7 +29,7 @@ module au_top (
       //combined_fsm man; 
       //fsm_draft man;
       //led_phasetwo man;
-      led2 man;
+      beast_fsm man;
       multi_seven_seg seg;
       //led_out led_out[4]; // for now its 4 but later its 8 strips (hint)
       //led_tester led_test;

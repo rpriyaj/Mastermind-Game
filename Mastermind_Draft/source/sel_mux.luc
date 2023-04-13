@@ -2,7 +2,7 @@ module sel_mux (
     input ra_data[16],
     input rb_data[16],
     input alu_data[16],
-    input asel_signal[2],
+    input asel_signal[3],
     input bsel_signal[4],
     input wdsel_signal[2],
     output asel_out[16],
@@ -24,6 +24,8 @@ module sel_mux (
       b10 : asel_out = 16b0; 
       b11: asel_out = 16b10;
       b100: asel_out = 16b1000; // change this to the guess attempt representation in 16bits
+      b101: asel_out = 16b0010001000100010;
+      b110: asel_out = 16b1111000000000000; //XOR helper init
       default : asel_out = ra_data;
     }
     
