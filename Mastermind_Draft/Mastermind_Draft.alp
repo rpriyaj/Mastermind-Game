@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Mastermind_Draft" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <src>phaseTwo_fsm.luc</src>
-    <src>comparator.luc</src>
-    <src>fsm_draft.luc</src>
+    <src top="true">au_top.luc</src>
     <component>pipeline.luc</component>
-    <src>ws2812b_writer.luc</src>
-    <src>combined_fsm.luc</src>
+    <src>regfile.luc</src>
     <component>counter.luc</component>
+    <src>boolean.luc</src>
+    <src>adder.luc</src>
+    <src>multiplier.luc</src>
+    <src>shifter.luc</src>
     <src>seven_seg.luc</src>
     <src>led_out.luc</src>
-    <src>regfile_manual_test.luc</src>
-    <src>led2.luc</src>
-    <src>phaseThree_fsm.luc</src>
-    <src>sel_mux_manual_test.luc</src>
     <component>reset_conditioner.luc</component>
-    <src>led_phasetwo.luc</src>
-    <src>adder.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <src>regfile.luc</src>
+    <src>comparator.luc</src>
     <component>button_conditioner.luc</component>
-    <src>beast_fsm.luc</src>
-    <src top="true">au_top.luc</src>
-    <src>boolean.luc</src>
-    <component>decoder.luc</component>
-    <src>shifter.luc</src>
     <src>led_tester.luc</src>
-    <src>phaseOne_fsm.luc</src>
+    <src>ws2812b_writer.luc</src>
+    <component>decoder.luc</component>
     <src>sel_mux.luc</src>
-    <src>multiplier.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <src>beast_fsm.luc</src>
     <component>edge_detector.luc</component>
     <src>alu.luc</src>
     <constraint>custom.acf</constraint>

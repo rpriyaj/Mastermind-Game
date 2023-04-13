@@ -1,14 +1,11 @@
 module beast_fsm (
     input clk,  // clock
     input rst,  // reset
-    input dips[16], // dip switches
-    input trigger_start, //This is a debug button to move from states to states -> most left button
     input colour_button, //Colour_button -> C2
     input confirm_button, //confirm_button -> C3
     output out[16],
     output seg_out[4][5],
-    // add output from ledout[4][1]
-    output outled[4]
+    output outled[4] //output to LEDs
   ) {
   
   var index;
@@ -20,7 +17,7 @@ module beast_fsm (
   // INSTANTIATE LEDOUT IN FSM HERE
   led_out led_out[4](.clk(clk), .rst(rst));
   
-  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(27));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
   fsm phase(.clk(clk), .rst(rst)) = {
@@ -1574,18 +1571,23 @@ module beast_fsm (
       phase.LOSE:
         seg_out = {5d16, 5d0, 5d18, 5d13};
         
-        phase.d = phase.GAMEOVER;
-      
+        if (slow_edge.out) {
+          phase.d = phase.GAMEOVER;
+        }
       
       phase.WIN:
         seg_out = {5d19, 5d10, 5d18, 5d18};
         
-        phase.d = phase.GAMEOVER;
-      
+        if (slow_edge.out) {
+          phase.d = phase.GAMEOVER;
+        }
+        
       phase.GAMEOVER:
         seg_out = {5d17, 5d1, 5d18, 5d14};
         
-        phase.d = phase.RESETATTEMPT;
+        if (slow_edge.out) {
+          phase.d = phase.RESETATTEMPT;
+        }
       
       phase.RESETATTEMPT:
         seg_out = {5d10, 5d10, 5d10, 5d10};

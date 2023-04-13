@@ -23,8 +23,6 @@ module au_top_0 (
   
   reg rst;
   
-  integer index;
-  
   reg switch_state;
   
   wire [1-1:0] M_reset_cond_out;
@@ -63,15 +61,11 @@ module au_top_0 (
   wire [16-1:0] M_man_out;
   wire [20-1:0] M_man_seg_out;
   wire [4-1:0] M_man_outled;
-  reg [16-1:0] M_man_dips;
-  reg [1-1:0] M_man_trigger_start;
   reg [1-1:0] M_man_colour_button;
   reg [1-1:0] M_man_confirm_button;
   beast_fsm_4 man (
     .clk(clk),
     .rst(rst),
-    .dips(M_man_dips),
-    .trigger_start(M_man_trigger_start),
     .colour_button(M_man_colour_button),
     .confirm_button(M_man_confirm_button),
     .out(M_man_out),
@@ -92,8 +86,6 @@ module au_top_0 (
   localparam MANUAL_test_mode = 1'd1;
   
   reg M_test_mode_d, M_test_mode_q = IDLE_test_mode;
-  reg [3:0] M_count_left_d, M_count_left_q = 3'h4;
-  reg [15:0] M_temp_encode_d, M_temp_encode_q = 1'h0;
   
   always @* begin
     M_test_mode_d = M_test_mode_q;
@@ -111,8 +103,6 @@ module au_top_0 (
     switch_state = M_buttondetector_out[0+0-:1];
     M_man_confirm_button = 1'h0;
     M_man_colour_button = 1'h0;
-    M_man_trigger_start = 1'h0;
-    M_man_dips = 16'h0000;
     outled = 4'h0;
     M_seg_values = 20'h001c1;
     
@@ -123,9 +113,6 @@ module au_top_0 (
         end
       end
       MANUAL_test_mode: begin
-        M_man_dips[0+7-:8] = io_dip[0+7-:8];
-        M_man_dips[8+7-:8] = io_dip[8+7-:8];
-        M_man_trigger_start = M_buttondetector_out[3+0-:1];
         M_man_confirm_button = M_buttondetector_out[4+0-:1];
         M_man_colour_button = M_buttondetector_out[5+0-:1];
         outled = M_man_outled;
@@ -143,12 +130,8 @@ module au_top_0 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_count_left_q <= 3'h4;
-      M_temp_encode_q <= 1'h0;
       M_test_mode_q <= 1'h0;
     end else begin
-      M_count_left_q <= M_count_left_d;
-      M_temp_encode_q <= M_temp_encode_d;
       M_test_mode_q <= M_test_mode_d;
     end
   end
