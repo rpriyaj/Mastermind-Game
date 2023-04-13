@@ -7,11 +7,12 @@ module shifter (
   ) {
 
   always {
-    case (alufn_op[1:0]){
+    case (alufn_op[2:0]){
     default: out = a;
     b00: out = a << b;
     b01: out = a >> b;
     b10: out = $signed(a) >>> b;
     b11: out = (a << b) | (a >> (16-b));
+    b100: out = (a >> b) | (a << (16-b));
   }
 }

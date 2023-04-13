@@ -17,7 +17,7 @@ proc create_report { reportName command } {
   }
 }
 namespace eval ::optrace {
-  variable script "C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/impl_1/au_top_0.tcl"
+  variable script "C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/impl_1/au_top_0.tcl"
   variable category "vivado_impl"
 }
 
@@ -129,16 +129,16 @@ OPTRACE "create in-memory project" START { }
   set_param project.singleFileAddWarning.threshold 0
 OPTRACE "create in-memory project" END { }
 OPTRACE "set parameters" START { }
-  set_property webtalk.parent_dir C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.cache/wt [current_project]
-  set_property parent.project_path C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.xpr [current_project]
-  set_property ip_output_repo C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.cache/ip [current_project]
+  set_property webtalk.parent_dir C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.cache/wt [current_project]
+  set_property parent.project_path C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.xpr [current_project]
+  set_property ip_output_repo C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
-  add_files -quiet C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp
+  add_files -quiet C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp
 OPTRACE "read constraints: implementation" START { }
-  read_xdc C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc
-  read_xdc {{C:/Program Files/Alchitry/Alchitry Labs/library/components/au.xdc}}
+  read_xdc C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc
+  read_xdc C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/constraint/bypass.xdc
 OPTRACE "read constraints: implementation" END { }
 OPTRACE "add files" END { }
 OPTRACE "link_design" START { }

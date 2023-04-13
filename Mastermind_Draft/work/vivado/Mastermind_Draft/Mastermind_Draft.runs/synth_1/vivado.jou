@@ -2,12 +2,12 @@
 # Vivado v2022.2 (64-bit)
 # SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
 # IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-# Start of session at: Wed Apr 12 17:17:17 2023
-# Process ID: 20768
-# Current directory: C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1
+# Start of session at: Thu Apr 13 15:52:03 2023
+# Process ID: 36092
+# Current directory: C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1
 # Command line: vivado.exe -log au_top_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source au_top_0.tcl
-# Log file: C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.vds
-# Journal file: C:/Users/Carina/Documents/CompStruct_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1\vivado.jou
+# Log file: C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.vds
+# Journal file: C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1\vivado.jou
 # Running On: LAPTOP-0QHGE09O, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 14888 MB
 #-----------------------------------------------------------
 source au_top_0.tcl -notrace

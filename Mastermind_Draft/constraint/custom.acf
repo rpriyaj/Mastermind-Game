@@ -22,6 +22,8 @@ pin outled[0] C45;
 pin outled[1] C46;
 pin outled[2] C49;
 pin outled[3] C48;
+pin inbutton[0] C42 pulldown;
+pin inbutton[1] C43 pulldown;
 
 //IO 
 pin io_led[0][0] B21;

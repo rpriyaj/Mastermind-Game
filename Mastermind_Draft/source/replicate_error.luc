@@ -1,0 +1,206 @@
+module replicate_error (
+    input clk,  // clock
+    input rst,  // reset
+    input dips[16], // dip switches
+    input trigger_start,
+    output out[16],
+    output seg_out[4][5]
+  ) {
+  
+  alu alu16 (.rst(rst));
+  regfile regfile(.clk(clk), .rst(rst));
+  sel_mux sel_mux;
+  
+  fsm phase_three (.clk(clk), .rst(rst)) = {
+    IDLE,
+    
+    SHIFTHINTWORKS,
+    UPDATEHINTWORKS,
+    
+    SHIFTHINTERROR
+  };
+  
+  always {
+    
+    // INITIALIZE SIGNALS
+    regfile.ra = 4b0;
+    regfile.rb = 4b0;
+    regfile.rc = 4b0;
+    regfile.we = b0;
+    regfile.wr_data = b0;
+    alu16.alufn_signal = 6b0;
+    sel_mux.asel_signal = 2b0;
+    sel_mux.bsel_signal = 3b0;
+    sel_mux.wdsel_signal = 2b0;
+    
+    // CONNECTIONS
+    sel_mux.ra_data = regfile.ra_data;
+    sel_mux.rb_data = regfile.rb_data;
+    alu16.a = sel_mux.asel_out;
+    alu16.b = sel_mux.bsel_out;
+    sel_mux.alu_data = alu16.out;
+    regfile.wr_data = sel_mux.wdsel_out;
+    
+    out = 16b0;
+    seg_out =  {5b0, 5b0, 5b0, 5b1};
+    
+    //slow_edge.in = slow_clock.value;
+    
+    // FSM
+    case (phase_three.q) {
+      phase_three.IDLE:
+        
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.SHIFTHINTWORKS; // rmbr does not reset values...
+        }
+        
+      phase_three.SHIFTHINTWORKS:
+        seg_out = {5d0, 5d18, 5d14, 5d14};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODED VALUE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b100111; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C -TEMP
+        regfile.we = b1; // WRITE ENABLED
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          16h0:
+            out = alu16.a_data;
+          16h1:
+            out = alu16.b_data;
+          16h3:
+            out = alu16.aluop_signal;
+          16h4:
+            out = alu16.out; //16b0000 0000 0001 0000
+          16h5:
+            out = regfile.ra_data; //16b0000 0000 0000 0001
+          16h6:
+            out = regfile.rb_data; //16b0
+          16h7:
+            out = regfile.rc_data; //16b0001 0000 0001 0000
+          16h8:
+            out = regfile.we_signal;
+          16h9:
+            out = sel_mux.asel_out;
+          16hA:
+            out = sel_mux.bsel_out;
+          16hB:
+            out = sel_mux.wdsel_out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.UPDATEHINTWORKS;
+        }
+      
+      // DONE
+      phase_three.UPDATEHINTWORKS:
+        seg_out = {5d0, 5d21, 5d14, 5d14};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // READ REG A - TEMP
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          16h0:
+            out = alu16.a_data;
+          16h1:
+            out = alu16.b_data;
+          16h3:
+            out = alu16.aluop_signal;
+          16h4:
+            out = alu16.out; //16b0000 0000 0001 0000
+          16h5:
+            out = regfile.ra_data; //16b0000 0000 0001 0000
+          16h6:
+            out = regfile.rb_data; //16b0
+          16h7:
+            out = regfile.rc_data; //16b0000 0000 0001 0000
+          16h8:
+            out = regfile.we_signal;
+          16h9:
+            out = sel_mux.asel_out;
+          16hA:
+            out = sel_mux.bsel_out;
+          16hB:
+            out = sel_mux.wdsel_out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.SHIFTHINTERROR;
+        }      
+      
+      phase_three.SHIFTHINTERROR:
+        seg_out = {5d0, 5d18, 5d14, 5d13};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h9; // READ REG A - HINT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODED VALUE 4
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b100111; // SHCL OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h9; // WRITE REG C - HINT
+        regfile.we = b1; // WRITE ENABLED
+        
+        // DEBUG PURPOSES ONLY
+        case(dips){
+          16h0:
+            out = alu16.a_data;
+          16h1:
+            out = alu16.b_data;
+          16h3:
+            out = alu16.aluop_signal;
+          16h4:
+            out = alu16.out; //16b0000 0001 0000 0000
+          16h5:
+            out = regfile.ra_data; //16b0000 0000 0001 0000
+          16h6:
+            out = regfile.rb_data; //16b0
+          16h7:
+            out = regfile.rc_data; //16b0000 0001 0000 0000
+          16h8:
+            out = regfile.we_signal;
+          16h9:
+            out = sel_mux.asel_out;
+          16hA:
+            out = sel_mux.bsel_out;
+          16hB:
+            out = sel_mux.wdsel_out;
+        }
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase_three.d = phase_three.IDLE;
+        }

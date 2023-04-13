@@ -1,17 +1,17 @@
 module regfile (
     input clk,           // clock
     input rst,           // reset
-    input ra[4],         // hex address of ra
-    input rb[4],         // hex address of rb
-    input rc[4],         // hex address of rc
+    input ra[5],         // hex address of ra
+    input rb[5],         // hex address of rb
+    input rc[5],         // hex address of rc
     input we,            // write signal
     input wr_data[16],   // data to write to register
     output ra_data[16],  // data in ra
     output rb_data[16],  // data in rb
     output data[16],     // DEBUG ONLY FROM HERE ON <- remove in final project
-    output ra_addr[4],
-    output rb_addr[4],
-    output rc_addr[4],
+    output ra_addr[5],
+    output rb_addr[5],
+    output rc_addr[5],
     output rc_data[16],
     output we_signal[1]
    
@@ -20,19 +20,20 @@ module regfile (
   // CHANGE DEFAULT VALUES IN #INIT(_) 
   dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_current_colour[16](#INIT(2), .clk(clk), .rst(rst));
-  dff reg_current_guess_count[16](#INIT(7), .clk(clk), .rst(rst));
+  dff reg_current_guess_count[4](#INIT(8), .clk(clk), .rst(rst)); //h80
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
   dff reg_code[16](#INIT(17959), .clk(clk), .rst(rst));
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
-  dff reg_guess[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_guess[16](#INIT(16b0010001000100010), .clk(clk), .rst(rst));
   dff reg_guess_helper[16](#INIT(61440), .clk(clk), .rst(rst));
-  dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_hint[16](#INIT(0), .clk(clk), .rst(rst)); 
   dff reg_temp_code[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_guess[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_temp_counter[16](#INIT(1), .clk(clk), .rst(rst));
-  dff reg_imposter[16](#INIT(3),.clk(clk), .rst(rst));
-  dff reg_error[16](#INIT(0), .clk(clk), .rst(rst));
+  dff reg_xor[16](#INIT(16b1111000000000000), .clk(clk), .rst(rst));
+  dff reg_led_colour[16](#INIT(16b0010001000100010), .clk(clk), .rst(rst));
   dff reg_temp[16](#INIT(0), .clk(clk), .rst(rst));    
+  
   
   always {
   
@@ -58,9 +59,10 @@ module regfile (
         4hA: reg_temp_code.d = wr_data;
         4hB: reg_temp_guess.d = wr_data;
         4hC: reg_temp_counter.d = wr_data;
-        4hD: reg_imposter.d = wr_data;
-        4hE: reg_error.d = wr_data;
+        4hD: reg_xor.d = wr_data;
+        4hE: reg_led_colour.d = wr_data;
         4hF: reg_temp.d = wr_data;
+        
       }
     }
     
@@ -77,8 +79,8 @@ module regfile (
       4hA: ra_data = reg_temp_code.q;
       4hB: ra_data = reg_temp_guess.q;
       4hC: ra_data = reg_temp_counter.q;
-      4hD: ra_data = reg_imposter.q;
-      4hE: ra_data = reg_error.q;
+      4hD: ra_data = reg_xor.q;
+      4hE: ra_data = reg_led_colour.q;
       4hF: ra_data = reg_temp.q;
       default: ra_data = 16b0;
     }
@@ -96,8 +98,8 @@ module regfile (
       4hA: rb_data = reg_temp_code.q;
       4hB: rb_data = reg_temp_guess.q;
       4hC: rb_data = reg_temp_counter.q;
-      4hD: rb_data = reg_imposter.q;
-      4hE: rb_data = reg_error.q;
+      4hD: rb_data = reg_xor.q;
+      4hE: rb_data = reg_led_colour.q;
       4hF: rb_data = reg_temp.q;
       default: rb_data = 16b0;
     }
@@ -121,8 +123,8 @@ module regfile (
       4hA: rc_data = reg_temp_code.q;
       4hB: rc_data = reg_temp_guess.q;
       4hC: rc_data = reg_temp_counter.q;
-      4hD: rc_data = reg_imposter.q;
-      4hE: rc_data = reg_error.q;
+      4hD: rc_data = reg_xor.q;
+      4hE: rc_data = reg_led_colour.q;
       4hF: rc_data = reg_temp.q;
       default: rc_data = 16b0;
     }

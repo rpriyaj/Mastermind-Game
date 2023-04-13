@@ -1,6 +1,5 @@
 //Need to configure in au_top: colour button, confirm button
 
-
 module combined_fsm (
     input clk,  // clock
     input rst,  // reset
@@ -18,10 +17,25 @@ module combined_fsm (
   counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
-  fsm phase(.clk(clk), .rst(rst)) = {IDLE,POSITION,BRANCHCOLOURINDEX,INCREASECOLOURINDEX,UPDATECOLOURINDEX,
-  BACKTOFIRSTCOLOURINDEX, ADDTOGUESSINDEX,UPDATEGUESSINDEX, SHIFTLEFTGUESSINDEX, UPDATESHIFTEDGUESSINDEX,
-     BRANCHCHECKPOSITIONINDEX,INCREASEPOSITIONINDEX,UPDATEPOSITIONINDEX,FINISH,
-    //PHASE 3
+  fsm phase(.clk(clk), .rst(rst)) = {
+  
+    // PHASE 2
+    IDLE,
+    POSITION,
+    BRANCHCOLOURINDEX,
+    INCREASECOLOURINDEX,
+    UPDATECOLOURINDEX,
+    BACKTOFIRSTCOLOURINDEX, 
+    ADDTOGUESSINDEX,
+    UPDATEGUESSINDEX, 
+    SHIFTLEFTGUESSINDEX, 
+    UPDATESHIFTEDGUESSINDEX,
+    BRANCHCHECKPOSITIONINDEX,
+    INCREASEPOSITIONINDEX,
+    UPDATEPOSITIONINDEX,
+    FINISH,
+    
+    // PHASE 3
     GETGUESS,
     GETCODE,
     CHECKGUESS_CORRCODE,
@@ -40,8 +54,6 @@ module combined_fsm (
     CHECKTEMPGUESS_TEMPCODE,
     SHIFTHINTWHITE,
     UPDATEHINTWHITE,
-    
-    // HUI YI FSM STATES
     SHIFTCODEHELPERDEFAULT,
     UPDATECODEHELPERDEFAULT,
     COMPARETEMPCOUNTER,
@@ -52,7 +64,7 @@ module combined_fsm (
     COMPARECODE_GUESS,
     SUBATTEMPTCOUNT,
     UPDATEATTEMPTCOUNT,
-    BRANCHATTEMPTCOUNT, // SHOULD GO THROUGH THE GAMEMODE CHALLENGE CHECK OR STRAIGHT TO BUTTON PRESS (CARINA)
+    BRANCHATTEMPTCOUNT,
     LOSE,
     WIN,
     GAMEOVER};
@@ -103,9 +115,6 @@ module combined_fsm (
         if (colour_button ){
           phase.d = phase.BRANCHCOLOURINDEX;
         }
-        
-        
-        
      
       phase.BRANCHCOLOURINDEX: // 7seg: "0BCI"
         seg_out={5d0, 5d11, 5d12,5d1};
@@ -856,7 +865,7 @@ module combined_fsm (
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
-        alu16.alufn_signal = 6b100001; // SHR OPERATION
+        alu16.alufn_signal = 6b100011; // SHCR OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hF; // WRITE REG C - TEMP

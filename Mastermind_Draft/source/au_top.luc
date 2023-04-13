@@ -9,24 +9,29 @@ module au_top (
     output io_seg [8],      // 7-segment LEDs on IO Shield
     output io_sel [4],      // Digit select on IO Shield
     input io_button [5],    // 5 buttons on IO Shield
-    input io_dip [3][8]     // DIP switches on IO Shield
+    input io_dip [3][8],     // DIP switches on IO Shield
+    input inbutton [2]
   ) {
   
   sig rst;                  // reset signal
   var index;
-  sig trigger_led;
+  //sig trigger_led;
   sig switch_state;
+  
   .clk(clk) {
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
-    button_conditioner buttoncond[4];
-    edge_detector buttondetector[4](#RISE(1), #FALL(0));
+    button_conditioner buttoncond[6];
+    edge_detector buttondetector[6](#RISE(1), #FALL(0));
     
     .rst(rst) {
-      //combined_fsm man; // whole flow in fsm_draft, isolated error in fsm_fixed_error
+      //combined_fsm man; 
+      //fsm_draft man;
+      //led_phasetwo man;
+      led2 man;
       multi_seven_seg seg;
-      led_out led_out[4];
+      //led_out led_out[4]; // for now its 4 but later its 8 strips (hint)
       //led_tester led_test;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
       dff count_left[4](#INIT(b100));
@@ -46,42 +51,47 @@ module au_top (
     io_seg = 8hff;          // turn segments off
     io_sel = 4hf;           // select no digits
     
-    buttoncond.in = io_button[3:0];
+    buttoncond.in[3:0] = io_button[3:0];
+    buttoncond.in[5:4] = inbutton;
     buttondetector.in = buttoncond.out;
     switch_state = buttondetector.out[0];
-    trigger_led = buttondetector.out[1];
+    //trigger_led = buttondetector.out[1];
     
+    /* LED DEBUGGING
+    // NOTE: JUST FOR DEBUGGING
     // to get the encoded data -- analogous to code/hint register
     temp_encode.d = c{io_dip[1], io_dip[0]};
     // [assumed changed attempt_count reg] input: 1000, 0100, 0010 or 0001 --> lose means attempt_left == 1
     count_left.d = io_dip[2][3:0];
-    
     // always send the code/hint registers into the led_out
     led_out.encode = 4x{{temp_encode.q}};
     
-    led_out.update = 4x{0};
+    // must always be zero -> default
+    led_out.update = 4x{0}; // -> MUST
     
+    // when encountered state, run this for loop - MUST
     if (trigger_led) {
       for (index = 0; index<4; index++) {
         led_out.update[index] = count_left.q[index]; // unless the correct signal (in this case button) is pressed, data will not update
       }
     }
-    // show the corresponding led lights in the outled
+    // show the corresponding led lights in the outled - MUST
     outled[3:0] = led_out.led;
-    
-    
-    /* FSM Buttons
-    //man.confirm_button=buttondetector.out[1];
-    //man.colour_button=buttondetector.out[2];
-    //man.trigger_start = b0;
-    //man.dips = 16b0;
-    
     */
+    
+    /* FSM Buttons DEFAULT */
+    man.confirm_button= b0;
+    man.colour_button= b0;
+    man.trigger_start = b0;
+    man.dips = 16b0;
+    
+    /* LED DEFAULT */
+    outled[3:0] = 4x{0};    
+    
     /*LED Trial 1
     temp_encode.d[7:0] = io_dip[0];
     temp_encode.d[15:8] = io_dip[1];
     led_out.encode = 4x{{temp_encode.q}}; //2D array of 1 row, 16 columns. Create 4 of this 2D array 
-    
     
     led_out.update = 4b1100;
     //led_out.update = 4x{1};
@@ -102,17 +112,20 @@ module au_top (
         }
       
       test_mode.MANUAL:
-          
-        
-      /* COMBINED_FSM CODE 
+        /* COMBINED_FSM CODE */
         man.dips[7:0] = io_dip[0];
         man.dips[15:8] = io_dip[1];
-        man.trigger_start = buttondetector.out[1];
+        man.trigger_start = buttondetector.out[3];
+        man.confirm_button = buttondetector.out[4];
+        man.colour_button = buttondetector.out[5];
         
+        outled[3:0] = man.outled;                
         seg.values = man.seg_out;
-        io_led[1] = man.out[15:8]; // show last 8 bits of result
+        
+        // DEBUG
+        io_led[1] = man.out[15:8];
         io_led[0] = man.out[7:0];
-        */
+        
         if (switch_state) {
           test_mode.d = test_mode.IDLE;
         }
