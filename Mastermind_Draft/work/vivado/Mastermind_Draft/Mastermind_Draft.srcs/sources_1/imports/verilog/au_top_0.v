@@ -13,7 +13,9 @@ module au_top_0 (
     output reg [7:0] io_seg,
     output reg [3:0] io_sel,
     input [1:0] inbutton,
-    output reg [15:0] outled
+    output reg [15:0] outled,
+    output reg [7:0] outseg,
+    output reg [3:0] outsel
   );
   
   
@@ -87,9 +89,10 @@ module au_top_0 (
     io_sel = 4'hf;
     M_buttoncond_in = inbutton;
     M_buttondetector_in = M_buttoncond_out;
+    outseg = M_seg_seg;
+    outsel = M_seg_sel;
     M_man_confirm_button = 1'h0;
     M_man_colour_button = 1'h0;
-    M_seg_values = 20'h001c1;
     M_man_confirm_button = M_buttondetector_out[0+0-:1];
     M_man_colour_button = M_buttondetector_out[1+0-:1];
     outled = M_man_outled;
