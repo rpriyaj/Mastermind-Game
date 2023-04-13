@@ -8,7 +8,7 @@ module sel_mux_9 (
     input [15:0] ra_data,
     input [15:0] rb_data,
     input [15:0] alu_data,
-    input [1:0] asel_signal,
+    input [2:0] asel_signal,
     input [3:0] bsel_signal,
     input [1:0] wdsel_signal,
     output reg [15:0] asel_out,
@@ -38,6 +38,12 @@ module sel_mux_9 (
       end
       3'h4: begin
         asel_out = 16'h0008;
+      end
+      3'h5: begin
+        asel_out = 16'h2222;
+      end
+      3'h6: begin
+        asel_out = 16'hf000;
       end
       default: begin
         asel_out = ra_data;

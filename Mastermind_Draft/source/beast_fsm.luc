@@ -22,8 +22,7 @@ module beast_fsm (
   
   counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(26));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
-  dff current_led[16](.clk(clk), .rst(rst));
-  dff current_strip[4](.clk(clk), .rst(rst));
+  
   fsm phase(.clk(clk), .rst(rst)) = {
   
     IDLE,
@@ -58,8 +57,51 @@ module beast_fsm (
     UPDATEGUESSATTEMPTCOUNT,
     
     
-    //PHase 3
-    GETGUESS
+    // PHASE 3
+    GETGUESS,
+    GETCODE,
+    CHECKGUESS_CORRCODE,
+    SHIFTHINTRED,
+    UPDATEHINTRED,
+    SHIFTGUESSHELPERDEFAULT,
+    UPDATEGUESSHELPERDEFAULT,
+    SHIFTCODEHELPER,
+    UPDATECODEHELPER,
+    CHECKCODEHELPER,
+    SHIFTNOHINT,
+    UPDATENOHINT,
+    GETNEXTCODE,
+    SHIFTTEMPGUESS,
+    UPDATETEMPGUESS,
+    CHECKTEMPGUESS_TEMPCODE,
+    SHIFTHINTWHITE,
+    UPDATEHINTWHITE,
+    SHIFTCODEHELPERDEFAULT,
+    UPDATECODEHELPERDEFAULT,
+    COMPARETEMPCOUNTER,
+    ADDTEMPCOUNTER,
+    UPDATETEMPCOUNTER,
+    ADDIMPOSTER,
+    UPDATEIMPOSTER,
+    COMPARECODE_GUESS,
+    SHIFTATTEMPTCOUNT,
+    UPDATEATTEMPTCOUNT,
+    BRANCHATTEMPTCOUNT,
+    UPDATEHINTLED,
+    
+    RESETPOSITION,
+    RESETCOLOUR,
+    RESETHINT,
+    RESETCOUNTER,
+    RESETATTEMPT,
+    RESETLEDCOLOUR,
+    RESETXORHELPER,
+    RESETALLLED,
+    RESETGUESS,
+    
+    LOSE,
+    WIN,
+    GAMEOVER
     };
 
   always {
@@ -73,7 +115,6 @@ module beast_fsm (
     sel_mux.asel_signal = 2b0;
     sel_mux.bsel_signal = 3b0;
     sel_mux.wdsel_signal = 2b0;
-    current_strip.d = 4b1000;
     
     // CONNECTIONS
     sel_mux.ra_data = regfile.ra_data;
@@ -738,6 +779,7 @@ module beast_fsm (
         if (trigger_start == b1) {
           phase.d = phase.FINISH;
         }
+        
         phase.FINISH:
         seg_out={5d17, 5d1, 5d18,5d14};
         
@@ -787,12 +829,10 @@ module beast_fsm (
         out = sel_mux.asel_out;
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.GETCODE;
-        }
-        
-        
-        
+        //}
+
         // DONE - WORKS
       phase.GETCODE:
         seg_out = {5d0, 5d0, 5d0, 5d2};
@@ -814,9 +854,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.CHECKGUESS_CORRCODE;
-        }
+        //}
       
       // DONE - WORKS
       phase.CHECKGUESS_CORRCODE:
@@ -840,13 +880,13 @@ module beast_fsm (
         
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.SHIFTHINTRED;
           } else {
             phase.d = phase.SHIFTCODEHELPER;
           }
-        }
+        //}
       
       // DONE
       phase.SHIFTHINTRED:
@@ -869,9 +909,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATEHINTRED;
-        }
+        //}
       
       // DONE
       phase.UPDATEHINTRED:
@@ -894,9 +934,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.SHIFTGUESSHELPERDEFAULT;
-        }
+        //}
       
       // DONE - WORKS
       phase.SHIFTCODEHELPER:
@@ -918,9 +958,9 @@ module beast_fsm (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATECODEHELPER;
-        }
+        //}
       
       // DONE - WORKS
       phase.UPDATECODEHELPER:
@@ -942,9 +982,9 @@ module beast_fsm (
         regfile.rc = 4h6; // WRITE REG C - CODE HELPER
         regfile.we = b1; // WRITE ENABLED
         
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.CHECKCODEHELPER;
-        }
+        //}
       
       // DONE - WORKS
       phase.CHECKCODEHELPER:
@@ -966,13 +1006,13 @@ module beast_fsm (
         regfile.rc = 4h0; // WRITE REG C - PEEK AT CODE HELPER
         regfile.we = b0; // WRITE DISABLED
         
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.SHIFTNOHINT;
           } else {
             phase.d = phase.GETNEXTCODE;
           }
-        }
+        //}
       
       phase.SHIFTNOHINT:
         seg_out = {5d0, 5d0, 5d0, 5d14};
@@ -994,9 +1034,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATENOHINT;
-        }
+        //}
       
       // DONE -
       phase.UPDATENOHINT:
@@ -1019,9 +1059,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.SHIFTGUESSHELPERDEFAULT;
-        }
+        //}
       
       // DONE - WORKS
       phase.GETNEXTCODE:
@@ -1044,9 +1084,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.SHIFTTEMPGUESS;
-        }
+        //}
       
       // DONE - WORKS
       phase.SHIFTTEMPGUESS:
@@ -1069,9 +1109,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATETEMPGUESS;
-        }
+        //}
       
       // DONE - WORKS
       phase.UPDATETEMPGUESS:
@@ -1094,9 +1134,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.CHECKTEMPGUESS_TEMPCODE;
-        }
+        //}
       
       // DONE - WORKS
       phase.CHECKTEMPGUESS_TEMPCODE:
@@ -1119,13 +1159,13 @@ module beast_fsm (
         regfile.we = b0; // WRITE DISABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.SHIFTHINTWHITE;
           } else {
             phase.d = phase.SHIFTCODEHELPER;
           }
-        }
+        //}
       
       // DONE - WORKS
       phase.SHIFTHINTWHITE:
@@ -1148,9 +1188,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATEHINTWHITE;
-        }
+        //}
       
       // DONE - WORKS
       phase.UPDATEHINTWHITE:
@@ -1173,9 +1213,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.SHIFTGUESSHELPERDEFAULT;
-        }
+        //}
       
       // DONE - WORKS
       phase.SHIFTGUESSHELPERDEFAULT:
@@ -1198,9 +1238,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATEGUESSHELPERDEFAULT;
-        }
+        //}
       
       // DONE - CHECKING
       phase.UPDATEGUESSHELPERDEFAULT:
@@ -1223,9 +1263,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATECODEHELPERDEFAULT;
-        }
+        //}
       
       // DONE -
       phase.UPDATECODEHELPERDEFAULT:
@@ -1248,9 +1288,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.COMPARETEMPCOUNTER;
-        }
+        //}
       
       //
       phase.COMPARETEMPCOUNTER:
@@ -1272,13 +1312,13 @@ module beast_fsm (
         regfile.rc = 4h0; // WRITE REG C - --
         regfile.we = b0; // WRITE DISABLED
         
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.ADDIMPOSTER;
           } else {
             phase.d = phase.ADDTEMPCOUNTER;
           }
-        }
+        //}
       
       // DONE -
       phase.ADDTEMPCOUNTER:
@@ -1300,9 +1340,9 @@ module beast_fsm (
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
         
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.UPDATETEMPCOUNTER;
-        }
+        //}
       
       // DONE -
       phase.UPDATETEMPCOUNTER:
@@ -1325,9 +1365,9 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           phase.d = phase.GETGUESS;
-        }
+        //}
       
       // DONE -
       phase.ADDIMPOSTER:
@@ -1335,11 +1375,11 @@ module beast_fsm (
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h9; // READ REG A - HINT
-        regfile.rb = 4hD; // READ REG B - IMPOSTER
+        regfile.rb = 4h0; // READ REG B - IMPOSTER
         
         // SELECTOR MUX
         sel_mux.asel_signal = 2b0; // ACCESS RA
-        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.bsel_signal = 4b11; // ACCESS HARDCODED VALUE 3
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
@@ -1438,13 +1478,13 @@ module beast_fsm (
         
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.WIN;
           } else {
             phase.d = phase.SHIFTATTEMPTCOUNT; // PREV SHIFTATTEMPTCOUNT
           }
-        }
+        //}
       
       phase.SHIFTATTEMPTCOUNT:
         seg_out = {5d10, 5d10, 5d12, 5d12};
@@ -1464,6 +1504,8 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hF; // WRITE REG C - TEMP
         regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
         
         if (trigger_start == b1) {
           phase.d = phase.UPDATEATTEMPTCOUNT;
@@ -1488,6 +1530,8 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h3; // WRITE REG C - CURRENT ATTEMPT COUNT
         regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
@@ -1515,13 +1559,13 @@ module beast_fsm (
         regfile.we = b0; // WRITE DISABLED
         
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
-        if (trigger_start == b1) {
+        //if (trigger_start == b1) {
           if (sel_mux.wdsel_out == 16b1) {
             phase.d = phase.LOSE;
           } else {
             phase.d = phase.RESETPOSITION;
           }
-        }
+        //}
       
       // ADD Reset states to Position and colour values
       phase.RESETPOSITION:
@@ -1542,7 +1586,7 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h1; // WRITE REG C - POSITION REG
         regfile.we = b1; // WRITE ENABLED
-        
+        out = sel_mux.wdsel_out;
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.RESETCOLOUR;
@@ -1567,7 +1611,7 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h2; // WRITE REG C - COLOUR REG
         regfile.we = b1; // WRITE ENABLED
-        
+        out = sel_mux.wdsel_out;
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.RESETHINT;
@@ -1591,7 +1635,7 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4h9; // WRITE REG C - HINT REG
         regfile.we = b1; // WRITE ENABLED
-        
+        out = sel_mux.wdsel_out;
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.RESETCOUNTER;
@@ -1615,12 +1659,89 @@ module beast_fsm (
         // WRITE REGISTERS (ACTUAL DATA)
         regfile.rc = 4hC; // WRITE REG C - COUNTER REG
         regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.RESETLEDCOLOUR; // GO BACK TO CARINA's CODE
+        }
+      phase.RESETLEDCOLOUR:
+        seg_out = {5d0, 5d20, 5d16, 5d12}; //"0RLC"
         
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b101; // ACCESS HARDCODED VALUE of 16b0010001000100010
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hE; // WRITE REG C - LEDCOLOUR
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.RESETXORHELPER; // GO BACK TO CARINA's CODE
+        }
+        
+      phase.RESETXORHELPER:
+        seg_out = {5d10, 5d10, 5d10, 5d14}; //"AAAR"
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b110; // ACCESS HARDCODED VALUE of 16b1111000000000000
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hD; // WRITE REG C - XORHELPER
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.RESETGUESS; // GO BACK TO CARINA's CODE
+        }  
+        
+      phase.RESETGUESS:
+        seg_out = {5d10, 5d10, 5d10, 5d6}; //
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b101; // ACCESS HARDCODED VALUE of 16b0010001000100010
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h7; // WRITE REG C - LEDCOLOUR
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
           phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
         }
-      
+         
+        
+        
+        
       phase.LOSE:
         seg_out = {5d16, 5d0, 5d18, 5d13};
         
@@ -1643,14 +1764,14 @@ module beast_fsm (
         }
       
       phase.RESETATTEMPT:
-        seg_out = {5d20, 5d20, 5d20, 5d1};
+        seg_out = {5d10, 5d10, 5d10, 5d10};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h0; // READ REG A - --
         regfile.rb = 4h0; // READ REG B - --
         
         // SELECTOR MUX
-        sel_mux.asel_signal = 4b1000; // ACCESS HARDCODED VALUE 8
+        sel_mux.asel_signal = 3b100; // ACCESS HARDCODED VALUE 8
         sel_mux.bsel_signal = 3b0; // ACCESS RB
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
@@ -1658,13 +1779,47 @@ module beast_fsm (
         alu16.alufn_signal = 6b11010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hC; // WRITE REG C - COUNTER REG
+        regfile.rc = 4h3; // WRITE REG C - COUNTER REG
         regfile.we = b1; // WRITE ENABLED
-        
+        out = sel_mux.wdsel_out;
         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
         if (trigger_start == b1) {
-          phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
+          phase.d = phase.RESETALLLED; 
         }
+      phase.RESETALLLED:
+        seg_out = {5d10, 5d10, 5d10, 5d16};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b10; // ACCESS HARDCODED 0
+        sel_mux.bsel_signal = 4b1110; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h0; // WRITE REG C - COUNTER REG
+        regfile.we = b0; // WRITE DISABLED
+        
+       
+        // UPDATE LED
+        led_out.encode = 4x{{sel_mux.asel_out}};
+        
+        out = sel_mux.wdsel_out;
+        
+        for (index = 0; index<4; index++) {
+          led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
+        }
+        
+         // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.RESETPOSITION; // GO BACK TO CARINA's CODE
+        }
+      
     }
   }
 }

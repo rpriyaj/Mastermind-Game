@@ -67,7 +67,7 @@ module au_top_0 (
   reg [1-1:0] M_man_trigger_start;
   reg [1-1:0] M_man_colour_button;
   reg [1-1:0] M_man_confirm_button;
-  led2_4 man (
+  beast_fsm_4 man (
     .clk(clk),
     .rst(rst),
     .dips(M_man_dips),

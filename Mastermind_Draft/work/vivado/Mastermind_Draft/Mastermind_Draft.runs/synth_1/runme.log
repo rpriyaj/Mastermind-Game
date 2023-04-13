@@ -4,13 +4,12 @@
 
 
 
-****** Vivado v2022.2 (64-bit)
-  **** SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
-  **** IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 
 source au_top_0.tcl -notrace
-create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 375.355 ; gain = 53.488
 Command: synth_design -top au_top_0 -part xc7a35tftg256-1
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
@@ -18,201 +17,286 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t
 INFO: [Device 21-403] Loading part xc7a35tftg256-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 26528
-INFO: [Synth 8-11241] undeclared symbol 'REGCCE', assumed default net type 'wire' [C:/Xilinx/Vivado/2022.2/data/verilog/src/unimacro/BRAM_SINGLE_MACRO.v:2170]
+INFO: [Synth 8-7075] Helper process launched with PID 1116
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 1182.957 ; gain = 407.863
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-6157] synthesizing module 'au_top_0' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
-INFO: [Synth 8-6157] synthesizing module 'button_conditioner_2' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/button_conditioner_2.v:13]
-INFO: [Synth 8-6157] synthesizing module 'pipeline_6' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/pipeline_6.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'pipeline_6' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/pipeline_6.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'button_conditioner_2' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/button_conditioner_2.v:13]
-INFO: [Synth 8-6157] synthesizing module 'edge_detector_3' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/edge_detector_3.v:12]
-INFO: [Synth 8-6155] done synthesizing module 'edge_detector_3' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/edge_detector_3.v:12]
-INFO: [Synth 8-6157] synthesizing module 'reset_conditioner_1' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'reset_conditioner_1' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v:11]
-INFO: [Synth 8-6157] synthesizing module 'led2_4' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led2_4.v:7]
-INFO: [Synth 8-6157] synthesizing module 'led_out_10' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led_out_10.v:7]
-INFO: [Synth 8-6157] synthesizing module 'ws2812b_writer_20' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/ws2812b_writer_20.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'ws2812b_writer_20' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/ws2812b_writer_20.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'led_out_10' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led_out_10.v:7]
-INFO: [Synth 8-6157] synthesizing module 'alu_7' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
-INFO: [Synth 8-6157] synthesizing module 'comparator_15' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_15.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'comparator_15' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_15.v:7]
-INFO: [Synth 8-6157] synthesizing module 'adder_16' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_16.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'adder_16' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_16.v:7]
-INFO: [Synth 8-6157] synthesizing module 'shifter_17' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_17.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'shifter_17' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_17.v:7]
-INFO: [Synth 8-6157] synthesizing module 'boolean_18' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_18.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'boolean_18' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_18.v:7]
-INFO: [Synth 8-6157] synthesizing module 'multiplier_19' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_19.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'multiplier_19' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_19.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'alu_7' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
-INFO: [Synth 8-6157] synthesizing module 'regfile_8' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:83]
-INFO: [Synth 8-6155] done synthesizing module 'regfile_8' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
-INFO: [Synth 8-6157] synthesizing module 'sel_mux_9' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
-WARNING: [Synth 8-151] case item 3'b100 is unreachable [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:39]
-INFO: [Synth 8-226] default block is never used [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:26]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:86]
-INFO: [Synth 8-6155] done synthesizing module 'sel_mux_9' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
-INFO: [Synth 8-6157] synthesizing module 'counter_11' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
-INFO: [Synth 8-6155] done synthesizing module 'counter_11' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led2_4.v:195]
-INFO: [Synth 8-6155] done synthesizing module 'led2_4' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led2_4.v:7]
-INFO: [Synth 8-6157] synthesizing module 'multi_seven_seg_5' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
-INFO: [Synth 8-6157] synthesizing module 'counter_12' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_12.v:14]
-INFO: [Synth 8-6155] done synthesizing module 'counter_12' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_12.v:14]
-INFO: [Synth 8-6157] synthesizing module 'seven_seg_13' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_13.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'seven_seg_13' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_13.v:7]
-INFO: [Synth 8-6157] synthesizing module 'decoder_14' [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_14.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'decoder_14' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_14.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'multi_seven_seg_5' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
-INFO: [Synth 8-6155] done synthesizing module 'au_top_0' (0#1) [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
-WARNING: [Synth 8-6014] Unused sequential element M_current_strip_q_reg was removed.  [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led2_4.v:603]
-WARNING: [Synth 8-6014] Unused sequential element M_current_led_q_reg was removed.  [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led2_4.v:612]
-WARNING: [Synth 8-6014] Unused sequential element M_count_left_q_reg was removed.  [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:146]
-WARNING: [Synth 8-6014] Unused sequential element M_temp_encode_q_reg was removed.  [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:147]
-WARNING: [Synth 8-3917] design au_top_0 has port led[7] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[6] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[5] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[4] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[3] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[2] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[1] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[0] driven by constant 0
-WARNING: [Synth 8-7129] Port rst in module multiplier_19 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port rst in module boolean_18 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[5] in module boolean_18 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[4] in module boolean_18 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port rst in module shifter_17 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[5] in module shifter_17 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[4] in module shifter_17 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[3] in module shifter_17 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port rst in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn[5] in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn[4] in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn[3] in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn[2] in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn[1] in module adder_16 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port rst in module comparator_15 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[5] in module comparator_15 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[4] in module comparator_15 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[3] in module comparator_15 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port alufn_op[0] in module comparator_15 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[15] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[14] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[13] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[12] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[11] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[10] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[9] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[8] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[7] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[6] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[5] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[4] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[3] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[2] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[1] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[0] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_button[4] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[23] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[22] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[21] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[20] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[19] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[18] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[17] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[16] in module au_top_0 is either unconnected or has no load
+INFO: [Synth 8-6157] synthesizing module 'au_top_0' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
+	Parameter IDLE_test_mode bound to: 1'b0 
+	Parameter MANUAL_test_mode bound to: 1'b1 
+INFO: [Synth 8-6157] synthesizing module 'button_conditioner_2' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/button_conditioner_2.v:13]
+	Parameter CLK_FREQ bound to: 26'b10111110101111000010000000 
+	Parameter MIN_DELAY bound to: 5'b10100 
+	Parameter NUM_SYNC bound to: 2'b10 
+INFO: [Synth 8-6157] synthesizing module 'pipeline_6' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/pipeline_6.v:11]
+	Parameter DEPTH bound to: 2'b10 
+INFO: [Synth 8-6155] done synthesizing module 'pipeline_6' (1#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/pipeline_6.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'button_conditioner_2' (2#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/button_conditioner_2.v:13]
+INFO: [Synth 8-6157] synthesizing module 'edge_detector_3' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/edge_detector_3.v:12]
+	Parameter RISE bound to: 1'b1 
+	Parameter FALL bound to: 1'b0 
+INFO: [Synth 8-6155] done synthesizing module 'edge_detector_3' (3#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/edge_detector_3.v:12]
+INFO: [Synth 8-6157] synthesizing module 'reset_conditioner_1' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v:11]
+	Parameter STAGES bound to: 3'b100 
+INFO: [Synth 8-6155] done synthesizing module 'reset_conditioner_1' (4#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/reset_conditioner_1.v:11]
+INFO: [Synth 8-6157] synthesizing module 'beast_fsm_4' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/beast_fsm_4.v:7]
+	Parameter IDLE_phase bound to: 7'b0000000 
+	Parameter POSITION_phase bound to: 7'b0000001 
+	Parameter BRANCHCOLOURINDEX_phase bound to: 7'b0000010 
+	Parameter INCREASECOLOURINDEX_phase bound to: 7'b0000011 
+	Parameter UPDATECOLOURINDEX_phase bound to: 7'b0000100 
+	Parameter BACKTOFIRSTCOLOURINDEX_phase bound to: 7'b0000101 
+	Parameter UPDATECOLOURPOS0_phase bound to: 7'b0000110 
+	Parameter ADDTOGUESSINDEX_phase bound to: 7'b0000111 
+	Parameter UPDATEGUESSINDEX_phase bound to: 7'b0001000 
+	Parameter SHIFTLEFTGUESSINDEX_phase bound to: 7'b0001001 
+	Parameter UPDATESHIFTEDGUESSINDEX_phase bound to: 7'b0001010 
+	Parameter BRANCHCHECKPOSITIONINDEX_phase bound to: 7'b0001011 
+	Parameter INCREASEPOSITIONINDEX_phase bound to: 7'b0001100 
+	Parameter UPDATEPOSITIONINDEX_phase bound to: 7'b0001101 
+	Parameter FINISH_phase bound to: 7'b0001110 
+	Parameter ANDLEDSTRIP_phase bound to: 7'b0001111 
+	Parameter SHIFTCOLOUR_phase bound to: 7'b0010000 
+	Parameter UPDATELEDCOLOUR_phase bound to: 7'b0010001 
+	Parameter UPDATEPHASETWOLED_phase bound to: 7'b0010010 
+	Parameter SHIFTXORHELPER_phase bound to: 7'b0010011 
+	Parameter UPDATEXORHELPER_phase bound to: 7'b0010100 
+	Parameter XOR_phase bound to: 7'b0010101 
+	Parameter BRANCHSHIFTCOLOURPOSITION_phase bound to: 7'b0010110 
+	Parameter SHIFTCOLOUR0_phase bound to: 7'b0010111 
+	Parameter SHIFTCOLOUR1_phase bound to: 7'b0011000 
+	Parameter SHIFTCOLOUR2_phase bound to: 7'b0011001 
+	Parameter SHIFTCOLOUR3_phase bound to: 7'b0011010 
+	Parameter SHIFTGUESSATTEMPTCOUNT_phase bound to: 7'b0011011 
+	Parameter UPDATEGUESSATTEMPTCOUNT_phase bound to: 7'b0011100 
+	Parameter GETGUESS_phase bound to: 7'b0011101 
+	Parameter GETCODE_phase bound to: 7'b0011110 
+	Parameter CHECKGUESS_CORRCODE_phase bound to: 7'b0011111 
+	Parameter SHIFTHINTRED_phase bound to: 7'b0100000 
+	Parameter UPDATEHINTRED_phase bound to: 7'b0100001 
+	Parameter SHIFTGUESSHELPERDEFAULT_phase bound to: 7'b0100010 
+	Parameter UPDATEGUESSHELPERDEFAULT_phase bound to: 7'b0100011 
+	Parameter SHIFTCODEHELPER_phase bound to: 7'b0100100 
+	Parameter UPDATECODEHELPER_phase bound to: 7'b0100101 
+	Parameter CHECKCODEHELPER_phase bound to: 7'b0100110 
+	Parameter SHIFTNOHINT_phase bound to: 7'b0100111 
+	Parameter UPDATENOHINT_phase bound to: 7'b0101000 
+	Parameter GETNEXTCODE_phase bound to: 7'b0101001 
+	Parameter SHIFTTEMPGUESS_phase bound to: 7'b0101010 
+	Parameter UPDATETEMPGUESS_phase bound to: 7'b0101011 
+	Parameter CHECKTEMPGUESS_TEMPCODE_phase bound to: 7'b0101100 
+	Parameter SHIFTHINTWHITE_phase bound to: 7'b0101101 
+	Parameter UPDATEHINTWHITE_phase bound to: 7'b0101110 
+	Parameter SHIFTCODEHELPERDEFAULT_phase bound to: 7'b0101111 
+	Parameter UPDATECODEHELPERDEFAULT_phase bound to: 7'b0110000 
+	Parameter COMPARETEMPCOUNTER_phase bound to: 7'b0110001 
+	Parameter ADDTEMPCOUNTER_phase bound to: 7'b0110010 
+	Parameter UPDATETEMPCOUNTER_phase bound to: 7'b0110011 
+	Parameter ADDIMPOSTER_phase bound to: 7'b0110100 
+	Parameter UPDATEIMPOSTER_phase bound to: 7'b0110101 
+	Parameter COMPARECODE_GUESS_phase bound to: 7'b0110110 
+	Parameter SHIFTATTEMPTCOUNT_phase bound to: 7'b0110111 
+	Parameter UPDATEATTEMPTCOUNT_phase bound to: 7'b0111000 
+	Parameter BRANCHATTEMPTCOUNT_phase bound to: 7'b0111001 
+	Parameter UPDATEHINTLED_phase bound to: 7'b0111010 
+	Parameter RESETPOSITION_phase bound to: 7'b0111011 
+	Parameter RESETCOLOUR_phase bound to: 7'b0111100 
+	Parameter RESETHINT_phase bound to: 7'b0111101 
+	Parameter RESETCOUNTER_phase bound to: 7'b0111110 
+	Parameter RESETATTEMPT_phase bound to: 7'b0111111 
+	Parameter RESETLEDCOLOUR_phase bound to: 7'b1000000 
+	Parameter RESETXORHELPER_phase bound to: 7'b1000001 
+	Parameter RESETALLLED_phase bound to: 7'b1000010 
+	Parameter RESETGUESS_phase bound to: 7'b1000011 
+	Parameter LOSE_phase bound to: 7'b1000100 
+	Parameter WIN_phase bound to: 7'b1000101 
+	Parameter GAMEOVER_phase bound to: 7'b1000110 
+INFO: [Synth 8-6157] synthesizing module 'led_out_10' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led_out_10.v:7]
+	Parameter PIXEL_COUNT bound to: 3'b100 
+	Parameter ENCODING_AMOUNT bound to: 4'b1000 
+	Parameter LEDCOLOR bound to: 192'b000000000011001100110011011001101111111101100110010011001001100100000000001100110000000000000000000000000011001100000000000000000000000000110011011000000110000001100000000000000000000000000000 
+	Parameter IDLE_state bound to: 1'b0 
+	Parameter LOAD_state bound to: 1'b1 
+INFO: [Synth 8-6157] synthesizing module 'ws2812b_writer_20' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/ws2812b_writer_20.v:11]
+	Parameter PIXEL_COUNT bound to: 3'b100 
+	Parameter SEND_PIXEL_state bound to: 1'b0 
+	Parameter RESET_state bound to: 1'b1 
+INFO: [Synth 8-6155] done synthesizing module 'ws2812b_writer_20' (5#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/ws2812b_writer_20.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'led_out_10' (6#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/led_out_10.v:7]
+INFO: [Synth 8-6157] synthesizing module 'alu_7' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
+INFO: [Synth 8-6157] synthesizing module 'comparator_15' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_15.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'comparator_15' (7#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/comparator_15.v:7]
+INFO: [Synth 8-6157] synthesizing module 'adder_16' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_16.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'adder_16' (8#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/adder_16.v:7]
+INFO: [Synth 8-6157] synthesizing module 'shifter_17' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_17.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'shifter_17' (9#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/shifter_17.v:7]
+INFO: [Synth 8-6157] synthesizing module 'boolean_18' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_18.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'boolean_18' (10#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/boolean_18.v:7]
+INFO: [Synth 8-6157] synthesizing module 'multiplier_19' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_19.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'multiplier_19' (11#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multiplier_19.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'alu_7' (12#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/alu_7.v:7]
+INFO: [Synth 8-6157] synthesizing module 'regfile_8' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:83]
+INFO: [Synth 8-6155] done synthesizing module 'regfile_8' (13#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/regfile_8.v:7]
+INFO: [Synth 8-6157] synthesizing module 'sel_mux_9' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:92]
+INFO: [Synth 8-6155] done synthesizing module 'sel_mux_9' (14#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/sel_mux_9.v:7]
+INFO: [Synth 8-6157] synthesizing module 'counter_11' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
+	Parameter SIZE bound to: 1'b1 
+	Parameter DIV bound to: 5'b11010 
+	Parameter TOP bound to: 1'b0 
+	Parameter UP bound to: 1'b1 
+	Parameter MAX_VALUE bound to: 27'b011111111111111111111111111 
+INFO: [Synth 8-6155] done synthesizing module 'counter_11' (15#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_11.v:14]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/beast_fsm_4.v:229]
+INFO: [Synth 8-6155] done synthesizing module 'beast_fsm_4' (16#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/beast_fsm_4.v:7]
+INFO: [Synth 8-6157] synthesizing module 'multi_seven_seg_5' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
+	Parameter DIGITS bound to: 3'b100 
+	Parameter DIV bound to: 5'b10000 
+	Parameter DIGIT_BITS bound to: 2'b10 
+INFO: [Synth 8-6157] synthesizing module 'counter_12' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_12.v:14]
+	Parameter SIZE bound to: 2'b10 
+	Parameter DIV bound to: 5'b10000 
+	Parameter TOP bound to: 4'b0011 
+	Parameter UP bound to: 1'b1 
+	Parameter MAX_VALUE bound to: 20'b00111111111111111111 
+INFO: [Synth 8-6155] done synthesizing module 'counter_12' (17#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/counter_12.v:14]
+INFO: [Synth 8-6157] synthesizing module 'seven_seg_13' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_13.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'seven_seg_13' (18#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/seven_seg_13.v:7]
+INFO: [Synth 8-6157] synthesizing module 'decoder_14' [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_14.v:11]
+	Parameter WIDTH bound to: 2'b10 
+INFO: [Synth 8-6155] done synthesizing module 'decoder_14' (19#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/decoder_14.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'multi_seven_seg_5' (20#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/multi_seven_seg_5.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'au_top_0' (21#1) [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.srcs/sources_1/imports/verilog/au_top_0.v:7]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:13 . Memory (MB): peak = 1279.902 ; gain = 504.809
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:13 . Memory (MB): peak = 1279.902 ; gain = 504.809
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:13 . Memory (MB): peak = 1279.902 ; gain = 504.809
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.052 . Memory (MB): peak = 1279.902 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.032 . Memory (MB): peak = 999.219 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
-Parsing XDC File [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc]
-Finished Parsing XDC File [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/constraint/custom.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/au_top_0_propImpl.xdc].
+Parsing XDC File [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/constraint/custom.xdc]
+Finished Parsing XDC File [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/constraint/custom.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/constraint/custom.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/au_top_0_propImpl.xdc].
 Resolution: To avoid this warning, move constraints listed in [.Xil/au_top_0_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
-Parsing XDC File [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/constraint/bypass.xdc]
-Finished Parsing XDC File [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/constraint/bypass.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/constraint/bypass.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/au_top_0_propImpl.xdc].
+Parsing XDC File [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/constraint/bypass.xdc]
+Finished Parsing XDC File [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/constraint/bypass.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/constraint/bypass.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/au_top_0_propImpl.xdc].
 Resolution: To avoid this warning, move constraints listed in [.Xil/au_top_0_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1341.188 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 999.219 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.013 . Memory (MB): peak = 1341.188 ; gain = 0.000
-INFO: [Synth 8-11241] undeclared symbol 'REGCCE', assumed default net type 'wire' [C:/Xilinx/Vivado/2022.2/data/verilog/src/unimacro/BRAM_SINGLE_MACRO.v:2170]
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:21 ; elapsed = 00:00:27 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished Constraint Validation : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a35tftg256-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:21 ; elapsed = 00:00:27 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:22 ; elapsed = 00:00:27 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-802] inferred FSM for state register 'M_phase_q_reg' in module 'led2_4'
+INFO: [Synth 8-802] inferred FSM for state register 'M_phase_q_reg' in module 'beast_fsm_4'
+WARNING: [Synth 8-6040] Register M_phase_q_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register M_phase_q_reg_rep driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
 ---------------------------------------------------------------------------------------------------
-              IDLE_phase |                            00000 |                            00000
-          POSITION_phase |                            00001 |                            00010
-BACKTOFIRSTCOLOURINDEX_phase |                            00010 |                            00110
- UPDATECOLOURINDEX_phase |                            00011 |                            00101
-               XOR_phase |                            00100 |                            10110
-       ANDLEDSTRIP_phase |                            00101 |                            10000
-BRANCHSHIFTCOLOURPOSITION_phase |                            00110 |                            10111
-      SHIFTCOLOUR0_phase |                            00111 |                            11000
-      SHIFTCOLOUR1_phase |                            01000 |                            11001
-      SHIFTCOLOUR2_phase |                            01001 |                            11010
-      SHIFTCOLOUR3_phase |                            01010 |                            11011
-   UPDATELEDCOLOUR_phase |                            01011 |                            10010
- UPDATEPHASETWOLED_phase |                            01100 |                            10011
-BRANCHCHECKPOSITIONINDEX_phase |                            01101 |                            01100
-INCREASEPOSITIONINDEX_phase |                            01110 |                            01101
-UPDATEPOSITIONINDEX_phase |                            01111 |                            01110
-    SHIFTXORHELPER_phase |                            10000 |                            10100
-   UPDATEXORHELPER_phase |                            10001 |                            10101
-SHIFTGUESSATTEMPTCOUNT_phase |                            10010 |                            11100
-UPDATEGUESSATTEMPTCOUNT_phase |                            10011 |                            11101
-          GETGUESS_phase |                            10100 |                            11110
-            FINISH_phase |                            10101 |                            01111
- BRANCHCOLOURINDEX_phase |                            10110 |                            00011
-INCREASECOLOURINDEX_phase |                            10111 |                            00100
+              IDLE_phase |                           000000 |                          0000000
+          POSITION_phase |                           000001 |                          0000001
+BACKTOFIRSTCOLOURINDEX_phase |                           000010 |                          0000101
+ UPDATECOLOURINDEX_phase |                           000011 |                          0000100
+               XOR_phase |                           000100 |                          0010101
+       ANDLEDSTRIP_phase |                           000101 |                          0001111
+BRANCHSHIFTCOLOURPOSITION_phase |                           000110 |                          0010110
+      SHIFTCOLOUR0_phase |                           000111 |                          0010111
+      SHIFTCOLOUR1_phase |                           001000 |                          0011000
+      SHIFTCOLOUR2_phase |                           001001 |                          0011001
+      SHIFTCOLOUR3_phase |                           001010 |                          0011010
+   UPDATELEDCOLOUR_phase |                           001011 |                          0010001
+ UPDATEPHASETWOLED_phase |                           001100 |                          0010010
+BRANCHCHECKPOSITIONINDEX_phase |                           001101 |                          0001011
+INCREASEPOSITIONINDEX_phase |                           001110 |                          0001100
+UPDATEPOSITIONINDEX_phase |                           001111 |                          0001101
+    SHIFTXORHELPER_phase |                           010000 |                          0010011
+   UPDATEXORHELPER_phase |                           010001 |                          0010100
+SHIFTGUESSATTEMPTCOUNT_phase |                           010010 |                          0011011
+UPDATEGUESSATTEMPTCOUNT_phase |                           010011 |                          0011100
+            FINISH_phase |                           010100 |                          0001110
+          GETGUESS_phase |                           010101 |                          0011101
+           GETCODE_phase |                           010110 |                          0011110
+CHECKGUESS_CORRCODE_phase |                           010111 |                          0011111
+      SHIFTHINTRED_phase |                           011000 |                          0100000
+     UPDATEHINTRED_phase |                           011001 |                          0100001
+   SHIFTCODEHELPER_phase |                           011010 |                          0100100
+  UPDATECODEHELPER_phase |                           011011 |                          0100101
+   CHECKCODEHELPER_phase |                           011100 |                          0100110
+       SHIFTNOHINT_phase |                           011101 |                          0100111
+      UPDATENOHINT_phase |                           011110 |                          0101000
+       GETNEXTCODE_phase |                           011111 |                          0101001
+    SHIFTTEMPGUESS_phase |                           100000 |                          0101010
+   UPDATETEMPGUESS_phase |                           100001 |                          0101011
+CHECKTEMPGUESS_TEMPCODE_phase |                           100010 |                          0101100
+    SHIFTHINTWHITE_phase |                           100011 |                          0101101
+   UPDATEHINTWHITE_phase |                           100100 |                          0101110
+SHIFTGUESSHELPERDEFAULT_phase |                           100101 |                          0100010
+UPDATEGUESSHELPERDEFAULT_phase |                           100110 |                          0100011
+UPDATECODEHELPERDEFAULT_phase |                           100111 |                          0110000
+COMPARETEMPCOUNTER_phase |                           101000 |                          0110001
+       ADDIMPOSTER_phase |                           101001 |                          0110100
+    UPDATEIMPOSTER_phase |                           101010 |                          0110101
+     UPDATEHINTLED_phase |                           101011 |                          0111010
+ COMPARECODE_GUESS_phase |                           101100 |                          0110110
+               WIN_phase |                           101101 |                          1000101
+ SHIFTATTEMPTCOUNT_phase |                           101110 |                          0110111
+UPDATEATTEMPTCOUNT_phase |                           101111 |                          0111000
+BRANCHATTEMPTCOUNT_phase |                           110000 |                          0111001
+              LOSE_phase |                           110001 |                          1000100
+          GAMEOVER_phase |                           110010 |                          1000110
+      RESETATTEMPT_phase |                           110011 |                          0111111
+       RESETALLLED_phase |                           110100 |                          1000010
+     RESETPOSITION_phase |                           110101 |                          0111011
+       RESETCOLOUR_phase |                           110110 |                          0111100
+         RESETHINT_phase |                           110111 |                          0111101
+      RESETCOUNTER_phase |                           111000 |                          0111110
+    RESETLEDCOLOUR_phase |                           111001 |                          1000000
+    RESETXORHELPER_phase |                           111010 |                          1000001
+        RESETGUESS_phase |                           111011 |                          1000011
+    ADDTEMPCOUNTER_phase |                           111100 |                          0110010
+ UPDATETEMPCOUNTER_phase |                           111101 |                          0110011
+ BRANCHCOLOURINDEX_phase |                           111110 |                          0000010
+INCREASECOLOURINDEX_phase |                           111111 |                          0000011
 ---------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'M_phase_q_reg' using encoding 'sequential' in module 'led2_4'
+INFO: [Synth 8-3354] encoded FSM with state register 'M_phase_q_reg' using encoding 'sequential' in module 'beast_fsm_4'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:23 ; elapsed = 00:00:29 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
 +---Adders : 
+	   2 Input   18 Bit       Adders := 1     
 	   2 Input   16 Bit       Adders := 1     
 	   3 Input   16 Bit       Adders := 1     
 	   2 Input    7 Bit       Adders := 4     
@@ -222,6 +306,7 @@ Detailed RTL Component Info :
 	   2 Input     16 Bit         XORs := 1     
 	   2 Input      1 Bit         XORs := 2     
 +---Registers : 
+	               18 Bit    Registers := 1     
 	               16 Bit    Registers := 22    
 	                7 Bit    Registers := 4     
 	                5 Bit    Registers := 4     
@@ -229,29 +314,32 @@ Detailed RTL Component Info :
 	                2 Bit    Registers := 10    
 	                1 Bit    Registers := 16    
 +---Muxes : 
-	  24 Input   64 Bit        Muxes := 1     
+	  64 Input   64 Bit        Muxes := 1     
 	   2 Input   24 Bit        Muxes := 1     
-	  24 Input   20 Bit        Muxes := 1     
+	  65 Input   20 Bit        Muxes := 1     
 	   2 Input   20 Bit        Muxes := 1     
+	   2 Input   18 Bit        Muxes := 1     
 	   3 Input   16 Bit        Muxes := 1     
 	   2 Input   16 Bit        Muxes := 6     
-	   4 Input   16 Bit        Muxes := 3     
-	  24 Input   16 Bit        Muxes := 1     
-	   2 Input    7 Bit        Muxes := 4     
-	  24 Input    6 Bit        Muxes := 1     
-	   2 Input    5 Bit        Muxes := 10    
-	  24 Input    5 Bit        Muxes := 1     
+	   4 Input   16 Bit        Muxes := 2     
+	   8 Input   16 Bit        Muxes := 1     
+	  64 Input   16 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 6     
+	  64 Input    7 Bit        Muxes := 1     
+	  64 Input    6 Bit        Muxes := 2     
+	   2 Input    6 Bit        Muxes := 16    
+	   2 Input    5 Bit        Muxes := 8     
 	   4 Input    5 Bit        Muxes := 1     
-	  24 Input    4 Bit        Muxes := 5     
-	   2 Input    4 Bit        Muxes := 1     
+	  64 Input    4 Bit        Muxes := 5     
+	   2 Input    4 Bit        Muxes := 2     
 	   4 Input    3 Bit        Muxes := 1     
-	   2 Input    3 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 2     
+	  64 Input    3 Bit        Muxes := 1     
 	   2 Input    2 Bit        Muxes := 4     
-	  24 Input    2 Bit        Muxes := 1     
 	   2 Input    1 Bit        Muxes := 98    
 	   4 Input    1 Bit        Muxes := 17    
 	  16 Input    1 Bit        Muxes := 15    
-	  24 Input    1 Bit        Muxes := 2     
+	  64 Input    1 Bit        Muxes := 2     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -267,70 +355,26 @@ Finished Part Resource Summary
 ---------------------------------------------------------------------------------
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
-WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 DSP Report: Generating DSP mult/out0, operation Mode is: A*B.
 DSP Report: operator mult/out0 is absorbed into DSP mult/out0.
-WARNING: [Synth 8-3917] design au_top_0 has port led[7] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[6] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[5] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[4] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[3] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[2] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[1] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port led[0] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[23] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[22] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[21] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[20] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[19] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[18] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[17] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_led[16] driven by constant 0
-WARNING: [Synth 8-3917] design au_top_0 has port io_seg[7] driven by constant 1
-WARNING: [Synth 8-7129] Port rst in module alu_7 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[15] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[14] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[13] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[12] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[11] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[10] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[9] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[8] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[7] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[6] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[5] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[4] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[3] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[2] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[1] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port dips[0] in module led2_4 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_button[4] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[23] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[22] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[21] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[20] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[19] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[18] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[17] in module au_top_0 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port io_dip[16] in module au_top_0 is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:39 ; elapsed = 00:00:48 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 999.219 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
 ---------------------------------------------------------------------------------
 
-ROM: Preliminary Mapping Report
+ROM: Preliminary Mapping	Report
 +-------------+------------------+---------------+----------------+
 |Module Name  | RTL Object       | Depth x Width | Implemented As | 
 +-------------+------------------+---------------+----------------+
 |seven_seg_13 | segs             | 32x7          | LUT            | 
-|led2_4       | seg_out0         | 32x20         | LUT            | 
+|beast_fsm_4  | seg_out          | 128x20        | LUT            | 
 |au_top_0     | seg/seg_dec/segs | 32x7          | LUT            | 
 +-------------+------------------+---------------+----------------+
 
 
-DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
+DSP: Preliminary Mapping	Report (see note below)
 +--------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
 |Module Name   | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
 +--------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
@@ -345,19 +389,19 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:51 ; elapsed = 00:01:03 . Memory (MB): peak = 1341.188 ; gain = 566.094
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1000.363 ; gain = 1.145
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:01:00 ; elapsed = 00:01:13 . Memory (MB): peak = 1382.316 ; gain = 607.223
+Finished Timing Optimization : Time (s): cpu = 00:00:29 ; elapsed = 00:00:31 . Memory (MB): peak = 1050.074 ; gain = 50.855
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:01:01 ; elapsed = 00:01:15 . Memory (MB): peak = 1423.707 ; gain = 648.613
+Finished Technology Mapping : Time (s): cpu = 00:00:30 ; elapsed = 00:00:32 . Memory (MB): peak = 1103.020 ; gain = 103.801
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -375,37 +419,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:08 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished IO Insertion : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:08 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:09 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:09 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:09 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:09 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -424,39 +468,38 @@ Report Cell Usage:
 |1     |BUFG   |     1|
 |2     |CARRY4 |    49|
 |3     |LUT1   |    22|
-|4     |LUT2   |    98|
-|5     |LUT3   |    69|
-|6     |LUT4   |   105|
-|7     |LUT5   |   235|
-|8     |LUT6   |   268|
-|9     |MUXF7  |    15|
+|4     |LUT2   |    97|
+|5     |LUT3   |    39|
+|6     |LUT4   |   113|
+|7     |LUT5   |   134|
+|8     |LUT6   |   563|
+|9     |MUXF7  |    33|
 |10    |MUXF8  |     5|
-|11    |FDRE   |   426|
-|12    |FDSE   |    22|
+|11    |FDRE   |   505|
+|12    |FDSE   |    31|
 |13    |IBUF   |     7|
 |14    |OBUF   |    49|
 +------+-------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:09 ; elapsed = 00:01:23 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 44 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:55 ; elapsed = 00:01:19 . Memory (MB): peak = 1438.535 ; gain = 602.156
-Synthesis Optimization Complete : Time (s): cpu = 00:01:09 ; elapsed = 00:01:24 . Memory (MB): peak = 1438.535 ; gain = 663.441
+Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:26 ; elapsed = 00:00:32 . Memory (MB): peak = 1116.852 ; gain = 117.633
+Synthesis Optimization Complete : Time (s): cpu = 00:00:32 ; elapsed = 00:00:34 . Memory (MB): peak = 1116.852 ; gain = 117.633
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.028 . Memory (MB): peak = 1446.059 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 69 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.015 . Memory (MB): peak = 1123.109 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 87 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1453.602 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1123.109 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Synth Design complete, checksum: c4e0b43d
 INFO: [Common 17-83] Releasing license: Synthesis
-66 Infos, 101 Warnings, 0 Critical Warnings and 0 Errors encountered.
+63 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:15 ; elapsed = 00:01:34 . Memory (MB): peak = 1453.602 ; gain = 1077.984
-INFO: [Common 17-1381] The checkpoint 'C:/Users/Carina/Documents/CS_Project/1d-project-group_15/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp' has been generated.
+synth_design: Time (s): cpu = 00:00:35 ; elapsed = 00:00:39 . Memory (MB): peak = 1123.109 ; gain = 123.891
+INFO: [Common 17-1381] The checkpoint 'C:/Users/dianm/Desktop/Alchitry/1D FIles/Mastermind_Draft/work/vivado/Mastermind_Draft/Mastermind_Draft.runs/synth_1/au_top_0.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file au_top_0_utilization_synth.rpt -pb au_top_0_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Apr 13 15:53:51 2023...
+INFO: [Common 17-206] Exiting Vivado at Thu Apr 13 17:56:55 2023...
