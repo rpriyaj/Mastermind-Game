@@ -22,7 +22,7 @@ module regfile_8 (
   
   reg [15:0] M_reg_current_colour_d, M_reg_current_colour_q = 2'h2;
   
-  reg [3:0] M_reg_current_guess_count_d, M_reg_current_guess_count_q = 4'h8;
+  reg [15:0] M_reg_current_guess_count_d, M_reg_current_guess_count_q = 16'h8000;
   
   reg [15:0] M_reg_game_mode_d, M_reg_game_mode_q = 1'h0;
   
@@ -223,9 +223,9 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_guess_q <= 16'h2222;
+      M_reg_hint_q <= 1'h0;
     end else begin
-      M_reg_guess_q <= M_reg_guess_d;
+      M_reg_hint_q <= M_reg_hint_d;
     end
   end
   
@@ -250,54 +250,9 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_current_colour_q <= 2'h2;
-    end else begin
-      M_reg_current_colour_q <= M_reg_current_colour_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
       M_reg_game_mode_q <= 1'h0;
     end else begin
       M_reg_game_mode_q <= M_reg_game_mode_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_temp_q <= 1'h0;
-    end else begin
-      M_reg_temp_q <= M_reg_temp_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_temp_counter_q <= 1'h1;
-    end else begin
-      M_reg_temp_counter_q <= M_reg_temp_counter_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_current_guess_count_q <= 4'h8;
-    end else begin
-      M_reg_current_guess_count_q <= M_reg_current_guess_count_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
-      M_reg_xor_q <= 16'hf000;
-    end else begin
-      M_reg_xor_q <= M_reg_xor_d;
     end
   end
   
@@ -313,9 +268,18 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_guess_helper_q <= 16'hf000;
+      M_reg_temp_q <= 1'h0;
     end else begin
-      M_reg_guess_helper_q <= M_reg_guess_helper_d;
+      M_reg_temp_q <= M_reg_temp_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_current_guess_count_q <= 16'h8000;
+    end else begin
+      M_reg_current_guess_count_q <= M_reg_current_guess_count_d;
     end
   end
   
@@ -331,15 +295,6 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_code_q <= 15'h4627;
-    end else begin
-      M_reg_code_q <= M_reg_code_d;
-    end
-  end
-  
-  
-  always @(posedge clk) begin
-    if (rst == 1'b1) begin
       M_reg_current_position_q <= 1'h0;
     end else begin
       M_reg_current_position_q <= M_reg_current_position_d;
@@ -349,9 +304,54 @@ module regfile_8 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_reg_hint_q <= 1'h0;
+      M_reg_temp_counter_q <= 1'h1;
     end else begin
-      M_reg_hint_q <= M_reg_hint_d;
+      M_reg_temp_counter_q <= M_reg_temp_counter_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_guess_helper_q <= 16'hf000;
+    end else begin
+      M_reg_guess_helper_q <= M_reg_guess_helper_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_guess_q <= 16'h2222;
+    end else begin
+      M_reg_guess_q <= M_reg_guess_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_current_colour_q <= 2'h2;
+    end else begin
+      M_reg_current_colour_q <= M_reg_current_colour_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_code_q <= 15'h4627;
+    end else begin
+      M_reg_code_q <= M_reg_code_d;
+    end
+  end
+  
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      M_reg_xor_q <= 16'hf000;
+    end else begin
+      M_reg_xor_q <= M_reg_xor_d;
     end
   end
   

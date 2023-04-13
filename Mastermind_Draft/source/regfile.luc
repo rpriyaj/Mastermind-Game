@@ -14,7 +14,7 @@ module regfile (
   // CHANGE DEFAULT VALUES IN #INIT(_) 
   dff reg_current_position[16](#INIT(0), .clk(clk), .rst(rst));
   dff reg_current_colour[16](#INIT(2), .clk(clk), .rst(rst));
-  dff reg_current_guess_count[4](#INIT(8), .clk(clk), .rst(rst));
+  dff reg_current_guess_count[16](#INIT(32768), .clk(clk), .rst(rst)); //32768 for 16 strip test
   dff reg_game_mode[16](#INIT(0),.clk(clk), .rst(rst));
   dff reg_code[16](#INIT(17959), .clk(clk), .rst(rst));
   dff reg_code_helper[16](#INIT(61440), .clk(clk), .rst(rst));
