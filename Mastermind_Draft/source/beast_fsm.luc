@@ -17,12 +17,19 @@ module beast_fsm (
   // INSTANTIATE LEDOUT IN FSM HERE
   led_out led_out[4](.clk(clk), .rst(rst));
   
-  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(27));
+  counter slow_clock (.clk(clk), .rst(rst), #SIZE(1), #DIV(28));
   edge_detector slow_edge (.clk(clk), #RISE(1), #FALL(0));
   
   fsm phase(.clk(clk), .rst(rst)) = {
     
     IDLE,
+    NORMALMODE,
+    IMPOSTERMODE,
+    ADDGAMEMODE,
+    SUBGAMEMODE,
+    UPDATEGAMEMODEADD,
+    UPDATEGAMEMODESUB,
+    
     POSITION,
     BRANCHCOLOURINDEX,
     INCREASECOLOURINDEX,
@@ -78,6 +85,7 @@ module beast_fsm (
     COMPARETEMPCOUNTER,
     ADDTEMPCOUNTER,
     UPDATETEMPCOUNTER,
+    CHECKGAMEMODE,
     ADDIMPOSTER,
     UPDATEIMPOSTER,
     COMPARECODE_GUESS,
@@ -94,7 +102,17 @@ module beast_fsm (
     RESETLEDCOLOUR,
     RESETXORHELPER,
     RESETALLLED,
+    RESETGAMEMODE,
     RESETGUESS,
+    
+    RESETPOSITIONFINAL,
+    RESETCOLOURFINAL,
+    RESETHINTFINAL,
+    RESETCOUNTERFINAL,
+    RESETATTEMPTFINAL,
+    RESETLEDCOLOURFINAL,
+    RESETXORHELPERFINAL,
+    RESETGUESSFINAL,
     
     LOSE,
     WIN,
@@ -136,9 +154,132 @@ module beast_fsm (
       phase.IDLE:
         seg_out = {5d1,5d15, 5d16, 5d13};
         if (confirm_button){
+          phase.d = phase.NORMALMODE; // PREV POSITION
+        }
+        
+      phase.NORMALMODE:
+        seg_out = {5d0,5d0, 5d6, 5d1};
+        
+        if (colour_button) {
+          phase.d = phase.ADDGAMEMODE;
+        }
+        else if (confirm_button){
           phase.d = phase.POSITION;
         }
-      
+        
+      phase.ADDGAMEMODE:
+        seg_out = {5d10,5d6, 5d14, 5d0};  
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h4; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0; // ACCESS RA
+        sel_mux.bsel_signal= b10; // ACCESS HARDCODED VALUE 1
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b000000; // ADD OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        phase.d = phase.UPDATEGAMEMODEADD;  
+        
+      phase.UPDATEGAMEMODEADD:
+        
+        seg_out={5d10, 5d21, 5d6, 5d14}; //7SEG: 0UC1
+        
+        // Purpose: Update colour index register
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0; // ACCESS RA
+        sel_mux.bsel_signal= b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h4; // WRITE REG C - back to colour register // test write to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.asel_out;
+        
+        //phase.d = phase.SHIFTLEFTGUESSINDEX;
+        phase.d = phase.IMPOSTERMODE; 
+        
+      phase.IMPOSTERMODE:
+        seg_out = {5d0,5d0, 5d6, 5d2};   
+        
+        if (colour_button) {
+          phase.d = phase.SUBGAMEMODE;
+        }
+        else if (confirm_button){
+          phase.d = phase.POSITION;
+        }
+
+      phase.SUBGAMEMODE:
+        seg_out = {5d10,5d6, 5d14, 5d0};  
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h4; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0; // ACCESS RA
+        sel_mux.bsel_signal= b10; // ACCESS HARDCODED VALUE 1
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b000001; // SUB OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C - back to colour register // test write to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        phase.d = phase.UPDATEGAMEMODESUB;
+        
+      phase.UPDATEGAMEMODESUB:
+        
+        seg_out={5d18, 5d21, 5d6, 5d14};
+        
+        // Purpose: Update colour index register
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // Refile rb = -- regfile rc = --
+        regfile.rb = 4h0; // we don't use this
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0; // ACCESS RA
+        sel_mux.bsel_signal= b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h4; // WRITE REG C - back to colour register // test write to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.asel_out;
+        
+        //phase.d = phase.SHIFTLEFTGUESSINDEX;
+        phase.d = phase.NORMALMODE;  
+        
       phase.POSITION:
         seg_out = {5d0,5d21, 5d14, 5d16};
         
@@ -1187,10 +1328,10 @@ module beast_fsm (
         regfile.we = b0; // WRITE DISABLED
         
         if (sel_mux.wdsel_out == 16b1) {
-          phase.d = phase.ADDIMPOSTER;
+          phase.d = phase.CHECKGAMEMODE; // PREV ADDIMPOSTER
         } else {
           phase.d = phase.ADDTEMPCOUNTER;
-        }
+        }  
       
       phase.ADDTEMPCOUNTER:
         seg_out = {5d10, 5d12, 5d12, 5d0};
@@ -1234,6 +1375,31 @@ module beast_fsm (
         regfile.we = b1; // WRITE ENABLED
         
         phase.d = phase.GETGUESS;
+        
+      phase.CHECKGAMEMODE:
+        seg_out = {5d12, 5d12, 5d6, 5d14};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h4; // READ REG A - CODE
+        regfile.rb = 4h0; // READ REG B - GUESS
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 4b10; // ACCESS HARDCODED VALUE 1
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b110011; // COMPEQ OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h0; // WRITE REG C - --
+        regfile.we = b0; // WRITE DISABLED
+        
+        if (sel_mux.wdsel_out == 16b1) {
+          phase.d = phase.ADDIMPOSTER;
+        } else {
+          phase.d = phase.UPDATEHINTLED; 
+        }  
       
       phase.ADDIMPOSTER:
         seg_out = {5d10, 5d10, 5d1, 5d1};
@@ -1543,7 +1709,7 @@ module beast_fsm (
         
         out = sel_mux.wdsel_out;
         
-        phase.d = phase.RESETGUESS; // GO BACK TO CARINA's CODE
+        phase.d = phase.RESETGUESS;
       
       phase.RESETGUESS:
         seg_out = {5d10, 5d10, 5d10, 5d6}; //
@@ -1566,7 +1732,7 @@ module beast_fsm (
         
         out = sel_mux.wdsel_out;
         
-        phase.d = phase.IDLE; // GO BACK TO CARINA's CODE
+        phase.d = phase.POSITION;
       
       phase.LOSE:
         seg_out = {5d16, 5d0, 5d18, 5d13};
@@ -1639,7 +1805,195 @@ module beast_fsm (
           led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
         }
         
-        phase.d = phase.RESETPOSITION;
+        phase.d = phase.RESETGAMEMODE; // PREV RESETPOSITION
+        
+      phase.RESETGAMEMODE:
+        seg_out = {5d10, 5d10, 5d6, 5d14};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b10; // ACCESS HARDCODED 0
+        sel_mux.bsel_signal = 4b1110; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h4; // WRITE REG C - GAME MODE REG
+        regfile.we = b1; // WRITE ENABLED
+
+        // UPDATE LED
+        led_out.encode = 4x{{sel_mux.asel_out}};
+        
+        out = sel_mux.wdsel_out;
+        
+        for (index = 0; index<4; index++) {
+          led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
+        }
+        
+        phase.d = phase.RESETPOSITIONFINAL;
+        
+      phase.RESETPOSITIONFINAL:
+        seg_out = {5d20, 5d20, 5d20, 5d1};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - CURRENT ATTEMPT COUNT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b10; // ACCESS HARDCODED VALUE 0
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h1; // WRITE REG C - POSITION REG
+        regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETCOLOURFINAL;
+      
+      // ADD Reset states to position and colour values
+      phase.RESETCOLOURFINAL:
+        seg_out = {5d20, 5d20, 5d20, 5d2};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - CURRENT ATTEMPT COUNT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b11; // ACCESS HARDCODED VALUE 2
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h2; // WRITE REG C - COLOUR REG
+        regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETHINTFINAL;
+      
+      phase.RESETHINTFINAL:
+        seg_out = {5d20, 5d20, 5d20, 5d3};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - CURRENT ATTEMPT COUNT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b10; // ACCESS HARDCODED VALUE 0
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h9; // WRITE REG C - HINT REG
+        regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETCOUNTERFINAL;
+      
+      phase.RESETCOUNTERFINAL:
+        seg_out = {5d20, 5d20, 5d20, 5d1};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b1; // ACCESS HARDCODED VALUE 1
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hC; // WRITE REG C - COUNTER REG
+        regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETLEDCOLOURFINAL; // GO BACK TO CARINA's CODE
+      
+      phase.RESETLEDCOLOURFINAL:
+        seg_out = {5d0, 5d20, 5d16, 5d12}; //"0RLC"
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b101; // ACCESS HARDCODED VALUE of 16b0010001000100010
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hE; // WRITE REG C - LEDCOLOUR
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETXORHELPERFINAL; // GO BACK TO CARINA's CODE
+      
+      phase.RESETXORHELPERFINAL:
+        seg_out = {5d10, 5d10, 5d10, 5d14}; //"AAAR"
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b110; // ACCESS HARDCODED VALUE of 16b1111000000000000
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hD; // WRITE REG C - XORHELPER
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.RESETGUESSFINAL;
+      
+      phase.RESETGUESSFINAL:
+        seg_out = {5d10, 5d10, 5d10, 5d6}; //
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h0; // READ REG A - --
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 3b101; // ACCESS HARDCODED VALUE of 16b0010001000100010
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h7; // WRITE REG C - LEDCOLOUR
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        phase.d = phase.IDLE;  
       
     }
   }
