@@ -42,7 +42,17 @@ module led2 (
     
     ANDLEDSTRIP,
     SHIFTCOLOUR,
-    UPDATELEDCOLOUR};
+    UPDATELEDCOLOUR,
+    UPDATEPHASETWOLED,
+    SHIFTXORHELPER,
+    UPDATEXORHELPER,
+    XOR,
+    BRANCHSHIFTCOLOURPOSITION,
+    SHIFTCOLOUR0,
+    SHIFTCOLOUR1,
+    SHIFTCOLOUR2,
+    SHIFTCOLOUR3
+    };
 
   always {
     // INITIALIZE VALUES
@@ -110,7 +120,7 @@ module led2 (
         }
         
         // NOTE make this transition into BRANCHGAMEMODE AND transition using clock (will disappear hints in next state)
-        if (colour_button){
+        if (trigger_start){
           phase.d = phase.BRANCHCOLOURINDEX;
         } 
     
@@ -198,18 +208,47 @@ module led2 (
         
         if (trigger_start){
           //phase.d = phase.SHIFTLEFTGUESSINDEX;
-           phase.d = phase.ANDLEDSTRIP;
+           phase.d = phase.XOR;
         }
         //else if (colour_button){
           //phase.d = phase.BRANCHCOLOURINDEX;
         //}
+      phase.XOR: 
+          seg_out={5d0, 5d20, 5d0,5d20}; //7SEG: 0ROR
+        // Purpose: Xor the xor helper and 1111
         
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 5h10; // REG A XOR HELPER
+        regfile.rb = 4h0; // REG B 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b1110; // output is 4hFFFF from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b010110; // "XOR" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+          //phase.d = phase.SHIFTLEFTGUESSINDEX;
+           phase.d = phase.ANDLEDSTRIP;
+        }
       phase.ANDLEDSTRIP:
         seg_out={5d0, 5d10, 5d16,5d18}; //7SEG: 0ALS
-        // Purpose: Update colour index register
+        // Purpose: To have the guess register but in the position that we are in, they are 0s 
+        // For example 1111 0000 1100 1100 (for position 1) 
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hE; // REG A initial all green
-        regfile.rb = 5h10; // REG B AND helper
+        regfile.ra = 4h7; // REG A initial all green
+        regfile.rb = 4hF; // REG B TEMP REGISTER AND helper
         
         
         // SELECTOR MUX
@@ -229,13 +268,56 @@ module led2 (
         out = sel_mux.wdsel_out;
         
         if (trigger_start){
-          //phase.d = phase.SHIFTLEFTGUESSINDEX;
-           phase.d = phase.SHIFTCOLOUR;
+           phase.d = phase.BRANCHSHIFTCOLOURPOSITION;
+        }
+      phase.BRANCHSHIFTCOLOURPOSITION: 
+          //Purpose: I read my current position, to go to differnt branches with different shift contatnts 
+        seg_out={5d11, 5d18, 5d12,5d19}; //7SEG: BSCP
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h1; // REG A POSITION REGISTER
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // output is 12 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b0; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start&&sel_mux.wdsel_out==0){
+          
+           phase.d = phase.SHIFTCOLOUR0;
+        }
+        
+        else if (trigger_start&&sel_mux.wdsel_out==1){
+          
+           phase.d = phase.SHIFTCOLOUR1;
+        }
+        
+        else if (trigger_start&&sel_mux.wdsel_out==2){
+          
+           phase.d = phase.SHIFTCOLOUR2;
+        }
+        
+        else if (trigger_start&&sel_mux.wdsel_out==3){
+          
+           phase.d = phase.SHIFTCOLOUR3;
         }
           
-      phase.SHIFTCOLOUR:
+      phase.SHIFTCOLOUR0:
         //Purpose: I shift my colour register to the correct position to add 
-        seg_out={5d0, 5d18, 5d12,5d10}; //7SEG: 0ALS
+        seg_out={5d18, 5d14, 5d16,5d0}; //7SEG: SHL0
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4h2; // REG A colour register
@@ -262,7 +344,96 @@ module led2 (
           //phase.d = phase.SHIFTLEFTGUESSINDEX;
            phase.d = phase.UPDATELEDCOLOUR;
         }
+       phase.SHIFTCOLOUR1:
+        //Purpose: I shift my colour register to the correct position to add 
+        seg_out={5d18, 5d14, 5d16,5d1}; //7SEG: SHL1
         
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h2; // REG A colour register
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b1000; // output is 8 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100000; // "SHL" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+          //phase.d = phase.SHIFTLEFTGUESSINDEX;
+           phase.d = phase.UPDATELEDCOLOUR;
+        } 
+        
+      phase.SHIFTCOLOUR2:
+        //Purpose: I shift my colour register to the correct position to add 
+        seg_out={5d18, 5d14, 5d16,5d2}; //7SEG: SHL2
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h2; // REG A colour register
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b100; // output is 4 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100000; // "SHL" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+          //phase.d = phase.SHIFTLEFTGUESSINDEX;
+           phase.d = phase.UPDATELEDCOLOUR;
+        }  
+        
+      phase.SHIFTCOLOUR3:
+        //Purpose: I shift my colour register to the correct position to add 
+        seg_out={5d18, 5d14, 5d16,5d3}; //7SEG: SHL3
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h2; // REG A colour register
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b0; // output is 4 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011010; // "SHL" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+          //phase.d = phase.SHIFTLEFTGUESSINDEX;
+           phase.d = phase.UPDATELEDCOLOUR;
+        }    
+      
       phase.UPDATELEDCOLOUR:
         
         seg_out = {5d21, 5d16,5d19,5d0};
@@ -280,37 +451,23 @@ module led2 (
         alu16.alufn_signal = 6b000000; // "ADD" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h0; // WRITE REG C - --
-        regfile.we = b0; // WRITE DISABLED
+        regfile.rc = 4h7; // WRITE REG C - GUESS REGISTER
+        regfile.we = b1; // WRITE DISABLED
       
-          
-        // UPDATE LED
-        led_out.encode = 4x{{sel_mux.wdsel_out}};
-        
-        out = sel_mux.wdsel_out;
-        
-        for (index = 0; index<4; index++) {
-          led_out.update[index] = current_strip.q[index]; // unless the correct signal (in this case button) is pressed, data will not update
-        }
         // NOTE make this transition into BRANCHGAMEMODE AND transition using clock (will disappear hints in next state)
-        if (confirm_button){
-          phase.d = phase.SHIFTLEFTGUESSINDEX;
+        if (trigger_start){
+          phase.d = phase.UPDATEPHASETWOLED;
            
         }
-        else if (colour_button){
-          phase.d = phase.BRANCHCOLOURINDEX;
-        }
-        else if (trigger_start){
-          phase.d = phase.FINISH;
-          }
+        
       
-      phase.UPDATECOLOURPOS0:
-      
-         seg_out = {5d21, 5d12,5d19,5d0};
+    
+      phase.UPDATEPHASETWOLED:
+         seg_out = {5d0, 5d21,5d12,5d16};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hE; // READ REG A - ERROR REG
-        regfile.rb = 4h2; // READ REG B - COLOUR REG
+        regfile.ra = 4h7; // READ REG A - GUESS REGISTER
+        regfile.rb = 4h3; // READ REG B - POSITION REGISTER
         
         // SELECTOR MUX
         sel_mux.asel_signal = 2b0; // ACCESS RA
@@ -318,36 +475,31 @@ module led2 (
         sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
         
         // PASS THROUGH ALU
-        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        alu16.alufn_signal = 6b000000; // "ADD" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h0; // WRITE REG C - --
+        regfile.rc = 4h0; // WRITE REG C - GUESS REGISTER
         regfile.we = b0; // WRITE DISABLED
-        
-        // EDIT ERROR REG 
-        current_led.d[15:12] = sel_mux.bsel_out;
-        current_led.d[11:0] = sel_mux.asel_out;
+      
           
         // UPDATE LED
-        led_out.encode = 4x{{current_led.q}};
+        led_out.encode = 4x{{sel_mux.asel_out}};
         
-        out = current_led.q;
+        out = sel_mux.asel_out;
         
         for (index = 0; index<4; index++) {
-          led_out.update[index] = current_strip.q[index]; // unless the correct signal (in this case button) is pressed, data will not update
+          led_out.update[index] = sel_mux.bsel_out[index]; // unless the correct signal (in this case button) is pressed, data will not update
         }
         // NOTE make this transition into BRANCHGAMEMODE AND transition using clock (will disappear hints in next state)
         if (confirm_button){
-          phase.d = phase.SHIFTLEFTGUESSINDEX;
+          phase.d = phase.BRANCHCHECKPOSITIONINDEX;
            
         }
         else if (colour_button){
           phase.d = phase.BRANCHCOLOURINDEX;
         }
-        else if (trigger_start){
-          phase.d = phase.FINISH;
-          }
-        
+       
+          
       phase.BACKTOFIRSTCOLOURINDEX:
         
         seg_out={5d11, 5d17, 5d12,5d1}; // 7SEG: BFCI
@@ -379,113 +531,7 @@ module led2 (
           phase.d = phase.UPDATECOLOURINDEX;
         }
       
-      phase.SHIFTLEFTGUESSINDEX:
-        // Purpose: Shift the guess index left by 4
-        
-        seg_out = {5d0, 5d18, 5d14, 5d20};
-        
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h7; // READ GUESS REG
-        regfile.rb = 4h0; // READ REG B - --
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal = 2b0; // ACCESS RA
-        sel_mux.bsel_signal = 3b100; // ACCESS HARDCODED VALUE 4
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.alufn_signal = 6b100000; // SHL OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // WRITE REG C -TEMP
-        regfile.we = b1; // WRITE ENABLED
-        
-        if (trigger_start){ //NOTE: why use confirm_button?
-          phase.d =phase.UPDATESHIFTEDGUESSINDEX;
-        }
-      
-      phase.UPDATESHIFTEDGUESSINDEX:
-        
-        // Purpose: Update guess index after being shifted
-        
-        seg_out={5d21, 5d18, 5d21,5d1}; //7SEG: USU1
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; //
-        regfile.rb = 4h0; // we don't use this
-        
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.a = sel_mux.asel_out;
-        alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b11010; // "A" OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h7; // Write to guess index
-        regfile.we = b1; // WRITE ENABLED
-        if (trigger_start){ // NOTE: why use confirm_button?
-          phase.d = phase.ADDTOGUESSINDEX;
-        }
-      
-      phase.ADDTOGUESSINDEX:
-        seg_out={5d0, 5d0, 5d10,5d20}; //7SEG:"00AR'
-        
-        // Purpose: Add colour index and guess index to temp reg
-        // Next state is update the guess register
-        // Next next state is to shift left the guess register
-        
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4h2; // colour index
-        regfile.rb = 4h7; // guess index
-        
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0;
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.a = sel_mux.asel_out;
-        alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b000000; // "ADD" OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4hF; // Write to temp register
-        regfile.we = b1; // WRITE ENABLED
-        
-        if (trigger_start){ // NOTE: why use confirm_button?
-          phase.d =phase.UPDATEGUESSINDEX;
-        }
-      
-      phase.UPDATEGUESSINDEX:
-        
-        seg_out={5d0, 5d21, 5d21,5d1}; //7SEG: 0UU1
-        // Purpose: Update guess index register
-        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hF; //
-        regfile.rb = 4h0; // we don't use this
-        
-        
-        // SELECTOR MUX
-        sel_mux.asel_signal= b0;
-        sel_mux.bsel_signal= b0; // output is 1 from bsel
-        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
-        
-        // PASS THROUGH ALU
-        alu16.a = sel_mux.asel_out;
-        alu16.b = sel_mux.bsel_out;
-        alu16.alufn_signal = 6b11010; // "A" OPERATION
-        
-        // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 4h7; // Write to guess index
-        regfile.we = b1; // WRITE ENABLED
-        if (trigger_start){ // NOTE: why use confirm_button?
-          phase.d = phase.BRANCHCHECKPOSITIONINDEX;
-        }
+    
       
       phase.BRANCHCHECKPOSITIONINDEX:
         seg_out={5d11, 5d12, 5d19,5d1}; // 7SEG: BCPI
@@ -573,7 +619,64 @@ module led2 (
         regfile.rc = 4h1; // Update position index register
         regfile.we = b1; // WRITE ENABLED
         if (trigger_start){ // NOTE: why use confirm_button?
-          phase.d = phase.BACKTOFIRSTCOLOURINDEX;
+          phase.d = phase.SHIFTXORHELPER;
+        }
+        
+      phase.SHIFTXORHELPER:
+          //Purpose: I shift my xor helper by 4 to the right to go to the next position 
+        seg_out={5d0, 5d18, 5d14,5d20}; //7SEG: 0ALS
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 5h10; // REG A XOR HELPER
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b100; // output is 4 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b100001; // "SHL" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C to temp register
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+           phase.d = phase.UPDATEXORHELPER;
+        }
+      phase.UPDATEXORHELPER:   
+        seg_out={5d21, 5d18, 5d14,5d20}; //7SEG: USHR
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // REG A TEMP REG (XOR helper) 
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b100; // output is 4 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 5h10; // WRITE REG C to XOR HELPER REG 
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start){
+          //phase.d = phase.SHIFTLEFTGUESSINDEX;
+           phase.d = phase.BACKTOFIRSTCOLOURINDEX;
         }
       
       phase.FINISH:

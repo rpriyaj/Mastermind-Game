@@ -39,6 +39,7 @@ module sel_mux (
       b111 : bsel_out = 16b111;
       b1000: bsel_out = 16b1000;
       b1100: bsel_out = 16b1100; //12 
+      b1110: bsel_out = 16b1111111111111111; //all 1s for XOR operation 
       default : bsel_out = rb_data;
     }
     

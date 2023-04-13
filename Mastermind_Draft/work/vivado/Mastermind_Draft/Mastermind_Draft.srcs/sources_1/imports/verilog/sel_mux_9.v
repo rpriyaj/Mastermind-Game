@@ -75,6 +75,9 @@ module sel_mux_9 (
       4'hc: begin
         bsel_out = 16'h000c;
       end
+      4'he: begin
+        bsel_out = 16'hffff;
+      end
       default: begin
         bsel_out = rb_data;
       end
