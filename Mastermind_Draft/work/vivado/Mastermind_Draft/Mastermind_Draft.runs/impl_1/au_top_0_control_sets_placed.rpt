@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Thu Apr 13 19:21:00 2023
+| Date         : Thu Apr 13 20:10:27 2023
 | Host         : LAPTOP-NUP5ASSV running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file au_top_0_control_sets_placed.rpt
 | Design       : au_top_0
@@ -23,11 +23,11 @@ Table of Contents
 +----------------------------------------------------------+-------+
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
-| Total control sets                                       |    40 |
-|    Minimum number of control sets                        |    40 |
+| Total control sets                                       |    42 |
+|    Minimum number of control sets                        |    42 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    90 |
+| Unused register locations in slices containing registers |    88 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -39,15 +39,15 @@ Table of Contents
 +--------------------+-------+
 |       Fanout       | Count |
 +--------------------+-------+
-| Total control sets |    40 |
+| Total control sets |    42 |
 | >= 0 to < 4        |     0 |
 | >= 4 to < 6        |     6 |
 | >= 6 to < 8        |     4 |
 | >= 8 to < 10       |     0 |
 | >= 10 to < 12      |     1 |
-| >= 12 to < 14      |    13 |
+| >= 12 to < 14      |    12 |
 | >= 14 to < 16      |     0 |
-| >= 16              |    16 |
+| >= 16              |    19 |
 +--------------------+-------+
 * Control sets can be remapped at either synth_design or opt_design
 
@@ -58,12 +58,12 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              10 |            6 |
+| No           | No                    | No                     |              10 |            7 |
 | No           | No                    | Yes                    |               0 |            0 |
-| No           | Yes                   | No                     |              67 |           22 |
+| No           | Yes                   | No                     |              68 |           23 |
 | Yes          | No                    | No                     |               0 |            0 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |             465 |          191 |
+| Yes          | Yes                   | No                     |             570 |          202 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
@@ -73,46 +73,48 @@ Table of Contents
 +----------------+------------------------------------------------------------------+------------------------------------------------------------------+------------------+----------------+--------------+
 |  Clock Signal  |                           Enable Signal                          |                         Set/Reset Signal                         | Slice Load Count | Bel Load Count | Bels / Slice |
 +----------------+------------------------------------------------------------------+------------------------------------------------------------------+------------------+----------------+--------------+
-|  clk_IBUF_BUFG |                                                                  | reset_cond/M_reset_cond_in                                       |                2 |              4 |         2.00 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_current_guess_count_d                          | reset_cond/Q[0]                                                  |                3 |              4 |         1.33 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_current_guess_count_d                          | reset_cond/Q[0]                                                  |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG |                                                                  | reset_cond/M_reset_cond_in                                       |                3 |              4 |         1.33 |
 |  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/M_bit_ctr_q[4]_i_1__2_n_0 | reset_cond/Q[0]                                                  |                2 |              5 |         2.50 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_bit_ctr_q[4]_i_1__1_n_0 | reset_cond/Q[0]                                                  |                1 |              5 |         5.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/M_bit_ctr_q[4]_i_1__0_n_0 | reset_cond/Q[0]                                                  |                2 |              5 |         2.50 |
 |  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/M_bit_ctr_q[4]_i_1_n_0    | reset_cond/Q[0]                                                  |                2 |              5 |         2.50 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/M_bit_ctr_q[4]_i_1__0_n_0 | reset_cond/Q[0]                                                  |                1 |              5 |         5.00 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                3 |              7 |         2.33 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                2 |              7 |         3.50 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                3 |              7 |         2.33 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_bit_ctr_q[4]_i_1__1_n_0 | reset_cond/Q[0]                                                  |                2 |              5 |         2.50 |
 |  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                2 |              7 |         3.50 |
-|  clk_IBUF_BUFG |                                                                  |                                                                  |                6 |             10 |         1.67 |
-|  clk_IBUF_BUFG | man/regfile/M_state_q_reg_0[0]                                   | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
-|  clk_IBUF_BUFG | man/regfile/M_state_q_reg_1[0]                                   | reset_cond/Q[0]                                                  |                4 |             12 |         3.00 |
-|  clk_IBUF_BUFG | man/regfile/M_state_q_reg[0]                                     | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/M_state_d                 | reset_cond/Q[0]                                                  |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG |                                                                  |                                                                  |                7 |             10 |         1.43 |
 |  clk_IBUF_BUFG | man/regfile/M_state_q_reg_2[0]                                   | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
-|  clk_IBUF_BUFG | man/regfile/E[0]                                                 | reset_cond/Q[0]                                                  |                7 |             13 |         1.86 |
+|  clk_IBUF_BUFG | man/regfile/M_state_q_reg[0]                                     | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG | man/regfile/M_state_q_reg_1[0]                                   | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG | man/regfile/M_state_q_reg_0[0]                                   | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                2 |             12 |         6.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/E[0]                      | reset_cond/Q[0]                                                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_2__1_n_0 | man/led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_1__1_n_0 |                4 |             13 |         3.25 |
+|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_2_n_0    | man/led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_1_n_0    |                4 |             13 |         3.25 |
 |  clk_IBUF_BUFG | man/led_out_gen_0[1].led_out/led_strip/M_rst_ctr_q[0]_i_2__0_n_0 | man/led_out_gen_0[1].led_out/led_strip/M_rst_ctr_q[0]_i_1__0_n_0 |                4 |             13 |         3.25 |
 |  clk_IBUF_BUFG | man/led_out_gen_0[3].led_out/led_strip/M_rst_ctr_q[0]_i_2__2_n_0 | man/led_out_gen_0[3].led_out/led_strip/M_rst_ctr_q[0]_i_1__2_n_0 |                4 |             13 |         3.25 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_2_n_0    | man/led_out_gen_0[0].led_out/led_strip/M_rst_ctr_q[0]_i_1_n_0    |                4 |             13 |         3.25 |
-|  clk_IBUF_BUFG | man/led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_2__1_n_0 | man/led_out_gen_0[2].led_out/led_strip/M_rst_ctr_q[0]_i_1__1_n_0 |                4 |             13 |         3.25 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_code_helper_d                                  | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_current_colour_d                               | reset_cond/Q[0]                                                  |                7 |             16 |         2.29 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_current_position_d                             | reset_cond/Q[0]                                                  |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_led_colour_d                                   | reset_cond/Q[0]                                                  |               11 |             16 |         1.45 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_temp_guess_d                                   | reset_cond/Q[0]                                                  |                7 |             16 |         2.29 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_temp_d                                         | reset_cond/Q[0]                                                  |                7 |             16 |         2.29 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_guess_d                                        | reset_cond/Q[0]                                                  |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_guess_helper_d                                 | reset_cond/Q[0]                                                  |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_hint_d                                         | reset_cond/Q[0]                                                  |               11 |             16 |         1.45 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_led_colour_d                                   | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
 |  clk_IBUF_BUFG | man/regfile/M_reg_temp_code_d                                    | reset_cond/Q[0]                                                  |                8 |             16 |         2.00 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_guess_helper_d                                 | reset_cond/Q[0]                                                  |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_hint_d                                         | reset_cond/Q[0]                                                  |                9 |             16 |         1.78 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_temp_counter_d                                 | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_temp_guess_d                                   | reset_cond/Q[0]                                                  |                6 |             16 |         2.67 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_temp_d                                         | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_xor_d                                          | reset_cond/Q[0]                                                  |               13 |             16 |         1.23 |
-|  clk_IBUF_BUFG | man/regfile/M_reg_guess_d                                        | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_temp_counter_d                                 | reset_cond/Q[0]                                                  |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_xor_d                                          | reset_cond/Q[0]                                                  |               10 |             16 |         1.60 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_code_helper_d                                  | reset_cond/Q[0]                                                  |                9 |             16 |         1.78 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_current_colour_d                               | reset_cond/Q[0]                                                  |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_game_mode_d                                    | reset_cond/Q[0]                                                  |                9 |             16 |         1.78 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_code_d                                         | reset_cond/Q[0]                                                  |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | man/regfile/M_reg_current_position_d                             | reset_cond/Q[0]                                                  |                7 |             16 |         2.29 |
 |  clk_IBUF_BUFG | buttoncond_gen_0[0].buttoncond/M_ctr_q[0]_i_2__0_n_0             | buttoncond_gen_0[0].buttoncond/sync/M_pipe_q_reg[1]_0            |                5 |             20 |         4.00 |
-|  clk_IBUF_BUFG | buttoncond_gen_0[4].buttoncond/M_ctr_q_reg[1]_0                  | buttoncond_gen_0[4].buttoncond/sync/M_pipe_q_reg[1]_0            |                5 |             20 |         4.00 |
 |  clk_IBUF_BUFG | buttoncond_gen_0[5].buttoncond/sel                               | buttoncond_gen_0[5].buttoncond/sync/clear                        |                5 |             20 |         4.00 |
-|  clk_IBUF_BUFG |                                                                  | reset_cond/Q[0]                                                  |               20 |             63 |         3.15 |
+|  clk_IBUF_BUFG | buttoncond_gen_0[4].buttoncond/M_ctr_q_reg[1]_0                  | buttoncond_gen_0[4].buttoncond/sync/M_pipe_q_reg[1]_0            |                5 |             20 |         4.00 |
+|  clk_IBUF_BUFG |                                                                  | reset_cond/Q[0]                                                  |               20 |             64 |         3.20 |
+|  clk_IBUF_BUFG | man/regfile/E[0]                                                 | reset_cond/Q[0]                                                  |               18 |             86 |         4.78 |
 +----------------+------------------------------------------------------------------+------------------------------------------------------------------+------------------+----------------+--------------+
 
 

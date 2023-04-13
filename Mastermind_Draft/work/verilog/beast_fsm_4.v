@@ -114,76 +114,92 @@ module beast_fsm_4 (
   
   
   localparam IDLE_phase = 7'd0;
-  localparam POSITION_phase = 7'd1;
-  localparam BRANCHCOLOURINDEX_phase = 7'd2;
-  localparam INCREASECOLOURINDEX_phase = 7'd3;
-  localparam UPDATECOLOURINDEX_phase = 7'd4;
-  localparam BACKTOFIRSTCOLOURINDEX_phase = 7'd5;
-  localparam UPDATECOLOURPOS0_phase = 7'd6;
-  localparam ADDTOGUESSINDEX_phase = 7'd7;
-  localparam UPDATEGUESSINDEX_phase = 7'd8;
-  localparam SHIFTLEFTGUESSINDEX_phase = 7'd9;
-  localparam UPDATESHIFTEDGUESSINDEX_phase = 7'd10;
-  localparam BRANCHCHECKPOSITIONINDEX_phase = 7'd11;
-  localparam INCREASEPOSITIONINDEX_phase = 7'd12;
-  localparam UPDATEPOSITIONINDEX_phase = 7'd13;
-  localparam FINISH_phase = 7'd14;
-  localparam ANDLEDSTRIP_phase = 7'd15;
-  localparam SHIFTCOLOUR_phase = 7'd16;
-  localparam UPDATELEDCOLOUR_phase = 7'd17;
-  localparam UPDATEPHASETWOLED_phase = 7'd18;
-  localparam SHIFTXORHELPER_phase = 7'd19;
-  localparam UPDATEXORHELPER_phase = 7'd20;
-  localparam XOR_phase = 7'd21;
-  localparam BRANCHSHIFTCOLOURPOSITION_phase = 7'd22;
-  localparam SHIFTCOLOUR0_phase = 7'd23;
-  localparam SHIFTCOLOUR1_phase = 7'd24;
-  localparam SHIFTCOLOUR2_phase = 7'd25;
-  localparam SHIFTCOLOUR3_phase = 7'd26;
-  localparam SHIFTGUESSATTEMPTCOUNT_phase = 7'd27;
-  localparam UPDATEGUESSATTEMPTCOUNT_phase = 7'd28;
-  localparam GETGUESS_phase = 7'd29;
-  localparam GETCODE_phase = 7'd30;
-  localparam CHECKGUESS_CORRCODE_phase = 7'd31;
-  localparam SHIFTHINTRED_phase = 7'd32;
-  localparam UPDATEHINTRED_phase = 7'd33;
-  localparam SHIFTGUESSHELPERDEFAULT_phase = 7'd34;
-  localparam UPDATEGUESSHELPERDEFAULT_phase = 7'd35;
-  localparam SHIFTCODEHELPER_phase = 7'd36;
-  localparam UPDATECODEHELPER_phase = 7'd37;
-  localparam CHECKCODEHELPER_phase = 7'd38;
-  localparam SHIFTNOHINT_phase = 7'd39;
-  localparam UPDATENOHINT_phase = 7'd40;
-  localparam GETNEXTCODE_phase = 7'd41;
-  localparam SHIFTTEMPGUESS_phase = 7'd42;
-  localparam UPDATETEMPGUESS_phase = 7'd43;
-  localparam CHECKTEMPGUESS_TEMPCODE_phase = 7'd44;
-  localparam SHIFTHINTWHITE_phase = 7'd45;
-  localparam UPDATEHINTWHITE_phase = 7'd46;
-  localparam SHIFTCODEHELPERDEFAULT_phase = 7'd47;
-  localparam UPDATECODEHELPERDEFAULT_phase = 7'd48;
-  localparam COMPARETEMPCOUNTER_phase = 7'd49;
-  localparam ADDTEMPCOUNTER_phase = 7'd50;
-  localparam UPDATETEMPCOUNTER_phase = 7'd51;
-  localparam ADDIMPOSTER_phase = 7'd52;
-  localparam UPDATEIMPOSTER_phase = 7'd53;
-  localparam COMPARECODE_GUESS_phase = 7'd54;
-  localparam SHIFTATTEMPTCOUNT_phase = 7'd55;
-  localparam UPDATEATTEMPTCOUNT_phase = 7'd56;
-  localparam BRANCHATTEMPTCOUNT_phase = 7'd57;
-  localparam UPDATEHINTLED_phase = 7'd58;
-  localparam RESETPOSITION_phase = 7'd59;
-  localparam RESETCOLOUR_phase = 7'd60;
-  localparam RESETHINT_phase = 7'd61;
-  localparam RESETCOUNTER_phase = 7'd62;
-  localparam RESETATTEMPT_phase = 7'd63;
-  localparam RESETLEDCOLOUR_phase = 7'd64;
-  localparam RESETXORHELPER_phase = 7'd65;
-  localparam RESETALLLED_phase = 7'd66;
-  localparam RESETGUESS_phase = 7'd67;
-  localparam LOSE_phase = 7'd68;
-  localparam WIN_phase = 7'd69;
-  localparam GAMEOVER_phase = 7'd70;
+  localparam NORMALMODE_phase = 7'd1;
+  localparam IMPOSTERMODE_phase = 7'd2;
+  localparam ADDGAMEMODE_phase = 7'd3;
+  localparam SUBGAMEMODE_phase = 7'd4;
+  localparam UPDATEGAMEMODEADD_phase = 7'd5;
+  localparam UPDATEGAMEMODESUB_phase = 7'd6;
+  localparam POSITION_phase = 7'd7;
+  localparam BRANCHCOLOURINDEX_phase = 7'd8;
+  localparam INCREASECOLOURINDEX_phase = 7'd9;
+  localparam UPDATECOLOURINDEX_phase = 7'd10;
+  localparam BACKTOFIRSTCOLOURINDEX_phase = 7'd11;
+  localparam UPDATECOLOURPOS0_phase = 7'd12;
+  localparam ADDTOGUESSINDEX_phase = 7'd13;
+  localparam UPDATEGUESSINDEX_phase = 7'd14;
+  localparam SHIFTLEFTGUESSINDEX_phase = 7'd15;
+  localparam UPDATESHIFTEDGUESSINDEX_phase = 7'd16;
+  localparam BRANCHCHECKPOSITIONINDEX_phase = 7'd17;
+  localparam INCREASEPOSITIONINDEX_phase = 7'd18;
+  localparam UPDATEPOSITIONINDEX_phase = 7'd19;
+  localparam FINISH_phase = 7'd20;
+  localparam ANDLEDSTRIP_phase = 7'd21;
+  localparam SHIFTCOLOUR_phase = 7'd22;
+  localparam UPDATELEDCOLOUR_phase = 7'd23;
+  localparam UPDATEPHASETWOLED_phase = 7'd24;
+  localparam SHIFTXORHELPER_phase = 7'd25;
+  localparam UPDATEXORHELPER_phase = 7'd26;
+  localparam XOR_phase = 7'd27;
+  localparam BRANCHSHIFTCOLOURPOSITION_phase = 7'd28;
+  localparam SHIFTCOLOUR0_phase = 7'd29;
+  localparam SHIFTCOLOUR1_phase = 7'd30;
+  localparam SHIFTCOLOUR2_phase = 7'd31;
+  localparam SHIFTCOLOUR3_phase = 7'd32;
+  localparam SHIFTGUESSATTEMPTCOUNT_phase = 7'd33;
+  localparam UPDATEGUESSATTEMPTCOUNT_phase = 7'd34;
+  localparam GETGUESS_phase = 7'd35;
+  localparam GETCODE_phase = 7'd36;
+  localparam CHECKGUESS_CORRCODE_phase = 7'd37;
+  localparam SHIFTHINTRED_phase = 7'd38;
+  localparam UPDATEHINTRED_phase = 7'd39;
+  localparam SHIFTGUESSHELPERDEFAULT_phase = 7'd40;
+  localparam UPDATEGUESSHELPERDEFAULT_phase = 7'd41;
+  localparam SHIFTCODEHELPER_phase = 7'd42;
+  localparam UPDATECODEHELPER_phase = 7'd43;
+  localparam CHECKCODEHELPER_phase = 7'd44;
+  localparam SHIFTNOHINT_phase = 7'd45;
+  localparam UPDATENOHINT_phase = 7'd46;
+  localparam GETNEXTCODE_phase = 7'd47;
+  localparam SHIFTTEMPGUESS_phase = 7'd48;
+  localparam UPDATETEMPGUESS_phase = 7'd49;
+  localparam CHECKTEMPGUESS_TEMPCODE_phase = 7'd50;
+  localparam SHIFTHINTWHITE_phase = 7'd51;
+  localparam UPDATEHINTWHITE_phase = 7'd52;
+  localparam SHIFTCODEHELPERDEFAULT_phase = 7'd53;
+  localparam UPDATECODEHELPERDEFAULT_phase = 7'd54;
+  localparam COMPARETEMPCOUNTER_phase = 7'd55;
+  localparam ADDTEMPCOUNTER_phase = 7'd56;
+  localparam UPDATETEMPCOUNTER_phase = 7'd57;
+  localparam CHECKGAMEMODE_phase = 7'd58;
+  localparam ADDIMPOSTER_phase = 7'd59;
+  localparam UPDATEIMPOSTER_phase = 7'd60;
+  localparam COMPARECODE_GUESS_phase = 7'd61;
+  localparam SHIFTATTEMPTCOUNT_phase = 7'd62;
+  localparam UPDATEATTEMPTCOUNT_phase = 7'd63;
+  localparam BRANCHATTEMPTCOUNT_phase = 7'd64;
+  localparam UPDATEHINTLED_phase = 7'd65;
+  localparam RESETPOSITION_phase = 7'd66;
+  localparam RESETCOLOUR_phase = 7'd67;
+  localparam RESETHINT_phase = 7'd68;
+  localparam RESETCOUNTER_phase = 7'd69;
+  localparam RESETATTEMPT_phase = 7'd70;
+  localparam RESETLEDCOLOUR_phase = 7'd71;
+  localparam RESETXORHELPER_phase = 7'd72;
+  localparam RESETALLLED_phase = 7'd73;
+  localparam RESETGAMEMODE_phase = 7'd74;
+  localparam RESETGUESS_phase = 7'd75;
+  localparam RESETPOSITIONFINAL_phase = 7'd76;
+  localparam RESETCOLOURFINAL_phase = 7'd77;
+  localparam RESETHINTFINAL_phase = 7'd78;
+  localparam RESETCOUNTERFINAL_phase = 7'd79;
+  localparam RESETATTEMPTFINAL_phase = 7'd80;
+  localparam RESETLEDCOLOURFINAL_phase = 7'd81;
+  localparam RESETXORHELPERFINAL_phase = 7'd82;
+  localparam RESETGUESSFINAL_phase = 7'd83;
+  localparam LOSE_phase = 7'd84;
+  localparam WIN_phase = 7'd85;
+  localparam GAMEOVER_phase = 7'd86;
   
   reg [6:0] M_phase_d, M_phase_q = IDLE_phase;
   
@@ -216,8 +232,86 @@ module beast_fsm_4 (
       IDLE_phase: begin
         seg_out = 20'h0be0d;
         if (confirm_button) begin
-          M_phase_d = POSITION_phase;
+          M_phase_d = NORMALMODE_phase;
         end
+      end
+      NORMALMODE_phase: begin
+        seg_out = 20'h000c1;
+        if (colour_button) begin
+          M_phase_d = ADDGAMEMODE_phase;
+        end else begin
+          if (confirm_button) begin
+            M_phase_d = POSITION_phase;
+          end
+        end
+      end
+      ADDGAMEMODE_phase: begin
+        seg_out = 20'h519c0;
+        M_regfile_ra = 4'h4;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 2'h2;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h00;
+        M_regfile_rc = 4'hf;
+        M_regfile_we = 1'h1;
+        M_phase_d = UPDATEGAMEMODEADD_phase;
+      end
+      UPDATEGAMEMODEADD_phase: begin
+        seg_out = 20'h554ce;
+        M_regfile_ra = 4'hf;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 1'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h4;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_asel_out;
+        M_phase_d = IMPOSTERMODE_phase;
+      end
+      IMPOSTERMODE_phase: begin
+        seg_out = 20'h000c2;
+        if (colour_button) begin
+          M_phase_d = SUBGAMEMODE_phase;
+        end else begin
+          if (confirm_button) begin
+            M_phase_d = POSITION_phase;
+          end
+        end
+      end
+      SUBGAMEMODE_phase: begin
+        seg_out = 20'h519c0;
+        M_regfile_ra = 4'h4;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 2'h2;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h01;
+        M_regfile_rc = 4'hf;
+        M_regfile_we = 1'h1;
+        M_phase_d = UPDATEGAMEMODESUB_phase;
+      end
+      UPDATEGAMEMODESUB_phase: begin
+        seg_out = 20'h954ce;
+        M_regfile_ra = 4'hf;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 1'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h4;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_asel_out;
+        M_phase_d = NORMALMODE_phase;
       end
       POSITION_phase: begin
         seg_out = 20'h055d0;
@@ -817,7 +911,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
         if (M_sel_mux_wdsel_out == 16'h0001) begin
-          M_phase_d = ADDIMPOSTER_phase;
+          M_phase_d = CHECKGAMEMODE_phase;
         end else begin
           M_phase_d = ADDTEMPCOUNTER_phase;
         end
@@ -845,6 +939,22 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hc;
         M_regfile_we = 1'h1;
         M_phase_d = GETGUESS_phase;
+      end
+      CHECKGAMEMODE_phase: begin
+        seg_out = 20'h630ce;
+        M_regfile_ra = 4'h4;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h0;
+        M_sel_mux_bsel_signal = 4'h2;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h33;
+        M_regfile_rc = 4'h0;
+        M_regfile_we = 1'h0;
+        if (M_sel_mux_wdsel_out == 16'h0001) begin
+          M_phase_d = ADDIMPOSTER_phase;
+        end else begin
+          M_phase_d = UPDATEHINTLED_phase;
+        end
       end
       ADDIMPOSTER_phase: begin
         seg_out = 20'h52821;
@@ -1036,7 +1146,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h7;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        M_phase_d = IDLE_phase;
+        M_phase_d = POSITION_phase;
       end
       LOSE_phase: begin
         seg_out = 20'h8024d;
@@ -1084,7 +1194,115 @@ module beast_fsm_4 (
         for (index = 1'h0; index < 3'h4; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
-        M_phase_d = RESETPOSITION_phase;
+        M_phase_d = RESETGAMEMODE_phase;
+      end
+      RESETGAMEMODE_phase: begin
+        seg_out = 20'h528ce;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 3'h2;
+        M_sel_mux_bsel_signal = 4'he;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h4;
+        M_regfile_we = 1'h1;
+        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        out = M_sel_mux_wdsel_out;
+        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+          M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
+        end
+        M_phase_d = RESETPOSITIONFINAL_phase;
+      end
+      RESETPOSITIONFINAL_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h2;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h1;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETCOLOURFINAL_phase;
+      end
+      RESETCOLOURFINAL_phase: begin
+        seg_out = 20'ha5282;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h3;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h2;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETHINTFINAL_phase;
+      end
+      RESETHINTFINAL_phase: begin
+        seg_out = 20'ha5283;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h2;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h9;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETCOUNTERFINAL_phase;
+      end
+      RESETCOUNTERFINAL_phase: begin
+        seg_out = 20'ha5281;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h1;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'hc;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETLEDCOLOURFINAL_phase;
+      end
+      RESETLEDCOLOURFINAL_phase: begin
+        seg_out = 20'h0520c;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 3'h5;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'he;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETXORHELPERFINAL_phase;
+      end
+      RESETXORHELPERFINAL_phase: begin
+        seg_out = 20'h5294e;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 3'h6;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'hd;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = RESETGUESSFINAL_phase;
+      end
+      RESETGUESSFINAL_phase: begin
+        seg_out = 20'h52946;
+        M_regfile_ra = 4'h0;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 3'h5;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h7;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_wdsel_out;
+        M_phase_d = IDLE_phase;
       end
     endcase
   end

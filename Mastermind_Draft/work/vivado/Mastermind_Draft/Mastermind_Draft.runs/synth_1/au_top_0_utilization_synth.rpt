@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Thu Apr 13 19:20:10 2023
+| Date         : Thu Apr 13 20:09:38 2023
 | Host         : LAPTOP-NUP5ASSV running 64-bit major release  (build 9200)
 | Command      : report_utilization -file au_top_0_utilization_synth.rpt -pb au_top_0_utilization_synth.pb
 | Design       : au_top_0
@@ -30,13 +30,13 @@ Table of Contents
 +-------------------------+------+-------+-----------+-------+
 |        Site Type        | Used | Fixed | Available | Util% |
 +-------------------------+------+-------+-----------+-------+
-| Slice LUTs*             |  885 |     0 |     20800 |  4.25 |
-|   LUT as Logic          |  885 |     0 |     20800 |  4.25 |
+| Slice LUTs*             |  975 |     0 |     20800 |  4.69 |
+|   LUT as Logic          |  975 |     0 |     20800 |  4.69 |
 |   LUT as Memory         |    0 |     0 |      9600 |  0.00 |
-| Slice Registers         |  542 |     0 |     41600 |  1.30 |
-|   Register as Flip Flop |  542 |     0 |     41600 |  1.30 |
+| Slice Registers         |  648 |     0 |     41600 |  1.56 |
+|   Register as Flip Flop |  648 |     0 |     41600 |  1.56 |
 |   Register as Latch     |    0 |     0 |     41600 |  0.00 |
-| F7 Muxes                |   31 |     0 |     16300 |  0.19 |
+| F7 Muxes                |   50 |     0 |     16300 |  0.31 |
 | F8 Muxes                |    4 |     0 |      8150 |  0.05 |
 +-------------------------+------+-------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
@@ -56,8 +56,8 @@ Table of Contents
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 31    |          Yes |         Set |            - |
-| 511   |          Yes |       Reset |            - |
+| 39    |          Yes |         Set |            - |
+| 609   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -77,11 +77,12 @@ Table of Contents
 3. DSP
 ------
 
-+-----------+------+-------+-----------+-------+
-| Site Type | Used | Fixed | Available | Util% |
-+-----------+------+-------+-----------+-------+
-| DSPs      |    0 |     0 |        90 |  0.00 |
-+-----------+------+-------+-----------+-------+
++----------------+------+-------+-----------+-------+
+|    Site Type   | Used | Fixed | Available | Util% |
++----------------+------+-------+-----------+-------+
+| DSPs           |    1 |     0 |        90 |  1.11 |
+|   DSP48E1 only |    1 |       |           |       |
++----------------+------+-------+-----------+-------+
 
 
 4. IO and GT Specific
@@ -146,19 +147,20 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT6     |  555 |                 LUT |
-| FDRE     |  511 |        Flop & Latch |
-| LUT5     |  139 |                 LUT |
-| LUT4     |  113 |                 LUT |
-| LUT2     |  101 |                 LUT |
-| CARRY4   |   51 |          CarryLogic |
+| LUT6     |  614 |                 LUT |
+| FDRE     |  609 |        Flop & Latch |
+| LUT5     |  138 |                 LUT |
+| LUT2     |  130 |                 LUT |
+| LUT4     |  105 |                 LUT |
+| LUT3     |   61 |                 LUT |
+| CARRY4   |   52 |          CarryLogic |
+| MUXF7    |   50 |               MuxFx |
 | OBUF     |   49 |                  IO |
-| LUT3     |   38 |                 LUT |
-| MUXF7    |   31 |               MuxFx |
-| FDSE     |   31 |        Flop & Latch |
+| FDSE     |   39 |        Flop & Latch |
 | LUT1     |   20 |                 LUT |
 | IBUF     |    6 |                  IO |
 | MUXF8    |    4 |               MuxFx |
+| DSP48E1  |    1 |    Block Arithmetic |
 | BUFG     |    1 |               Clock |
 +----------+------+---------------------+
 
