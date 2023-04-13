@@ -7,9 +7,9 @@ module au_top (
     output io_seg [8],      // 7-segment LEDs on IO Shield
     output io_sel [4],      // Digit select on IO Shield
     input inbutton [2],     // CUSTOM Button
-    output outled [16]       // CUSTOM LED strip
-    //output outseg [8],      // CUSTOM 7-seg
-    //output outsel [4]      // CUSTOM 7-seg
+    output outled [16],       // CUSTOM LED strip
+    output outseg [8],      // CUSTOM 7-seg
+    output outsel [4]      // CUSTOM 7-seg
     
   ) {
   
@@ -45,15 +45,15 @@ module au_top (
     buttoncond.in = inbutton;
     buttondetector.in = buttoncond.out;
     
-    //outseg = seg.seg;
-    //outsel = seg.sel;
+    outseg = seg.seg;
+    outsel = seg.sel;
     
     /* FSM Buttons DEFAULT */
     man.confirm_button= b0;
     man.colour_button= b0;
     
     /* HI MESSAGE */
-    seg.values = {5d0, 5d0, 5d14, 5d1};
+    //seg.values = {5d0, 5d0, 5d14, 5d1};
 
     /* Set FSM inputs (custom buttons) */
     man.confirm_button = buttondetector.out[0];

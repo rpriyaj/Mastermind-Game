@@ -1,12 +1,18 @@
 +--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
 |       Launch Clock       |      Capture Clock       |                                                 Pin                                                      |
 +--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[0]/D|
+|                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[3]/D|
+|                    clk_0 |                    clk_0 |                                                                         man/FSM_onehot_M_phase_q_reg[8]/D|
 |                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[5]/D|
-|                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[2]/D|
-|                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[6]/D|
-|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[48]/D|
 |                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[78]/D|
-|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[47]/D|
-|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[56]/D|
+|                    clk_0 |                    clk_0 |                                                                                man/M_phase_q_reg_rep[6]/D|
 |                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[24]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[48]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[50]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[41]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[68]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[37]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[53]/D|
+|                    clk_0 |                    clk_0 |                                                                        man/FSM_onehot_M_phase_q_reg[75]/D|
 +--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+

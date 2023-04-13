@@ -19,19 +19,19 @@ pin usb_tx USB_RX;
 
 // custom pins
 // 7 segment IO Pins
-//pin outseg[0] B36; // A 
-//pin outseg[1] B42; // B 
-//pin outseg[2] B12;  // C 
-//pin outseg[3] B40; // D 
-//pin outseg[4] B37; // E 
-//pin outseg[5] B39; // F 
-//pin outseg[6] B9;  // G 
-//pin outseg[7] B43; // DP 
+pin outseg[0] B8; // A 
+pin outseg[1] B2; // B 
+pin outseg[2] D9;  // C 
+pin outseg[3] D42; // D 
+pin outseg[4] D43; // E 
+pin outseg[5] B5; // F 
+pin outseg[6] D12;  // G 
+pin outseg[7] D8; // DP 
 
-//pin outsel[0] B30; // D1 
-//pin outsel[1] B33; // D2 
-//pin outsel[2] B31; // D3 
-//pin outsel[3] B34; // D4
+pin outsel[0] B12; // D1 
+pin outsel[1] B9; // D2 
+pin outsel[2] B6; // D3 
+pin outsel[3] B3; // D4
 
 // LED IO Pins
 pin outled[0] A24; // guess 1
