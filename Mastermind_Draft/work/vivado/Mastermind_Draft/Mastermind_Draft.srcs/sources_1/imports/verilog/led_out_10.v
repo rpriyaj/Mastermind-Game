@@ -91,18 +91,18 @@ module led_out_10 (
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_temp_encoding_q <= 1'h0;
+      M_led_encoding_q <= 1'h0;
     end else begin
-      M_temp_encoding_q <= M_temp_encoding_d;
+      M_led_encoding_q <= M_led_encoding_d;
     end
   end
   
   
   always @(posedge clk) begin
     if (rst == 1'b1) begin
-      M_led_encoding_q <= 1'h0;
+      M_temp_encoding_q <= 1'h0;
     end else begin
-      M_led_encoding_q <= M_led_encoding_d;
+      M_temp_encoding_q <= M_temp_encoding_d;
     end
   end
   

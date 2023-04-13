@@ -105,7 +105,8 @@ module au_top_0 (
     io_led = 24'h000000;
     io_seg = 8'hff;
     io_sel = 4'hf;
-    M_buttoncond_in[0+4-:5] = io_button;
+    M_buttoncond_in[0+3-:4] = io_button[0+3-:4];
+    M_buttoncond_in[4+1-:2] = inbutton;
     M_buttondetector_in = M_buttoncond_out;
     switch_state = M_buttondetector_out[0+0-:1];
     M_man_confirm_button = 1'h0;
@@ -125,8 +126,8 @@ module au_top_0 (
         M_man_dips[0+7-:8] = io_dip[0+7-:8];
         M_man_dips[8+7-:8] = io_dip[8+7-:8];
         M_man_trigger_start = M_buttondetector_out[3+0-:1];
-        M_man_confirm_button = M_buttondetector_out[1+0-:1];
-        M_man_colour_button = M_buttondetector_out[2+0-:1];
+        M_man_confirm_button = M_buttondetector_out[4+0-:1];
+        M_man_colour_button = M_buttondetector_out[5+0-:1];
         outled = M_man_outled;
         M_seg_values = M_man_seg_out;
         io_led[8+7-:8] = M_man_out[8+7-:8];

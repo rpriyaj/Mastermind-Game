@@ -51,7 +51,10 @@ module led2 (
     SHIFTCOLOUR0,
     SHIFTCOLOUR1,
     SHIFTCOLOUR2,
-    SHIFTCOLOUR3
+    SHIFTCOLOUR3,
+    SHIFTGUESSATTEMPTCOUNT,
+    UPDATEGUESSATTEMPTCOUNT,
+    GETGUESS
     };
 
   always {
@@ -95,7 +98,7 @@ module led2 (
         seg_out = {5d0,5d21, 5d14, 5d16};
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 4hE; // READ REG A - ERROR REG
+        regfile.ra = 4hE; // READ REG A - COLOUR LED 
         regfile.rb = 4h3; // READ REG B - CURRENT GUESS COUNT
         
         // SELECTOR MUX
@@ -121,7 +124,7 @@ module led2 (
         
         // NOTE make this transition into BRANCHGAMEMODE AND transition using clock (will disappear hints in next state)
         if (trigger_start){
-          phase.d = phase.BRANCHCOLOURINDEX;
+          phase.d = phase.BACKTOFIRSTCOLOURINDEX;
         } 
     
       
@@ -218,7 +221,7 @@ module led2 (
         // Purpose: Xor the xor helper and 1111
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 5h10; // REG A XOR HELPER
+        regfile.ra = 4hD; // REG A XOR HELPER
         regfile.rb = 4h0; // REG B 
         
         
@@ -262,7 +265,7 @@ module led2 (
         alu16.alufn_signal = 6b011000; // "AND" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 5h11; // WRITE REG C to colour helper
+        regfile.rc = 4hE; // WRITE REG C to colour helper
         regfile.we = b1; // WRITE ENABLED
         
         out = sel_mux.wdsel_out;
@@ -440,7 +443,7 @@ module led2 (
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
         regfile.ra = 4hF; // READ REG A - TEMP REG w colour in correct position
-        regfile.rb = 5h11; // READ REG B - COLOUR HELPER
+        regfile.rb = 4hE; // READ REG B - COLOUR HELPER
         
         // SELECTOR MUX
         sel_mux.asel_signal = 2b0; // ACCESS RA
@@ -563,7 +566,7 @@ module led2 (
         
         // Else if position index is ==3, go to phase 3
         else if(trigger_start){ // NOTE: why use confirm_button?
-          phase.d = phase.FINISH;
+          phase.d = phase.SHIFTGUESSATTEMPTCOUNT;
         }
       
       
@@ -627,7 +630,7 @@ module led2 (
         seg_out={5d0, 5d18, 5d14,5d20}; //7SEG: 0ALS
         
         // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
-        regfile.ra = 5h10; // REG A XOR HELPER
+        regfile.ra = 4hD; // REG A XOR HELPER
         regfile.rb = 4h0; // 
         
         
@@ -669,7 +672,7 @@ module led2 (
         alu16.alufn_signal = 6b011010; // "A" OPERATION
         
         // WRITE REGISTERS (ACTUAL DATA)
-        regfile.rc = 5h10; // WRITE REG C to XOR HELPER REG 
+        regfile.rc = 4hD; // WRITE REG C to XOR HELPER REG 
         regfile.we = b1; // WRITE ENABLED
         
         out = sel_mux.wdsel_out;
@@ -679,8 +682,107 @@ module led2 (
            phase.d = phase.BACKTOFIRSTCOLOURINDEX;
         }
       
-      phase.FINISH:
+      
+        
+      phase.SHIFTGUESSATTEMPTCOUNT:
+        seg_out = {5d18, 5d6, 5d10, 5d12}; //"SGAC"
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h3; // READ REG A - CURRENT ATTEMPT COUNT
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 4b10; // ACCESS HARDCODE VALUE 1
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b100001; // SHR OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hF; // WRITE REG C - TEMP
+        regfile.we = b1; // WRITE ENABLED
+        out = sel_mux.wdsel_out;
+        
+        if (trigger_start == b1) {
+          phase.d = phase.UPDATEGUESSATTEMPTCOUNT;
+        }
+      
+      //
+      phase.UPDATEGUESSATTEMPTCOUNT:
+        seg_out = {5d21, 5d6, 5d10, 5d12}; //"U6AC"
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4hF; // READ REG A - TEMP
+        regfile.rb = 4h0; // READ REG B - --
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h3; // WRITE REG C - CURRENT ATTEMPT COUNT
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.GETGUESS;
+        }
+        
+        
+        phase.GETGUESS:
+        seg_out = {5d0, 5d0, 5d0, 5d1};
+        
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h7; // READ REG A - GUESS
+        regfile.rb = 4h8; // READ REG B - GUESS HELPER
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal = 2b0; // ACCESS RA
+        sel_mux.bsel_signal = 4b0; // ACCESS RB
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.alufn_signal = 6b11000; // AND OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4hB; // WRITE REG C - TEMP GUESS
+        regfile.we = b1; // WRITE ENABLED
+        
+        out = sel_mux.asel_out;
+        
+        // REPLACE TRANSITION LOGIC. IN ACTUAL PROJECT, USE SLOW CLOCK EDGE TO MOVE TO NEXT PHASE!
+        if (trigger_start == b1) {
+          phase.d = phase.FINISH;
+        }
+        
+        phase.FINISH:
         seg_out={5d17, 5d1, 5d18,5d14};
         
+        // READ REGISTERS (ADDRESS AND SIGNAL ONLY)
+        regfile.ra = 4h7; // REG A GUESS REG
+        regfile.rb = 4h0; // 
+        
+        
+        // SELECTOR MUX
+        sel_mux.asel_signal= b0;
+        sel_mux.bsel_signal= b100; // output is 4 from bsel
+        sel_mux.wdsel_signal = 2b0; // ACCESS ALU OUTPUT OF RA AND RB
+        
+        // PASS THROUGH ALU
+        alu16.a = sel_mux.asel_out;
+        alu16.b = sel_mux.bsel_out;
+        alu16.alufn_signal = 6b011010; // "A" OPERATION
+        
+        // WRITE REGISTERS (ACTUAL DATA)
+        regfile.rc = 4h0; // WRITE REG C to XOR HELPER REG 
+        regfile.we = b0; // WRITE ENABLED
+        
+        out = sel_mux.wdsel_out;
   }
 }

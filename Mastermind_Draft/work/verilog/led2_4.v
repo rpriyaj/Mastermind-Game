@@ -159,6 +159,9 @@ module led2_4 (
   localparam SHIFTCOLOUR1_phase = 5'd25;
   localparam SHIFTCOLOUR2_phase = 5'd26;
   localparam SHIFTCOLOUR3_phase = 5'd27;
+  localparam SHIFTGUESSATTEMPTCOUNT_phase = 5'd28;
+  localparam UPDATEGUESSATTEMPTCOUNT_phase = 5'd29;
+  localparam GETGUESS_phase = 5'd30;
   
   reg [4:0] M_phase_d, M_phase_q = IDLE_phase;
   
@@ -211,8 +214,8 @@ module led2_4 (
         for (index = 1'h0; index < 3'h4; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
-        if (colour_button) begin
-          M_phase_d = BRANCHCOLOURINDEX_phase;
+        if (trigger_start) begin
+          M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
         end
       end
       BRANCHCOLOURINDEX_phase: begin
@@ -267,7 +270,7 @@ module led2_4 (
       end
       XOR_phase: begin
         seg_out = 20'h05014;
-        M_regfile_ra = 5'h10;
+        M_regfile_ra = 4'hd;
         M_regfile_rb = 4'h0;
         M_sel_mux_asel_signal = 1'h0;
         M_sel_mux_bsel_signal = 4'he;
@@ -292,7 +295,7 @@ module led2_4 (
         M_alu16_a = M_sel_mux_asel_out;
         M_alu16_b = M_sel_mux_bsel_out;
         M_alu16_alufn_signal = 6'h18;
-        M_regfile_rc = 5'h11;
+        M_regfile_rc = 4'he;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
         if (trigger_start) begin
@@ -399,7 +402,7 @@ module led2_4 (
       UPDATELEDCOLOUR_phase: begin
         seg_out = 20'hac260;
         M_regfile_ra = 4'hf;
-        M_regfile_rb = 5'h11;
+        M_regfile_rb = 4'he;
         M_sel_mux_asel_signal = 2'h0;
         M_sel_mux_bsel_signal = 3'h0;
         M_sel_mux_wdsel_signal = 2'h0;
@@ -465,7 +468,7 @@ module led2_4 (
           M_phase_d = INCREASEPOSITIONINDEX_phase;
         end else begin
           if (trigger_start) begin
-            M_phase_d = FINISH_phase;
+            M_phase_d = SHIFTGUESSATTEMPTCOUNT_phase;
           end
         end
       end
@@ -503,7 +506,7 @@ module led2_4 (
       end
       SHIFTXORHELPER_phase: begin
         seg_out = 20'h049d4;
-        M_regfile_ra = 5'h10;
+        M_regfile_ra = 4'hd;
         M_regfile_rb = 4'h0;
         M_sel_mux_asel_signal = 1'h0;
         M_sel_mux_bsel_signal = 3'h4;
@@ -528,15 +531,69 @@ module led2_4 (
         M_alu16_a = M_sel_mux_asel_out;
         M_alu16_b = M_sel_mux_bsel_out;
         M_alu16_alufn_signal = 6'h1a;
-        M_regfile_rc = 5'h10;
+        M_regfile_rc = 4'hd;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
         if (trigger_start) begin
           M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
         end
       end
+      SHIFTGUESSATTEMPTCOUNT_phase: begin
+        seg_out = 20'h9194c;
+        M_regfile_ra = 4'h3;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h0;
+        M_sel_mux_bsel_signal = 4'h2;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h21;
+        M_regfile_rc = 4'hf;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = UPDATEGUESSATTEMPTCOUNT_phase;
+        end
+      end
+      UPDATEGUESSATTEMPTCOUNT_phase: begin
+        seg_out = 20'ha994c;
+        M_regfile_ra = 4'hf;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 2'h0;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h3;
+        M_regfile_we = 1'h1;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = GETGUESS_phase;
+        end
+      end
+      GETGUESS_phase: begin
+        seg_out = 20'h00001;
+        M_regfile_ra = 4'h7;
+        M_regfile_rb = 4'h8;
+        M_sel_mux_asel_signal = 2'h0;
+        M_sel_mux_bsel_signal = 4'h0;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_alufn_signal = 6'h18;
+        M_regfile_rc = 4'hb;
+        M_regfile_we = 1'h1;
+        out = M_sel_mux_asel_out;
+        if (trigger_start == 1'h1) begin
+          M_phase_d = FINISH_phase;
+        end
+      end
       FINISH_phase: begin
         seg_out = 20'h8864e;
+        M_regfile_ra = 4'h7;
+        M_regfile_rb = 4'h0;
+        M_sel_mux_asel_signal = 1'h0;
+        M_sel_mux_bsel_signal = 3'h4;
+        M_sel_mux_wdsel_signal = 2'h0;
+        M_alu16_a = M_sel_mux_asel_out;
+        M_alu16_b = M_sel_mux_bsel_out;
+        M_alu16_alufn_signal = 6'h1a;
+        M_regfile_rc = 4'h0;
+        M_regfile_we = 1'h0;
+        out = M_sel_mux_wdsel_out;
       end
     endcase
   end

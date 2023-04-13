@@ -51,8 +51,8 @@ module au_top (
     io_seg = 8hff;          // turn segments off
     io_sel = 4hf;           // select no digits
     
-    buttoncond.in[4:0] = io_button[4:0];
-    //buttoncond.in[5:4] = inbutton;
+    buttoncond.in[3:0] = io_button[3:0];
+    buttoncond.in[5:4] = inbutton;
     buttondetector.in = buttoncond.out;
     switch_state = buttondetector.out[0];
     //trigger_led = buttondetector.out[1];
@@ -116,8 +116,8 @@ module au_top (
         man.dips[7:0] = io_dip[0];
         man.dips[15:8] = io_dip[1];
         man.trigger_start = buttondetector.out[3];
-        man.confirm_button = buttondetector.out[1];
-        man.colour_button = buttondetector.out[2];
+        man.confirm_button = buttondetector.out[4];
+        man.colour_button = buttondetector.out[5];
         
         outled[3:0] = man.outled;                
         seg.values = man.seg_out;
