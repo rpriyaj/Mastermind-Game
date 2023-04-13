@@ -7,8 +7,6 @@
 module beast_fsm_4 (
     input clk,
     input rst,
-    input [15:0] dips,
-    input trigger_start,
     input colour_button,
     input confirm_button,
     output reg [15:0] out,
@@ -44,12 +42,6 @@ module beast_fsm_4 (
   
   wire [16-1:0] M_regfile_ra_data;
   wire [16-1:0] M_regfile_rb_data;
-  wire [16-1:0] M_regfile_data;
-  wire [5-1:0] M_regfile_ra_addr;
-  wire [5-1:0] M_regfile_rb_addr;
-  wire [5-1:0] M_regfile_rc_addr;
-  wire [16-1:0] M_regfile_rc_data;
-  wire [1-1:0] M_regfile_we_signal;
   reg [5-1:0] M_regfile_ra;
   reg [5-1:0] M_regfile_rb;
   reg [5-1:0] M_regfile_rc;
@@ -64,13 +56,7 @@ module beast_fsm_4 (
     .we(M_regfile_we),
     .wr_data(M_regfile_wr_data),
     .ra_data(M_regfile_ra_data),
-    .rb_data(M_regfile_rb_data),
-    .data(M_regfile_data),
-    .ra_addr(M_regfile_ra_addr),
-    .rb_addr(M_regfile_rb_addr),
-    .rc_addr(M_regfile_rc_addr),
-    .rc_data(M_regfile_rc_data),
-    .we_signal(M_regfile_we_signal)
+    .rb_data(M_regfile_rb_data)
   );
   
   wire [16-1:0] M_sel_mux_asel_out;
@@ -229,7 +215,7 @@ module beast_fsm_4 (
     case (M_phase_q)
       IDLE_phase: begin
         seg_out = 20'h0be0d;
-        if (trigger_start) begin
+        if (confirm_button) begin
           M_phase_d = POSITION_phase;
         end
       end
@@ -248,9 +234,7 @@ module beast_fsm_4 (
         for (index = 1'h0; index < 3'h4; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
-        if (trigger_start) begin
-          M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
-        end
+        M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
       end
       BRANCHCOLOURINDEX_phase: begin
         seg_out = 20'h02d81;
@@ -261,12 +245,10 @@ module beast_fsm_4 (
         M_alu16_a = M_sel_mux_asel_out;
         M_alu16_b = M_sel_mux_bsel_out;
         M_alu16_alufn_signal = 6'h35;
-        if (M_sel_mux_wdsel_out && trigger_start) begin
+        if (M_sel_mux_wdsel_out) begin
           M_phase_d = INCREASECOLOURINDEX_phase;
         end else begin
-          if (trigger_start) begin
-            M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
-          end
+          M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
         end
       end
       INCREASECOLOURINDEX_phase: begin
@@ -281,9 +263,7 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h00;
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
-        if (trigger_start) begin
-          M_phase_d = UPDATECOLOURINDEX_phase;
-        end
+        M_phase_d = UPDATECOLOURINDEX_phase;
       end
       UPDATECOLOURINDEX_phase: begin
         seg_out = 20'h05581;
@@ -298,9 +278,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h2;
         M_regfile_we = 1'h1;
         out = M_sel_mux_asel_out;
-        if (trigger_start) begin
-          M_phase_d = XOR_phase;
-        end
+        M_phase_d = XOR_phase;
       end
       XOR_phase: begin
         seg_out = 20'h05014;
@@ -315,9 +293,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = ANDLEDSTRIP_phase;
-        end
+        M_phase_d = ANDLEDSTRIP_phase;
       end
       ANDLEDSTRIP_phase: begin
         seg_out = 20'h02a12;
@@ -332,9 +308,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'he;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = BRANCHSHIFTCOLOURPOSITION_phase;
-        end
+        M_phase_d = BRANCHSHIFTCOLOURPOSITION_phase;
       end
       BRANCHSHIFTCOLOURPOSITION_phase: begin
         seg_out = 20'h5c993;
@@ -349,16 +323,16 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h0;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start && M_sel_mux_wdsel_out == 1'h0) begin
+        if (M_sel_mux_wdsel_out == 1'h0) begin
           M_phase_d = SHIFTCOLOUR0_phase;
         end else begin
-          if (trigger_start && M_sel_mux_wdsel_out == 1'h1) begin
+          if (M_sel_mux_wdsel_out == 1'h1) begin
             M_phase_d = SHIFTCOLOUR1_phase;
           end else begin
-            if (trigger_start && M_sel_mux_wdsel_out == 2'h2) begin
+            if (M_sel_mux_wdsel_out == 2'h2) begin
               M_phase_d = SHIFTCOLOUR2_phase;
             end else begin
-              if (trigger_start && M_sel_mux_wdsel_out == 2'h3) begin
+              if (M_sel_mux_wdsel_out == 2'h3) begin
                 M_phase_d = SHIFTCOLOUR3_phase;
               end
             end
@@ -378,9 +352,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = UPDATELEDCOLOUR_phase;
-        end
+        M_phase_d = UPDATELEDCOLOUR_phase;
       end
       SHIFTCOLOUR1_phase: begin
         seg_out = 20'h93a01;
@@ -395,9 +367,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = UPDATELEDCOLOUR_phase;
-        end
+        M_phase_d = UPDATELEDCOLOUR_phase;
       end
       SHIFTCOLOUR2_phase: begin
         seg_out = 20'h93a02;
@@ -412,9 +382,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = UPDATELEDCOLOUR_phase;
-        end
+        M_phase_d = UPDATELEDCOLOUR_phase;
       end
       SHIFTCOLOUR3_phase: begin
         seg_out = 20'h93a03;
@@ -429,9 +397,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = UPDATELEDCOLOUR_phase;
-        end
+        M_phase_d = UPDATELEDCOLOUR_phase;
       end
       UPDATELEDCOLOUR_phase: begin
         seg_out = 20'hac260;
@@ -443,9 +409,7 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h00;
         M_regfile_rc = 4'h7;
         M_regfile_we = 1'h1;
-        if (trigger_start) begin
-          M_phase_d = UPDATEPHASETWOLED_phase;
-        end
+        M_phase_d = UPDATEPHASETWOLED_phase;
       end
       UPDATEPHASETWOLED_phase: begin
         seg_out = 20'h05590;
@@ -482,9 +446,7 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
-        if (trigger_start) begin
-          M_phase_d = UPDATECOLOURINDEX_phase;
-        end
+        M_phase_d = UPDATECOLOURINDEX_phase;
       end
       BRANCHCHECKPOSITIONINDEX_phase: begin
         seg_out = 20'h5b261;
@@ -498,12 +460,10 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h35;
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
-        if (M_sel_mux_wdsel_out && trigger_start) begin
+        if (M_sel_mux_wdsel_out) begin
           M_phase_d = INCREASEPOSITIONINDEX_phase;
         end else begin
-          if (trigger_start) begin
-            M_phase_d = SHIFTGUESSATTEMPTCOUNT_phase;
-          end
+          M_phase_d = SHIFTGUESSATTEMPTCOUNT_phase;
         end
       end
       INCREASEPOSITIONINDEX_phase: begin
@@ -518,9 +478,7 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h00;
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
-        if (trigger_start) begin
-          M_phase_d = UPDATEPOSITIONINDEX_phase;
-        end
+        M_phase_d = UPDATEPOSITIONINDEX_phase;
       end
       UPDATEPOSITIONINDEX_phase: begin
         seg_out = 20'h05661;
@@ -534,9 +492,7 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h1;
         M_regfile_we = 1'h1;
-        if (trigger_start) begin
-          M_phase_d = SHIFTXORHELPER_phase;
-        end
+        M_phase_d = SHIFTXORHELPER_phase;
       end
       SHIFTXORHELPER_phase: begin
         seg_out = 20'h049d4;
@@ -551,9 +507,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = UPDATEXORHELPER_phase;
-        end
+        M_phase_d = UPDATEXORHELPER_phase;
       end
       UPDATEXORHELPER_phase: begin
         seg_out = 20'hac9d4;
@@ -568,9 +522,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hd;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
-        end
+        M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
       end
       SHIFTGUESSATTEMPTCOUNT_phase: begin
         seg_out = 20'h9194c;
@@ -583,9 +535,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = UPDATEGUESSATTEMPTCOUNT_phase;
-        end
+        M_phase_d = UPDATEGUESSATTEMPTCOUNT_phase;
       end
       UPDATEGUESSATTEMPTCOUNT_phase: begin
         seg_out = 20'ha994c;
@@ -598,9 +548,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h3;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = FINISH_phase;
-        end
+        M_phase_d = FINISH_phase;
       end
       FINISH_phase: begin
         seg_out = 20'h8864e;
@@ -615,9 +563,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start) begin
-          M_phase_d = GETGUESS_phase;
-        end
+        M_phase_d = GETGUESS_phase;
       end
       GETGUESS_phase: begin
         seg_out = 20'h00001;
@@ -911,9 +857,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_asel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = UPDATEIMPOSTER_phase;
-        end
+        M_phase_d = UPDATEIMPOSTER_phase;
       end
       UPDATEIMPOSTER_phase: begin
         seg_out = 20'ha8421;
@@ -926,9 +870,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h9;
         M_regfile_we = 1'h1;
         out = M_sel_mux_asel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = UPDATEHINTLED_phase;
-        end
+        M_phase_d = UPDATEHINTLED_phase;
       end
       UPDATEHINTLED_phase: begin
         seg_out = 20'hab82d;
@@ -945,9 +887,7 @@ module beast_fsm_4 (
         for (index = 1'h0; index < 3'h4; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
-        if (trigger_start == 1'h1) begin
-          M_phase_d = COMPARECODE_GUESS_phase;
-        end
+        M_phase_d = COMPARECODE_GUESS_phase;
       end
       COMPARECODE_GUESS_phase: begin
         seg_out = 20'h6318c;
@@ -976,9 +916,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hf;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = UPDATEATTEMPTCOUNT_phase;
-        end
+        M_phase_d = UPDATEATTEMPTCOUNT_phase;
       end
       UPDATEATTEMPTCOUNT_phase: begin
         seg_out = 20'haa98c;
@@ -991,9 +929,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h3;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = BRANCHATTEMPTCOUNT_phase;
-        end
+        M_phase_d = BRANCHATTEMPTCOUNT_phase;
       end
       BRANCHATTEMPTCOUNT_phase: begin
         seg_out = 20'h5314c;
@@ -1022,9 +958,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h1;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETCOLOUR_phase;
-        end
+        M_phase_d = RESETCOLOUR_phase;
       end
       RESETCOLOUR_phase: begin
         seg_out = 20'ha5282;
@@ -1037,9 +971,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h2;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETHINT_phase;
-        end
+        M_phase_d = RESETHINT_phase;
       end
       RESETHINT_phase: begin
         seg_out = 20'ha5283;
@@ -1052,9 +984,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h9;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETCOUNTER_phase;
-        end
+        M_phase_d = RESETCOUNTER_phase;
       end
       RESETCOUNTER_phase: begin
         seg_out = 20'ha5281;
@@ -1067,9 +997,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hc;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETLEDCOLOUR_phase;
-        end
+        M_phase_d = RESETLEDCOLOUR_phase;
       end
       RESETLEDCOLOUR_phase: begin
         seg_out = 20'h0520c;
@@ -1082,9 +1010,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'he;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETXORHELPER_phase;
-        end
+        M_phase_d = RESETXORHELPER_phase;
       end
       RESETXORHELPER_phase: begin
         seg_out = 20'h5294e;
@@ -1097,9 +1023,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'hd;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETGUESS_phase;
-        end
+        M_phase_d = RESETGUESS_phase;
       end
       RESETGUESS_phase: begin
         seg_out = 20'h52946;
@@ -1112,25 +1036,23 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h7;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = IDLE_phase;
-        end
+        M_phase_d = IDLE_phase;
       end
       LOSE_phase: begin
         seg_out = 20'h8024d;
-        if (trigger_start == 1'h1) begin
+        if (M_slow_edge_out) begin
           M_phase_d = GAMEOVER_phase;
         end
       end
       WIN_phase: begin
         seg_out = 20'h9aa52;
-        if (trigger_start == 1'h1) begin
+        if (M_slow_edge_out) begin
           M_phase_d = GAMEOVER_phase;
         end
       end
       GAMEOVER_phase: begin
         seg_out = 20'h8864e;
-        if (trigger_start == 1'h1) begin
+        if (M_slow_edge_out) begin
           M_phase_d = RESETATTEMPT_phase;
         end
       end
@@ -1145,9 +1067,7 @@ module beast_fsm_4 (
         M_regfile_rc = 4'h3;
         M_regfile_we = 1'h1;
         out = M_sel_mux_wdsel_out;
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETALLLED_phase;
-        end
+        M_phase_d = RESETALLLED_phase;
       end
       RESETALLLED_phase: begin
         seg_out = 20'h52950;
@@ -1164,9 +1084,7 @@ module beast_fsm_4 (
         for (index = 1'h0; index < 3'h4; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
-        if (trigger_start == 1'h1) begin
-          M_phase_d = RESETPOSITION_phase;
-        end
+        M_phase_d = RESETPOSITION_phase;
       end
     endcase
   end

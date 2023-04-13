@@ -14,7 +14,7 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
-  var index;
+  //var index;
   //sig trigger_led;
   sig switch_state;
   
@@ -34,8 +34,8 @@ module au_top (
       //led_out led_out[4]; // for now its 4 but later its 8 strips (hint)
       //led_tester led_test;
       fsm test_mode = {IDLE, MANUAL}; // AUTOMATIC
-      dff count_left[4](#INIT(b100));
-      dff temp_encode[16](#INIT(0));
+      //dff count_left[4](#INIT(b100));
+      //dff temp_encode[16](#INIT(0));
     }
   }
   
@@ -82,8 +82,8 @@ module au_top (
     /* FSM Buttons DEFAULT */
     man.confirm_button= b0;
     man.colour_button= b0;
-    man.trigger_start = b0;
-    man.dips = 16b0;
+    //man.trigger_start = b0;
+    //man.dips = 16b0;
     
     /* LED DEFAULT */
     outled[3:0] = 4x{0};    
@@ -113,9 +113,9 @@ module au_top (
       
       test_mode.MANUAL:
         /* COMBINED_FSM CODE */
-        man.dips[7:0] = io_dip[0];
-        man.dips[15:8] = io_dip[1];
-        man.trigger_start = buttondetector.out[3];
+        //man.dips[7:0] = io_dip[0];
+        //man.dips[15:8] = io_dip[1];
+        //man.trigger_start = buttondetector.out[3];
         man.confirm_button = buttondetector.out[4];
         man.colour_button = buttondetector.out[5];
         
