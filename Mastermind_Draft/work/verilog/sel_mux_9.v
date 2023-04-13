@@ -45,6 +45,9 @@ module sel_mux_9 (
       3'h6: begin
         asel_out = 16'hf000;
       end
+      3'h7: begin
+        asel_out = 16'h8000;
+      end
       default: begin
         asel_out = ra_data;
       end

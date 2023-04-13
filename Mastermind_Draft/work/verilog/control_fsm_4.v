@@ -4,14 +4,14 @@
    This is a temporary file and any changes made to it will be destroyed.
 */
 
-module beast_fsm_4 (
+module control_fsm_4 (
     input clk,
     input rst,
     input colour_button,
     input confirm_button,
     output reg [15:0] out,
     output reg [19:0] seg_out,
-    output reg [3:0] outled
+    output reg [15:0] outled
   );
   
   
@@ -80,13 +80,13 @@ module beast_fsm_4 (
     .wdsel_out(M_sel_mux_wdsel_out)
   );
   
-  wire [(3'h4+0)-1:0] M_led_out_led;
-  reg [(3'h4+0)-1:0] M_led_out_update;
-  reg [(3'h4+0)*16-1:0] M_led_out_encode;
+  wire [(5'h10+0)-1:0] M_led_out_led;
+  reg [(5'h10+0)-1:0] M_led_out_update;
+  reg [(5'h10+0)*16-1:0] M_led_out_encode;
   
   genvar GEN_led_out0;
   generate
-  for (GEN_led_out0=0;GEN_led_out0<3'h4;GEN_led_out0=GEN_led_out0+1) begin: led_out_gen_0
+  for (GEN_led_out0=0;GEN_led_out0<5'h10;GEN_led_out0=GEN_led_out0+1) begin: led_out_gen_0
     led_out_10 led_out (
       .clk(clk),
       .rst(rst),
@@ -224,8 +224,8 @@ module beast_fsm_4 (
     out = 16'h0000;
     seg_out = 20'h00000;
     M_slow_edge_in = M_slow_clock_value;
-    M_led_out_update = 4'h0;
-    M_led_out_encode = 64'h0000000000000000;
+    M_led_out_update = 16'h0000;
+    M_led_out_encode = 256'h0000000000000000000000000000000000000000000000000000000000000000;
     outled = M_led_out_led;
     
     case (M_phase_q)
@@ -236,7 +236,7 @@ module beast_fsm_4 (
         end
       end
       NORMALMODE_phase: begin
-        seg_out = 20'h000c1;
+        seg_out = 20'hb59c1;
         if (colour_button) begin
           M_phase_d = ADDGAMEMODE_phase;
         end else begin
@@ -275,7 +275,7 @@ module beast_fsm_4 (
         M_phase_d = IMPOSTERMODE_phase;
       end
       IMPOSTERMODE_phase: begin
-        seg_out = 20'h000c2;
+        seg_out = 20'hb59c2;
         if (colour_button) begin
           M_phase_d = SUBGAMEMODE_phase;
         end else begin
@@ -323,9 +323,9 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
-        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        M_led_out_encode = {5'h10{{M_sel_mux_asel_out}}};
         out = M_sel_mux_asel_out;
-        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        for (index = 1'h0; index < 5'h10; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         M_phase_d = BACKTOFIRSTCOLOURINDEX_phase;
@@ -515,9 +515,9 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h00;
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
-        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        M_led_out_encode = {5'h10{{M_sel_mux_asel_out}}};
         out = M_sel_mux_asel_out;
-        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        for (index = 1'h0; index < 5'h10; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         if (confirm_button) begin
@@ -992,9 +992,9 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
-        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        M_led_out_encode = {5'h10{{M_sel_mux_asel_out}}};
         out = M_sel_mux_asel_out;
-        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        for (index = 1'h0; index < 5'h10; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         M_phase_d = COMPARECODE_GUESS_phase;
@@ -1170,7 +1170,7 @@ module beast_fsm_4 (
         seg_out = 20'h5294a;
         M_regfile_ra = 4'h0;
         M_regfile_rb = 4'h0;
-        M_sel_mux_asel_signal = 3'h4;
+        M_sel_mux_asel_signal = 3'h7;
         M_sel_mux_bsel_signal = 3'h0;
         M_sel_mux_wdsel_signal = 2'h0;
         M_alu16_alufn_signal = 6'h1a;
@@ -1189,9 +1189,9 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h0;
         M_regfile_we = 1'h0;
-        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        M_led_out_encode = {5'h10{{M_sel_mux_asel_out}}};
         out = M_sel_mux_wdsel_out;
-        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        for (index = 1'h0; index < 5'h10; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         M_phase_d = RESETGAMEMODE_phase;
@@ -1206,9 +1206,9 @@ module beast_fsm_4 (
         M_alu16_alufn_signal = 6'h1a;
         M_regfile_rc = 4'h4;
         M_regfile_we = 1'h1;
-        M_led_out_encode = {3'h4{{M_sel_mux_asel_out}}};
+        M_led_out_encode = {5'h10{{M_sel_mux_asel_out}}};
         out = M_sel_mux_wdsel_out;
-        for (index = 1'h0; index < 3'h4; index = index + 1) begin
+        for (index = 1'h0; index < 5'h10; index = index + 1) begin
           M_led_out_update[(index)*1+0-:1] = M_sel_mux_bsel_out[(index)*1+0-:1];
         end
         M_phase_d = RESETPOSITIONFINAL_phase;
