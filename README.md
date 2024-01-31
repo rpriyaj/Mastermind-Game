@@ -24,3 +24,5 @@ The objective of the game is for the player to guess all 4 colours correct and a
 
 ## Hardware Requirement 
 The game was built with Alchitry Au FPGA, WS2812B LED strips and buttons.  
+
+![image](https://github.com/rpriyaj/Adult-Income-Prediction/assets/77479366/c8cdc901-62ef-4bc5-ad0a-12eb1a76c63a)
